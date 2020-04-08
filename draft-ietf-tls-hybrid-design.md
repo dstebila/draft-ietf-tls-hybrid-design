@@ -51,9 +51,7 @@ informative:
       -
         ins: A. Langley
     date: 2018-12-12
-  DFGS15: DOI.10.1145/2810103.2813653
   DODIS: DOI.10.1007/978-3-540-30576-7_11
-  DOWLING: DOI.10.5204/thesis.eprints.108960
   ETSI:
     target: https://www.etsi.org/images/files/ETSIWhitePapers/QuantumSafeWhitepaper.pdf
     title: "Quantum safe cryptography and security: An introduction, benefits, enablers and challengers"
@@ -85,7 +83,6 @@ informative:
   IKE-HYBRID: I-D.tjhai-ipsecme-hybrid-qske-ikev2
   IKE-PSK: I-D.ietf-ipsecme-qr-ikev2
   KIEFER: I-D.kiefer-tls-ecdhe-sidh
-  KPW13: DOI.10.1007/978-3-642-40041-4_24
   LANGLEY:
     target: https://www.imperialviolet.org/2018/04/11/pqconftls.html
     title: Post-quantum confidentiality for TLS
