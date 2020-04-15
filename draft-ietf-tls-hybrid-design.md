@@ -1,8 +1,8 @@
 ---
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
-docname: draft-ietf-tls-hybrid-design-latest
-date: 2020-04-08
+docname: draft-ietf-tls-hybrid-design-00
+date: 2020-04-15
 category: info
 
 ipr: trust200902
@@ -150,7 +150,7 @@ informative:
 
 Hybrid key exchange refers to using multiple key exchange algorithms simultaneously and combining the result with the goal of providing security even if all but one of the component algorithms is broken.  It is motivated by transition to post-quantum cryptography.  This document provides a construction for hybrid key exchange in the Transport Layer Security (TLS) protocol version 1.3.
 
-Discussion of this work is encouraged to happen on the TLS IETF mailing list tls@ietf.org or on the GitHub repository which contains the draft: https://github.com/dstebila/draft-stebila-tls-hybrid-design.
+Discussion of this work is encouraged to happen on the TLS IETF mailing list tls@ietf.org or on the GitHub repository which contains the draft: https://github.com/dstebila/draft-ietf-tls-hybrid-design.
 
 --- middle
 
@@ -166,18 +166,18 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.  These have been moved to the appendix of the current draft, and will be eventually be removed.
 
-- since draft-03:
+- draft-ietf-tls-hybrid-design-00:
     - Allow key_exchange values from the same algorithm to be reused across multiple KeyShareEntry records in the same ClientHello.
-- draft-03:
+- draft-stebila-tls-hybrid-design-03:
     - Add requirement for KEMs to provide protection against key reuse.
     - Clarify FIPS-compliance of shared secret concatenation method.
-- draft-02:
-    - Design considerations from draft-00 and draft-01 are moved to the appendix.
+- draft-stebila-tls-hybrid-design-02:
+    - Design considerations from draft-stebila-tls-hybrid-design-00 and draft-stebila-tls-hybrid-design-01 are moved to the appendix.
     - A single construction is given in the main body.
-- draft-01:
+- draft-stebila-tls-hybrid-design-01:
     - Add [(Comb-KDF-1)](#comb-kdf-1) and [(Comb-KDF-2)](#comb-kdf-2) options.
     - Add two candidate instantiations.
-- draft-00: Initial version.
+- draft-stebila-tls-hybrid-design-00: Initial version.
 
 ## Terminology {#terminology}
 
