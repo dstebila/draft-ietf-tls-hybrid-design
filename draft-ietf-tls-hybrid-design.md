@@ -95,9 +95,9 @@ informative:
     title: "Lucky Thirteen: Breaking the TLS and DTLS record protocols"
     author:
     -
-      ins: NJ Al Fardan
+      ins: N. J. Al Fardan
     -
-      ins: KG Paterson
+      ins: K. G. Paterson
   NIELSEN:
     title: Quantum Computation and Quantum Information
     author:
@@ -143,7 +143,7 @@ informative:
       org: Open Quantum Safe Project
     date: 2018-11
   RACCOON:
-    target: "TBD (waiting for ePrint URL)"
+    target: https://raccoon-attack.com/
     title: "Raccoon Attack: Finding and Exploiting Most-Significant-Bit-Oracles in TLS-DH(E)"
     author:
     -
