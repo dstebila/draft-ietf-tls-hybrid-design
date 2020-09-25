@@ -90,6 +90,14 @@ informative:
       -
         ins: A. Langley
     date: 2018-04-11
+  LUCKY13:
+    target: https://ieeexplore.ieee.org/iel7/6547086/6547088/06547131.pdf
+    title: "Lucky Thirteen: Breaking the TLS and DTLS record protocols"
+    author:
+    -
+      ins: N. J. Al Fardan
+    -
+      ins: K. G. Paterson
   NIELSEN:
     title: Quantum Computation and Quantum Information
     author:
@@ -134,6 +142,23 @@ informative:
     author:
       org: Open Quantum Safe Project
     date: 2018-11
+  RACCOON:
+    target: https://raccoon-attack.com/
+    title: "Raccoon Attack: Finding and Exploiting Most-Significant-Bit-Oracles in TLS-DH(E)"
+    author:
+    -
+      ins: R. Merget
+    -
+      ins: M. Brinkmann
+    -
+      ins: N. Aviram
+    -
+      ins: J. Somorovsky
+    -
+      ins: J. Mittmann
+    -
+      ins: J. Schwenk
+    date: 2020-09
   S2N:
     target: https://aws.amazon.com/blogs/security/post-quantum-tls-now-supported-in-aws-kms/
     title: Post-quantum TLS now supported in AWS KMS
@@ -226,9 +251,9 @@ In addition to the primary cryptographic goal, there may be several additional g
 
 - **High performance:** Use of hybrid key exchange should not be prohibitively expensive in terms of computational performance.  In general this will depend on the performance characteristics of the specific cryptographic algorithms used, and as such is outside the scope of this document.  See {{BCNS15}}, {{CECPQ1}}, {{FRODO}} for preliminary results about performance characteristics.
 
-- **Low latency:** Use of hybrid key exchange should not substantially increase the latency experienced to establish a connection.  Factors affecting this may include the following. 
+- **Low latency:** Use of hybrid key exchange should not substantially increase the latency experienced to establish a connection.  Factors affecting this may include the following.
     - The computational performance characteristics of the specific algorithms used.  See above.
-    - The size of messages to be transmitted.  Public key and ciphertext sizes for post-quantum algorithms range from hundreds of bytes to over one hundred kilobytes, so this impact can be substantially.  See {{BCNS15}}, {{FRODO}} for preliminary results in a laboratory setting, and {{LANGLEY}} for preliminary results on more realistic networks.
+    - The size of messages to be transmitted.  Public key and ciphertext sizes for post-quantum algorithms range from hundreds of bytes to over one hundred kilobytes, so this impact can be substantial.  See {{BCNS15}}, {{FRODO}} for preliminary results in a laboratory setting, and {{LANGLEY}} for preliminary results on more realistic networks.
     - Additional round trips added to the protocol.  See below.
 
 - **No extra round trips:** Attempting to negotiate hybrid key exchange should not lead to extra round trips in any of the three hybrid-aware/non-hybrid-aware scenarios listed above.  
@@ -383,20 +408,6 @@ Concatenation of public keys in the `HybridKeyExchange` struct as described in {
 
 If it is desired to avoid duplication of key shares, options include a) disconnect the use of a combination for the algorithm identifier from the use of concatenation of public keys by introducing new logic and/or data structures (see {{shares-multiple}} or {{shares-ext-additional}}); or b) provide some back reference from a later key share entry to an earlier one.
 
-**Variable-length shared secrets.**
-The shared secret calculation in {{construction-shared-secret}} directly concatenates the shared secret values of each scheme, rather than encoding them with length fields.  This implicitly assumes that the length of each shared secret is fixed once the algorithm is fixed.  This is the case for all Round 2 candidates.
-
-However, if it is envisioned that this specification be used with algorithms which do not have fixed-length shared secrets (after the variant has been fixed by the algorithm identifier in the `NamedGroup` negotiation in {{construction-negotiation}}), then {{construction-shared-secret}} should be revised to use an unambiguous concatenation method such as the following:
-
-~~~
-    struct {
-        opaque shared_secret_1<1..2^16-1>;
-        opaque shared_secret_2<1..2^16-1>;
-    } HybridSharedSecret
-~~~
-
-Guidance from the working group is particularly requested on this point.
-
 **Resumption.**
 TLS 1.3 allows for session resumption via a PSK.  When a PSK is used during session establishment, an ephemeral key exchange can also be used to enhance forward secrecy.  If the original key exchange was hybrid, should an ephemeral key exchange in a resumption of that original key exchange be required to use the same hybrid algorithms?
 
@@ -413,9 +424,16 @@ The shared secrets computed in the hybrid key exchange should be computed in a w
 
 As noted in {{kems}}, KEMs used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is re-used, such as achieving IND-CCA2 security or having a transform like the Fujisaki--Okamoto transform applied.  Some IND-CPA-secure post-quantum KEMs (i.e., without countermeasures such as the FO transform) are completely insecure under public key reuse; for example, some lattice-based IND-CPA-secure KEMs are vulnerable to attacks that recover the private key after just a few thousand samples {{FLUHRER}}.
 
+**Secrets should be constant length.**
+This document assumes that the length of each shared secret is fixed once the algorithm is fixed.  This is the case for all Round 2 candidates.
+
+Note that variable-length secrets are, generally speaking, dangerous.  In particular, when using key material of variable length and processing it using hash functions, a timing side channel may arise.  In broad terms, when the secret is longer, the hash function may need to process more blocks internally.  In some unfortunate circumstances, this has led to timing attacks, e.g. the Lucky Thirteen {{LUCKY13}} and Raccoon {{RACCOON}} attacks.
+
+Therefore, this specification MUST only be used with algorithms which have fixed-length shared secrets (after the variant has been fixed by the algorithm identifier in the `NamedGroup` negotiation in {{construction-negotiation}}).
+
 # Acknowledgements
 
-These ideas have grown from discussions with many colleagues, including Christopher Wood, Matt Campagna, Eric Crockett, authors of the various hybrid Internet-Drafts and implementations cited in this document, and members of the TLS working group.  The immediate impetus for this document came from discussions with attendees at the Workshop on Post-Quantum Software in Mountain View, California, in January 2019.  Martin Thomson suggested the [(Comb-KDF-1)](#comb-kdf-1) approach.  Daniel J. Bernstein and Tanja Lange commented on the risks of reuse of ephemeral public keys.  Matt Campagna and the team at Amazon Web Services provided additional suggestions.
+These ideas have grown from discussions with many colleagues, including Christopher Wood, Matt Campagna, Eric Crockett, authors of the various hybrid Internet-Drafts and implementations cited in this document, and members of the TLS working group.  The immediate impetus for this document came from discussions with attendees at the Workshop on Post-Quantum Software in Mountain View, California, in January 2019.  Martin Thomson suggested the [(Comb-KDF-1)](#comb-kdf-1) approach.  Daniel J. Bernstein and Tanja Lange commented on the risks of reuse of ephemeral public keys.  Matt Campagna and the team at Amazon Web Services provided additional suggestions.  Nimrod Aviram proposed restricting to fixed-length secrets.
 
 --- back
 
@@ -668,7 +686,7 @@ Each party concatenates the shared secrets established by each component algorit
 
 Compared with [(Comb-KDF-1)](#comb-kdf-1), this method concatenates the (2 or more) shared secrets prior to input to the KDF, whereas (Comb-KDF-1) puts the (exactly 2) shared secrets in the two different input slots to the KDF.
 
-Compared with [(Comb-Concat)](#comb-concat), this method has an extract KDF application.  While this adds computational overhead, this may provide a cleaner abstraction of the hybridization mechanism for the purposes of formal security analysis. 
+Compared with [(Comb-Concat)](#comb-concat), this method has an extract KDF application.  While this adds computational overhead, this may provide a cleaner abstraction of the hybridization mechanism for the purposes of formal security analysis.
 
 ~~~~
                                     0
