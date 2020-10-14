@@ -119,11 +119,11 @@ informative:
       org: National Institute of Standards and Technology (NIST)
     date: 2020-01-28
   NIST-SP-800-56C:
-    target: https://doi.org/10.6028/NIST.SP.800-56Cr1
+    target: https://doi.org/10.6028/NIST.SP.800-56Cr2
     title: Recommendation for Key-Derivation Methods in Key-Establishment Schemes
     author:
       org: National Institute of Standards and Technology (NIST)
-    date: 2018-04
+    date: 2020-08
   NIST-SP-800-135:
     target: https://doi.org/10.6028/NIST.SP.800-135r1
     title: Recommendation for Existing Application-Specific Key Derivation Functions
@@ -388,7 +388,7 @@ concatenated_shared_secret -> HKDF-Extract = Handshake Secret
 ~~~~
 
 **FIPS-compliance of shared secret concatenation.**
-{{NIST-SP-800-56C}} or {{NIST-SP-800-135}} give NIST recommendations for key derivation methods in key exchange protocols.  Some hybrid combinations may combine the shared secret from a NIST-approved algorithm (e.g., ECDH using the nistp256/secp256r1 curve) with a shared secret from a non-approved algorithm (e.g., post-quantum).  Although the simple concatenation approach above is not currently an approved method in {{NIST-SP-800-56C}} or {{NIST-SP-800-135}}, NIST indicated in January 2020 that a forthcoming revision of {{NIST-SP-800-56C}} will list simple concatenation as an approved method {{NIST-FAQ}}.
+{{NIST-SP-800-56C}} or {{NIST-SP-800-135}} give NIST recommendations for key derivation methods in key exchange protocols.  Some hybrid combinations may combine the shared secret from a NIST-approved algorithm (e.g., ECDH using the nistp256/secp256r1 curve) with a shared secret from a non-approved algorithm (e.g., post-quantum).  {{NIST-SP-800-56C}} lists simple concatenation as an approved method for generation of a hybrid shared secret in which one of the constituent shared secret is from an approved method.
 
 # Open questions {#comb-open-questions}
 
