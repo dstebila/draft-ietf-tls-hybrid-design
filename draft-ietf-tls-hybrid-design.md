@@ -64,7 +64,7 @@ informative:
     seriesinfo: ETSI White Paper No. 8
     date: 2015-06
   EVEN: DOI.10.1007/978-1-4684-4730-9_4
-  EXTERN-PSK: I-D.ietf-tls-tls13-cert-with-extern-psk
+  EXTERN-PSK: RFC8773
   FLUHRER:
     target: https://eprint.iacr.org/2016/085
     title: "Cryptanalysis of ring-LWE based key exchange with key share reuse"
@@ -76,12 +76,12 @@ informative:
   FO: DOI.10.1007/s00145-011-9114-1
   FRODO: DOI.10.1145/2976749.2978425
   GIACON: DOI.10.1007/978-3-319-76578-5_7
-  GREASE: I-D.ietf-tls-grease
+  GREASE: RFC8701
   HARNIK: DOI.10.1007/11426639_6
   HOFFMAN: I-D.hoffman-c2pq
   HHK: DOI.10.1007/978-3-319-70500-2_12
   IKE-HYBRID: I-D.tjhai-ipsecme-hybrid-qske-ikev2
-  IKE-PSK: I-D.ietf-ipsecme-qr-ikev2
+  IKE-PSK: RFC8784
   KIEFER: I-D.kiefer-tls-ecdhe-sidh
   LANGLEY:
     target: https://www.imperialviolet.org/2018/04/11/pqconftls.html
