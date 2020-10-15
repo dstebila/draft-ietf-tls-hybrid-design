@@ -1,8 +1,8 @@
 ---
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
-docname: draft-ietf-tls-hybrid-design-00
-date: 2020-04-15
+docname: draft-ietf-tls-hybrid-design-01
+date: 2020-10-15
 category: info
 
 ipr: trust200902
@@ -112,12 +112,6 @@ informative:
     title: Post-Quantum Cryptography
     author:
       org: National Institute of Standards and Technology (NIST)
-  NIST-FAQ:
-    target: https://csrc.nist.gov/Projects/post-quantum-cryptography/faqs
-    title: Post-Quantum Cryptography - FAQs
-    author:
-      org: National Institute of Standards and Technology (NIST)
-    date: 2020-01-28
   NIST-SP-800-56C:
     target: https://doi.org/10.6028/NIST.SP.800-56Cr2
     title: Recommendation for Key-Derivation Methods in Key-Establishment Schemes
