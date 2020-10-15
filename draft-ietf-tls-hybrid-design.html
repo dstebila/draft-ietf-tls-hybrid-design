@@ -14,7 +14,7 @@
     " name="description">
 <meta content="xml2rfc 2.47.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
-<meta content="draft-ietf-tls-hybrid-design-00" name="ietf.draft">
+<meta content="draft-ietf-tls-hybrid-design-01" name="ietf.draft">
 <link href="draft-ietf-tls-hybrid-design.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
 <style type="text/css">@import url('https://martinthomson.github.io/i-d-template/fonts.css');
@@ -827,11 +827,11 @@ table.left {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">ietf-tls-hybrid-design</td>
-<td class="right">April 2020</td>
+<td class="right">October 2020</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Stebila, et al.</td>
-<td class="center">Expires 17 October 2020</td>
+<td class="center">Expires 18 April 2021</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -841,15 +841,15 @@ table.left {
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">Network Working Group</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-ietf-tls-hybrid-design-00</dd>
+<dd class="internet-draft">draft-ietf-tls-hybrid-design-01</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2020-04-15" class="published">15 April 2020</time>
+<time datetime="2020-10-15" class="published">15 October 2020</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2020-10-17">17 October 2020</time></dd>
+<dd class="expires"><time datetime="2021-04-18">18 April 2021</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -892,7 +892,7 @@ table.left {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 October 2020.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 April 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1090,40 +1090,49 @@ table.left {
 <p id="section-1.1-2">Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.  These have been moved to the appendix of the current draft, and will be eventually be removed.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1.1-3.1">
-            <p id="section-1.1-3.1.1">draft-ietf-tls-hybrid-design-00:<a href="#section-1.1-3.1.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.1.1">draft-ietf-tls-hybrid-design-01:<a href="#section-1.1-3.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.1.2.1">Allow key_exchange values from the same algorithm to be reused across multiple KeyShareEntry records in the same ClientHello.<a href="#section-1.1-3.1.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.1.2.1">Forbid variable-length secret keys<a href="#section-1.1-3.1.2.1" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-1.1-3.1.2.2">Use fixed-length KEM public keys/ciphertexts<a href="#section-1.1-3.1.2.2" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-1.1-3.2">
-            <p id="section-1.1-3.2.1">draft-stebila-tls-hybrid-design-03:<a href="#section-1.1-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.2.1">draft-ietf-tls-hybrid-design-00:<a href="#section-1.1-3.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.2.2.1">Add requirement for KEMs to provide protection against key reuse.<a href="#section-1.1-3.2.2.1" class="pilcrow">¶</a>
-</li>
-              <li class="normal" id="section-1.1-3.2.2.2">Clarify FIPS-compliance of shared secret concatenation method.<a href="#section-1.1-3.2.2.2" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.2.2.1">Allow key_exchange values from the same algorithm to be reused across multiple KeyShareEntry records in the same ClientHello.<a href="#section-1.1-3.2.2.1" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-1.1-3.3">
-            <p id="section-1.1-3.3.1">draft-stebila-tls-hybrid-design-02:<a href="#section-1.1-3.3.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.3.1">draft-stebila-tls-hybrid-design-03:<a href="#section-1.1-3.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.3.2.1">Design considerations from draft-stebila-tls-hybrid-design-00 and draft-stebila-tls-hybrid-design-01 are moved to the appendix.<a href="#section-1.1-3.3.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.3.2.1">Add requirement for KEMs to provide protection against key reuse.<a href="#section-1.1-3.3.2.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-1.1-3.3.2.2">A single construction is given in the main body.<a href="#section-1.1-3.3.2.2" class="pilcrow">¶</a>
+              <li class="normal" id="section-1.1-3.3.2.2">Clarify FIPS-compliance of shared secret concatenation method.<a href="#section-1.1-3.3.2.2" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-1.1-3.4">
-            <p id="section-1.1-3.4.1">draft-stebila-tls-hybrid-design-01:<a href="#section-1.1-3.4.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.4.1">draft-stebila-tls-hybrid-design-02:<a href="#section-1.1-3.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.4.2.1">Add <span><a href="#comb-kdf-1" class="xref">(Comb-KDF-1)</a> (<a href="#comb-kdf-1" class="xref">Appendix B.4.2</a>)</span> and <span><a href="#comb-kdf-2" class="xref">(Comb-KDF-2)</a> (<a href="#comb-kdf-2" class="xref">Appendix B.4.3</a>)</span> options.<a href="#section-1.1-3.4.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.4.2.1">Design considerations from draft-stebila-tls-hybrid-design-00 and draft-stebila-tls-hybrid-design-01 are moved to the appendix.<a href="#section-1.1-3.4.2.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-1.1-3.4.2.2">Add two candidate instantiations.<a href="#section-1.1-3.4.2.2" class="pilcrow">¶</a>
+              <li class="normal" id="section-1.1-3.4.2.2">A single construction is given in the main body.<a href="#section-1.1-3.4.2.2" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
-          <li class="normal" id="section-1.1-3.5">draft-stebila-tls-hybrid-design-00: Initial version.<a href="#section-1.1-3.5" class="pilcrow">¶</a>
+          <li class="normal" id="section-1.1-3.5">
+            <p id="section-1.1-3.5.1">draft-stebila-tls-hybrid-design-01:<a href="#section-1.1-3.5.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1.1-3.5.2.1">Add <span><a href="#comb-kdf-1" class="xref">(Comb-KDF-1)</a> (<a href="#comb-kdf-1" class="xref">Appendix B.4.2</a>)</span> and <span><a href="#comb-kdf-2" class="xref">(Comb-KDF-2)</a> (<a href="#comb-kdf-2" class="xref">Appendix B.4.3</a>)</span> options.<a href="#section-1.1-3.5.2.1" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-1.1-3.5.2.2">Add two candidate instantiations.<a href="#section-1.1-3.5.2.2" class="pilcrow">¶</a>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-1.1-3.6">draft-stebila-tls-hybrid-design-00: Initial version.<a href="#section-1.1-3.6" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -1283,7 +1292,7 @@ Ideally backwards compatibility should be achieved without extra round trips and
         <h3 id="name-transmitting-public-keys-an">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-transmitting-public-keys-an" class="section-name selfRef">Transmitting public keys and ciphertexts</a>
         </h3>
-<p id="section-3.2-1">We take the relatively simple "concatenation approach": the messages from the two algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  However we do add structure in the concatenation procedure, specifically including length fields, so that the concatenation operation is unambiguous.  Note that among the Round 2 candidates in the NIST Post-Quantum Cryptography Standardization Project, not all algorithms have fixed public key sizes; for example, the SIKE key encapsulation mechanism permits compressed or uncompressed public keys at each security level, and the compressed and uncompressed formats are interoperable.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">We take the relatively simple "concatenation approach": the messages from the two algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  The values are directly concatenated, without any additional encoding or length fields; this assumes that the representation and length of elements is fixed once the algorithm is fixed.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">Recall that in TLS 1.3 a KEM public key or KEM ciphertext is represented as a <code>KeyShareEntry</code>:<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <div class="artwork art-text alignLeft" id="section-3.2-3">
 <pre>
@@ -1306,18 +1315,9 @@ Ideally backwards compatibility should be achieved without extra round trips and
 </pre><a href="#section-3.2-5" class="pilcrow">¶</a>
 </div>
 <p id="section-3.2-6">The client's shares are listed in descending order of client preference; the server selects one algorithm and sends its corresponding share.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
-<p id="section-3.2-7">For a hybrid key exchange, the <code>key_exchange</code> field of a <code>KeyShareEntry</code> is the following data structure:<a href="#section-3.2-7" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.2-8">
-<pre>
-    struct {
-        opaque key_exchange_1&lt;1..2^16-1&gt;;
-        opaque key_exchange_2&lt;1..2^16-1&gt;;
-    } HybridKeyExchange
-</pre><a href="#section-3.2-8" class="pilcrow">¶</a>
-</div>
-<p id="section-3.2-9">The order of shares in the <code>HybridKeyExchange</code> struct is the same as the order of algorithms indicated in the definition of the <code>NamedGroup</code>.<a href="#section-3.2-9" class="pilcrow">¶</a></p>
-<p id="section-3.2-10">For the client's share, the <code>key_exchange_1</code> and <code>key_exchange_2</code> values are the <code>pk</code> outputs of the corresponding KEMs' <code>KeyGen</code> algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.  For the server's share, the <code>key_exchange_1</code> and <code>key_exchange_2</code> values are the <code>ct</code> outputs of the corresponding KEMs' <code>Encaps</code> algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.<a href="#section-3.2-10" class="pilcrow">¶</a></p>
-<p id="section-3.2-11"><span>[<a href="#TLS13" class="xref">TLS13</a>]</span> requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, we relax the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent in within the same <code>ClientHello</code>.  However, the key_exchange values for each algorithm MUST be generated independently.<a href="#section-3.2-11" class="pilcrow">¶</a></p>
+<p id="section-3.2-7">For a hybrid key exchange, the <code>key_exchange</code> field of a <code>KeyShareEntry</code> is the concatenation of the <code>key_exchange</code> field for each of the constituent algorithms.  The order of shares in the concatenation is the same as the order of algorithms indicated in the definition of the <code>NamedGroup</code>.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.2-8">For the client's share, the <code>key_exchange</code> are the <code>pk</code> outputs of the corresponding KEMs' <code>KeyGen</code> algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.  For the server's share, the <code>key_exchange</code> values are the <code>ct</code> outputs of the corresponding KEMs' <code>Encaps</code> algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.<a href="#section-3.2-8" class="pilcrow">¶</a></p>
+<p id="section-3.2-9"><span>[<a href="#TLS13" class="xref">TLS13</a>]</span> requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, we relax the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent in within the same <code>ClientHello</code>.  However, the key_exchange values for each algorithm MUST be generated independently.<a href="#section-3.2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="construction-shared-secret">
@@ -1325,7 +1325,7 @@ Ideally backwards compatibility should be achieved without extra round trips and
         <h3 id="name-shared-secret-calculation">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-shared-secret-calculation" class="section-name selfRef">Shared secret calculation</a>
         </h3>
-<p id="section-3.3-1">Here we also take a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  In this case, we do not add any additional structure (length fields) in the concatenation procedure: among all Round 2 candidates, once the algorithm and variant are specified, the shared secret output length is fixed.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-1">Here we also take a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  Again, we do not add any additional structure (length fields) in the concatenation procedure: among all Round 3 finalists and alternate candidates, once the algorithm and variant are specified, the shared secret output length is fixed.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">In other words, the shared secret is calculated as<a href="#section-3.3-2" class="pilcrow">¶</a></p>
 <div class="artwork art-text alignLeft" id="section-3.3-3">
 <pre>
@@ -1366,7 +1366,7 @@ concatenated_shared_secret -&gt; HKDF-Extract = Handshake Secret
 </pre><a href="#section-3.3-5" class="pilcrow">¶</a>
 </div>
 <p id="section-3.3-6"><strong>FIPS-compliance of shared secret concatenation.</strong>
-          <span>[<a href="#NIST-SP-800-56C" class="xref">NIST-SP-800-56C</a>]</span> or <span>[<a href="#NIST-SP-800-135" class="xref">NIST-SP-800-135</a>]</span> give NIST recommendations for key derivation methods in key exchange protocols.  Some hybrid combinations may combine the shared secret from a NIST-approved algorithm (e.g., ECDH using the nistp256/secp256r1 curve) with a shared secret from a non-approved algorithm (e.g., post-quantum).  Although the simple concatenation approach above is not currently an approved method in <span>[<a href="#NIST-SP-800-56C" class="xref">NIST-SP-800-56C</a>]</span> or <span>[<a href="#NIST-SP-800-135" class="xref">NIST-SP-800-135</a>]</span>, NIST indicated in January 2020 that a forthcoming revision of <span>[<a href="#NIST-SP-800-56C" class="xref">NIST-SP-800-56C</a>]</span> will list simple concatenation as an approved method <span>[<a href="#NIST-FAQ" class="xref">NIST-FAQ</a>]</span>.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
+          <span>[<a href="#NIST-SP-800-56C" class="xref">NIST-SP-800-56C</a>]</span> or <span>[<a href="#NIST-SP-800-135" class="xref">NIST-SP-800-135</a>]</span> give NIST recommendations for key derivation methods in key exchange protocols.  Some hybrid combinations may combine the shared secret from a NIST-approved algorithm (e.g., ECDH using the nistp256/secp256r1 curve) with a shared secret from a non-approved algorithm (e.g., post-quantum).  <span>[<a href="#NIST-SP-800-56C" class="xref">NIST-SP-800-56C</a>]</span> lists simple concatenation as an approved method for generation of a hybrid shared secret in which one of the constituent shared secret is from an approved method.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1403,8 +1403,8 @@ Some post-quantum key exchange algorithms have non-trivial failure rates: two ho
       </h2>
 <p id="section-6-1">The shared secrets computed in the hybrid key exchange should be computed in a way that achieves the "hybrid" property: the resulting secret is secure as long as at least one of the component key exchange algorithms is unbroken.  See <span>[<a href="#GIACON" class="xref">GIACON</a>]</span> and <span>[<a href="#BINDEL" class="xref">BINDEL</a>]</span> for an investigation of these issues.  Under the assumption that shared secrets are fixed length once the combination is fixed, the construction from <a href="#construction-shared-secret" class="xref">Section 3.3</a> corresponds to the dual-PRF combiner of <span>[<a href="#BINDEL" class="xref">BINDEL</a>]</span> which is shown to preserve security under the assumption that the hash function is a dual-PRF.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">As noted in <a href="#kems" class="xref">Section 2</a>, KEMs used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is re-used, such as achieving IND-CCA2 security or having a transform like the Fujisaki-Okamoto transform applied.  Some IND-CPA-secure post-quantum KEMs (i.e., without countermeasures such as the FO transform) are completely insecure under public key reuse; for example, some lattice-based IND-CPA-secure KEMs are vulnerable to attacks that recover the private key after just a few thousand samples <span>[<a href="#FLUHRER" class="xref">FLUHRER</a>]</span>.<a href="#section-6-2" class="pilcrow">¶</a></p>
-<p id="section-6-3"><strong>Secrets should be constant length.</strong>
-This document assumes that the length of each shared secret is fixed once the algorithm is fixed.  This is the case for all Round 2 candidates.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-3"><strong>Public keys, ciphertexts, and secrets should be constant length.</strong>
+This document assumes that the length of each public key, ciphertext, and shared secret is fixed once the algorithm is fixed.  This is the case for all Round 3 finalists and alternate candidates.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <p id="section-6-4">Note that variable-length secrets are, generally speaking, dangerous.  In particular, when using key material of variable length and processing it using hash functions, a timing side channel may arise.  In broad terms, when the secret is longer, the hash function may need to process more blocks internally.  In some unfortunate circumstances, this has led to timing attacks, e.g. the Lucky Thirteen <span>[<a href="#LUCKY13" class="xref">LUCKY13</a>]</span> and Raccoon <span>[<a href="#RACCOON" class="xref">RACCOON</a>]</span> attacks.<a href="#section-6-4" class="pilcrow">¶</a></p>
 <p id="section-6-5">Therefore, this specification MUST only be used with algorithms which have fixed-length shared secrets (after the variant has been fixed by the algorithm identifier in the <code>NamedGroup</code> negotiation in <a href="#construction-negotiation" class="xref">Section 3.1</a>).<a href="#section-6-5" class="pilcrow">¶</a></p>
 </section>
@@ -1541,17 +1541,13 @@ This document assumes that the length of each shared secret is fixed once the al
         <dd>
 <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Post-Quantum Cryptography"</span>, <span>n.d.</span>, <span>&lt;<a href="https://www.nist.gov/pqcrypto">https://www.nist.gov/pqcrypto</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="NIST-FAQ">[NIST-FAQ]</dt>
-        <dd>
-<span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Post-Quantum Cryptography - FAQs"</span>, <time datetime="2020-01-28" class="refDate">28 January 2020</time>, <span>&lt;<a href="https://csrc.nist.gov/Projects/post-quantum-cryptography/faqs">https://csrc.nist.gov/Projects/post-quantum-cryptography/faqs</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="NIST-SP-800-135">[NIST-SP-800-135]</dt>
         <dd>
 <span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Recommendation for Existing Application-Specific Key Derivation Functions"</span>, <time datetime="2011-12" class="refDate">December 2011</time>, <span>&lt;<a href="https://doi.org/10.6028/NIST.SP.800-135r1">https://doi.org/10.6028/NIST.SP.800-135r1</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="NIST-SP-800-56C">[NIST-SP-800-56C]</dt>
         <dd>
-<span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Recommendation for Key-Derivation Methods in Key-Establishment Schemes"</span>, <time datetime="2018-04" class="refDate">April 2018</time>, <span>&lt;<a href="https://doi.org/10.6028/NIST.SP.800-56Cr1">https://doi.org/10.6028/NIST.SP.800-56Cr1</a>&gt;</span>. </dd>
+<span class="refAuthor">National Institute of Standards and Technology (NIST)</span>, <span class="refTitle">"Recommendation for Key-Derivation Methods in Key-Establishment Schemes"</span>, <time datetime="2020-08" class="refDate">August 2020</time>, <span>&lt;<a href="https://doi.org/10.6028/NIST.SP.800-56Cr2">https://doi.org/10.6028/NIST.SP.800-56Cr2</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="OQS-102">[OQS-102]</dt>
         <dd>
