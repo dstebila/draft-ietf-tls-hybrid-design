@@ -1,8 +1,8 @@
 ---
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
-docname: draft-ietf-tls-hybrid-design-00
-date: 2020-04-15
+docname: draft-ietf-tls-hybrid-design-01
+date: 2020-10-15
 category: info
 
 ipr: trust200902
@@ -112,18 +112,12 @@ informative:
     title: Post-Quantum Cryptography
     author:
       org: National Institute of Standards and Technology (NIST)
-  NIST-FAQ:
-    target: https://csrc.nist.gov/Projects/post-quantum-cryptography/faqs
-    title: Post-Quantum Cryptography - FAQs
-    author:
-      org: National Institute of Standards and Technology (NIST)
-    date: 2020-01-28
   NIST-SP-800-56C:
-    target: https://doi.org/10.6028/NIST.SP.800-56Cr1
+    target: https://doi.org/10.6028/NIST.SP.800-56Cr2
     title: Recommendation for Key-Derivation Methods in Key-Establishment Schemes
     author:
       org: National Institute of Standards and Technology (NIST)
-    date: 2018-04
+    date: 2020-08
   NIST-SP-800-135:
     target: https://doi.org/10.6028/NIST.SP.800-135r1
     title: Recommendation for Existing Application-Specific Key Derivation Functions
@@ -191,6 +185,9 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.  These have been moved to the appendix of the current draft, and will be eventually be removed.
 
+- draft-ietf-tls-hybrid-design-01:
+    - Forbid variable-length secret keys
+    - Use fixed-length KEM public keys/ciphertexts
 - draft-ietf-tls-hybrid-design-00:
     - Allow key_exchange values from the same algorithm to be reused across multiple KeyShareEntry records in the same ClientHello.
 - draft-stebila-tls-hybrid-design-03:
@@ -310,7 +307,7 @@ Specific values shall be standardized by IANA in the TLS Supported Groups regist
 
 ## Transmitting public keys and ciphertexts {#construction-transmitting}
 
-We take the relatively simple "concatenation approach": the messages from the two algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  However we do add structure in the concatenation procedure, specifically including length fields, so that the concatenation operation is unambiguous.  Note that among the Round 2 candidates in the NIST Post-Quantum Cryptography Standardization Project, not all algorithms have fixed public key sizes; for example, the SIKE key encapsulation mechanism permits compressed or uncompressed public keys at each security level, and the compressed and uncompressed formats are interoperable.
+We take the relatively simple "concatenation approach": the messages from the two algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  The values are directly concatenated, without any additional encoding or length fields; this assumes that the representation and length of elements is fixed once the algorithm is fixed.
 
 Recall that in TLS 1.3 a KEM public key or KEM ciphertext is represented as a `KeyShareEntry`:
 
@@ -335,24 +332,15 @@ These are transmitted in the `extension_data` fields of `KeyShareClientHello` an
 
 The client's shares are listed in descending order of client preference; the server selects one algorithm and sends its corresponding share.
 
-For a hybrid key exchange, the `key_exchange` field of a `KeyShareEntry` is the following data structure:
+For a hybrid key exchange, the `key_exchange` field of a `KeyShareEntry` is the concatenation of the `key_exchange` field for each of the constituent algorithms.  The order of shares in the concatenation is the same as the order of algorithms indicated in the definition of the `NamedGroup`.
 
-~~~
-    struct {
-        opaque key_exchange_1<1..2^16-1>;
-        opaque key_exchange_2<1..2^16-1>;
-    } HybridKeyExchange
-~~~
-
-The order of shares in the `HybridKeyExchange` struct is the same as the order of algorithms indicated in the definition of the `NamedGroup`.
-
-For the client's share, the `key_exchange_1` and `key_exchange_2` values are the `pk` outputs of the corresponding KEMs' `KeyGen` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.  For the server's share, the `key_exchange_1` and `key_exchange_2` values are the `ct` outputs of the corresponding KEMs' `Encaps` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.
+For the client's share, the `key_exchange` are the `pk` outputs of the corresponding KEMs' `KeyGen` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.  For the server's share, the `key_exchange` values are the `ct` outputs of the corresponding KEMs' `Encaps` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.
 
 {{TLS13}} requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, we relax the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent in within the same `ClientHello`.  However, the key_exchange values for each algorithm MUST be generated independently.
 
 ## Shared secret calculation {#construction-shared-secret}
 
-Here we also take a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  In this case, we do not add any additional structure (length fields) in the concatenation procedure: among all Round 2 candidates, once the algorithm and variant are specified, the shared secret output length is fixed.
+Here we also take a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  Again, we do not add any additional structure (length fields) in the concatenation procedure: among all Round 3 finalists and alternate candidates, once the algorithm and variant are specified, the shared secret output length is fixed.
 
 In other words, the shared secret is calculated as
 
@@ -394,7 +382,7 @@ concatenated_shared_secret -> HKDF-Extract = Handshake Secret
 ~~~~
 
 **FIPS-compliance of shared secret concatenation.**
-{{NIST-SP-800-56C}} or {{NIST-SP-800-135}} give NIST recommendations for key derivation methods in key exchange protocols.  Some hybrid combinations may combine the shared secret from a NIST-approved algorithm (e.g., ECDH using the nistp256/secp256r1 curve) with a shared secret from a non-approved algorithm (e.g., post-quantum).  Although the simple concatenation approach above is not currently an approved method in {{NIST-SP-800-56C}} or {{NIST-SP-800-135}}, NIST indicated in January 2020 that a forthcoming revision of {{NIST-SP-800-56C}} will list simple concatenation as an approved method {{NIST-FAQ}}.
+{{NIST-SP-800-56C}} or {{NIST-SP-800-135}} give NIST recommendations for key derivation methods in key exchange protocols.  Some hybrid combinations may combine the shared secret from a NIST-approved algorithm (e.g., ECDH using the nistp256/secp256r1 curve) with a shared secret from a non-approved algorithm (e.g., post-quantum).  {{NIST-SP-800-56C}} lists simple concatenation as an approved method for generation of a hybrid shared secret in which one of the constituent shared secret is from an approved method.
 
 # Open questions {#comb-open-questions}
 
@@ -424,8 +412,8 @@ The shared secrets computed in the hybrid key exchange should be computed in a w
 
 As noted in {{kems}}, KEMs used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is re-used, such as achieving IND-CCA2 security or having a transform like the Fujisaki--Okamoto transform applied.  Some IND-CPA-secure post-quantum KEMs (i.e., without countermeasures such as the FO transform) are completely insecure under public key reuse; for example, some lattice-based IND-CPA-secure KEMs are vulnerable to attacks that recover the private key after just a few thousand samples {{FLUHRER}}.
 
-**Secrets should be constant length.**
-This document assumes that the length of each shared secret is fixed once the algorithm is fixed.  This is the case for all Round 2 candidates.
+**Public keys, ciphertexts, and secrets should be constant length.**
+This document assumes that the length of each public key, ciphertext, and shared secret is fixed once the algorithm is fixed.  This is the case for all Round 3 finalists and alternate candidates.
 
 Note that variable-length secrets are, generally speaking, dangerous.  In particular, when using key material of variable length and processing it using hash functions, a timing side channel may arise.  In broad terms, when the secret is longer, the hash function may need to process more blocks internally.  In some unfortunate circumstances, this has led to timing attacks, e.g. the Lucky Thirteen {{LUCKY13}} and Raccoon {{RACCOON}} attacks.
 
