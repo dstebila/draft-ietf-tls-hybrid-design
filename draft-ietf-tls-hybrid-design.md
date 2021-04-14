@@ -1,8 +1,8 @@
 ---
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
-docname: draft-ietf-tls-hybrid-design-01
-date: 2020-10-15
+docname: draft-ietf-tls-hybrid-design-02
+date: 2021-04-14
 category: info
 
 ipr: trust200902
@@ -185,6 +185,8 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.  These have been moved to the appendix of the current draft, and will be eventually be removed.
 
+- draft-ietf-tls-hybrid-design-02:
+    - Bump to version -02 to avoid expiry
 - draft-ietf-tls-hybrid-design-01:
     - Forbid variable-length secret keys
     - Use fixed-length KEM public keys/ciphertexts
