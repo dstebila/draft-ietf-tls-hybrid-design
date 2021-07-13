@@ -1,8 +1,8 @@
 ---
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
-docname: draft-ietf-tls-hybrid-design-03-dev
-date: 2021-07-12
+docname: draft-ietf-tls-hybrid-design-03
+date: 2021-07-13
 category: info
 
 ipr: trust200902
@@ -184,7 +184,7 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.  These have been moved to the appendix of the current draft, and will be eventually be removed.
 
-- Changes since draft-ietf-tls-hybrid-design-02:
+- draft-ietf-tls-hybrid-design-03:
     - Remove specific code point examples and requested codepoint range for hybrid private use
     - Change "Open questions" to "Discussion"
     - Some wording changes
