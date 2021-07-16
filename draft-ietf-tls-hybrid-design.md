@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-03
-date: 2021-07-13
+date: 2021-07-16
 category: info
 
 ipr: trust200902
@@ -184,6 +184,8 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.  These have been moved to the appendix of the current draft, and will be eventually be removed.
 
+- Since draft-ietf-tls-hybrid-design-03:
+    - Some wording changes
 - draft-ietf-tls-hybrid-design-03:
     - Remove specific code point examples and requested codepoint range for hybrid private use
     - Change "Open questions" to "Discussion"
@@ -227,9 +229,11 @@ A hybrid key exchange algorithm allows early adopters eager for post-quantum sec
 
 Ideally, one would not use hybrid key exchange: one would have confidence in a single algorithm and parameterization that will stand the test of time.  However, this may not be the case in the face of quantum computers and cryptanalytic advances more generally.  
 
-Many (though not all) post-quantum algorithms currently under consideration are relatively new; they have not been subject to the same depth of study as RSA and finite-field or elliptic curve Diffie--Hellman, and thus the security community does not necessarily have as much confidence in their fundamental security, or the concrete security level of specific parameterizations.  
+Many (though not all) post-quantum algorithms currently under consideration are relatively new; they have not been subject to the same depth of study as RSA and finite-field or elliptic curve Diffie--Hellman, and thus the security community does not necessarily have as much confidence in their fundamental security, or the concrete security level of specific parameterizations.
 
 Moreover, it is possible that after next-generation algorithms are defined, and for a period of time thereafter, conservative users may not have full confidence in some algorithms.
+
+Some users may want to accelerate adoption of post-quantum cryptography due the threat of retroactive decryption: if a cryptographic assumption is broken due to the advent of a quantum computer or some other cryptanalytic breakthrough, confidentiality of information can be broken retroactively by any adversary who has passively recorded handshakes and encrypted communications.  Hybrid key exchange enables potential security against retroactive decryption while not fully abandoning classical cryptosystems.
 
 As such, there may be users for whom hybrid key exchange is an appropriate step prior to an eventual transition to next-generation algorithms.
 
@@ -237,8 +241,8 @@ As such, there may be users for whom hybrid key exchange is an appropriate step 
 
 This document focuses on hybrid ephemeral key exchange in TLS 1.3 {{TLS13}}.  It intentionally does not address:
 
-- Selecting which next-generation algorithms to use in TLS 1.3, nor algorithm identifiers nor encoding mechanisms for next-generation algorithms.  This selection will be based on the recommendations by the Crypto Forum Research Group (CFRG), which is currently waiting for the results of the NIST Post-Quantum Cryptography Standardization Project {{NIST}}.
-- Authentication using next-generation algorithms.  If a cryptographic assumption is broken due to the advent of a quantum computer or some other cryptanalytic breakthrough, confidentiality of information can be broken retroactively by any adversary who has passively recorded handshakes and encrypted communications.  In contrast, session authentication cannot be retroactively broken.
+- Selecting which next-generation algorithms to use in TLS 1.3, or algorithm identifiers or encoding mechanisms for next-generation algorithms.  This selection will be based on the recommendations by the Crypto Forum Research Group (CFRG), which is currently waiting for the results of the NIST Post-Quantum Cryptography Standardization Project {{NIST}}.
+- Authentication using next-generation algorithms.  While quantum computers could retroactively decrypt previous sessions, session authentication cannot be retroactively broken.
 
 ## Goals {#goals}
 
@@ -272,13 +276,13 @@ This document models key agreement as key encapsulation mechanisms (KEMs), which
 - `Encaps(pk) -> (ct, ss)`: A probabilistic encapsulation algorithm, which takes as input a public key `pk` and outputs a ciphertext `ct` and shared secret `ss`.
 - `Decaps(sk, ct) -> ss`: A decapsulation algorithm, which takes as input a secret key `sk` and ciphertext `ct` and outputs a shared secret `ss`, or in some cases a distinguished error value.
 
-The main security property for KEMs is indistinguishability under adaptive chosen ciphertext attack (IND-CCA2), which means that shared secret values should be indistinguishable from random strings even given the ability to have arbitrary ciphertexts decapsulated.  IND-CCA2 corresponds to security against an active attacker, and the public key / secret key pair can be treated as a long-term key or reused.  A common design pattern for obtaining security under key reuse is to apply the Fujisaki--Okamoto (FO) transform {{FO}} or a variant thereof {{HHK}}.  
+The main security property for KEMs is indistinguishability under adaptive chosen ciphertext attack (IND-CCA2), which means that shared secret values should be indistinguishable from random strings even given the ability to have other arbitrary ciphertexts decapsulated.  IND-CCA2 corresponds to security against an active attacker, and the public key / secret key pair can be treated as a long-term key or reused.  A common design pattern for obtaining security under key reuse is to apply the Fujisaki--Okamoto (FO) transform {{FO}} or a variant thereof {{HHK}}.  
 
 A weaker security notion is indistinguishability under chosen plaintext attack (IND-CPA), which means that the shared secret values should be indistinguishable from random strings given a copy of the public key.  IND-CPA roughly corresponds to security against a passive attacker, and sometimes corresponds to one-time key exchange.
 
 Key exchange in TLS 1.3 is phrased in terms of Diffie--Hellman key exchange in a group.  DH key exchange can be modeled as a KEM, with `KeyGen` corresponding to selecting an exponent `x` as the secret key and computing the public key `g^x`; encapsulation corresponding to selecting an exponent `y`, computing the ciphertext `g^y` and the shared secret `g^(xy)`, and decapsulation as computing the shared secret `g^(xy)`. See {{?I-D.irtf-cfrg-hpke}} for more details of such Diffie--Hellman-based key encapsulation mechanisms.
 
-TLS 1.3 does not require that ephemeral public keys be used only in a single key exchange session; some implementations may reuse them, at the cost of limited forward secrecy.  As a result, any KEM used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is re-used, such as achieving IND-CCA2 security or having a transform like the Fujisaki--Okamoto transform {{FO}} {{HHK}} applied.  While it is recommended that implementations avoid reuse of KEM public keys, implementations that do reuse KEM public keys MUST ensure that the number of reuses of a KEM public key abides by any bounds in the specification of the KEM or subsequent security analyses.  Implementations MUST NOT reuse randomness in the generation of KEM ciphertexts.
+TLS 1.3 does not require that ephemeral public keys be used only in a single key exchange session; some implementations may reuse them, at the cost of limited forward secrecy.  As a result, any KEM used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is reused, such as achieving IND-CCA2 security or having a transform like the Fujisaki--Okamoto transform {{FO}} {{HHK}} applied.  While it is recommended that implementations avoid reuse of KEM public keys, implementations that do reuse KEM public keys MUST ensure that the number of reuses of a KEM public key abides by any bounds in the specification of the KEM or subsequent security analyses.  Implementations MUST NOT reuse randomness in the generation of KEM ciphertexts.
 
 # Construction for hybrid key exchange {#construction}
 
@@ -410,7 +414,7 @@ Identifiers for specific key exchange algorithm combinations will be defined in 
 
 The shared secrets computed in the hybrid key exchange should be computed in a way that achieves the "hybrid" property: the resulting secret is secure as long as at least one of the component key exchange algorithms is unbroken.  See {{GIACON}} and {{BINDEL}} for an investigation of these issues.  Under the assumption that shared secrets are fixed length once the combination is fixed, the construction from {{construction-shared-secret}} corresponds to the dual-PRF combiner of {{BINDEL}} which is shown to preserve security under the assumption that the hash function is a dual-PRF.
 
-As noted in {{kems}}, KEMs used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is re-used, such as achieving IND-CCA2 security or having a transform like the Fujisaki--Okamoto transform applied.  Some IND-CPA-secure post-quantum KEMs (i.e., without countermeasures such as the FO transform) are completely insecure under public key reuse; for example, some lattice-based IND-CPA-secure KEMs are vulnerable to attacks that recover the private key after just a few thousand samples {{FLUHRER}}.
+As noted in {{kems}}, KEMs used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is reused, such as achieving IND-CCA2 security or having a transform like the Fujisaki--Okamoto transform applied.  Some IND-CPA-secure post-quantum KEMs (i.e., without countermeasures such as the FO transform) are completely insecure under public key reuse; for example, some lattice-based IND-CPA-secure KEMs are vulnerable to attacks that recover the private key after just a few thousand samples {{FLUHRER}}.
 
 **Public keys, ciphertexts, and secrets should be constant length.**
 This document assumes that the length of each public key, ciphertext, and shared secret is fixed once the algorithm is fixed.  This is the case for all Round 3 finalists and alternate candidates.
@@ -456,7 +460,7 @@ This appendix discusses choices one could make along four distinct axes when int
 3. How should multiple key shares (public keys / ciphertexts) be conveyed?
 4. How should multiple shared secrets be combined?
 
-The construction in the main body illustrates one selection along each of these axes.  The remainder of this appendix outlines various options we have identified for each of these choices.  Immediately below we provide a summary list.  Options are labelled with a short code in parentheses to provide easy cross-referencing.
+The construction in the main body illustrates one selection along each of these axes, as indicated with *.  The remainder of this appendix outlines various options we have identified for each of these choices.  Immediately below we provide a summary list.  Options are labelled with a short code in parentheses to provide easy cross-referencing.
 
 1. [(Neg)](#neg) How to negotiate the use of hybridization in general and component algorithms specifically?
 
@@ -468,24 +472,24 @@ The construction in the main body illustrates one selection along each of these 
 
     - [(Neg-Comb)](#neg-comb) Negotiating component algorithms as a combination
 
-      - [(Neg-Comb-1)](#neg-comb-1) Standardize `NamedGroup` identifiers for each desired combination.
+      - [(Neg-Comb-1)](#neg-comb-1)* Standardize `NamedGroup` identifiers for each desired combination.
       - [(Neg-Comb-2)](#neg-comb-2) Use placeholder identifiers in `supported_groups` with an extension defining the combination corresponding to each placeholder.
       - [(Neg-Comb-3)](#neg-comb-3) List combinations by inserting grouping delimiters into `supported_groups` list.
 
 2. [(Num)](#num) How many component algorithms can be combined?
 
-    - [(Num-2)](#num-2) Two.
+    - [(Num-2)](#num-2)* Two.
     - [(Num-2+)](#num-2-plus) Two or more.
 
 3. [(Shares)](#shares) How should multiple key shares (public keys / ciphertexts) be conveyed?
 
-    - [(Shares-Concat)](#shares-concat) Concatenate each combination of key shares.
+    - [(Shares-Concat)](#shares-concat)* Concatenate each combination of key shares.
     - [(Shares-Multiple)](#shares-multiple) Send individual key shares for each algorithm.
     - [(Shares-Ext-Additional)](#shares-ext-additional) Use an extension to convey key shares for component algorithms.
 
 4. [(Comb)](#comb) How should multiple shared secrets be combined?
 
-    - [(Comb-Concat)](#comb-concat) Concatenate the shared secrets then use directly in the TLS 1.3 key schedule.
+    - [(Comb-Concat)](#comb-concat)* Concatenate the shared secrets then use directly in the TLS 1.3 key schedule.
     - [(Comb-KDF-1)](#comb-kdf-1) and [(Comb-KDF-2)](#comb-kdf-2) KDF the shared secrets together, then use the output in the TLS 1.3 key schedule.
     - [(Comb-XOR)](#comb-xor) XOR the shared secrets then use directly in the TLS 1.3 key schedule.
     - [(Comb-Chain)](#comb-chain) Extend the TLS 1.3 key schedule so that there is a stage of the key schedule for each shared secret.
@@ -534,7 +538,7 @@ The `NamedGroup` enum is extended to include algorithm identifiers for each next
 #### (Neg-Comb-3) {#neg-comb-3}
 
 The client lists combinations in `supported_groups` list, using a special delimiter to indicate combinations.  For example,
-`supported_groups = combo_delimiter, secp256r1, nextgen1, combo_delimiter, secp256r1, nextgen4, standalone_delimiter, secp256r1, x25519` would indicate that the client's highest preference is the combination secp256r1+nextgen1, the next highest preference is the combination secp2561+nextgen4, then the single algorithm secp256r1, then the single algorithm x25519.  A hybrid-aware server would be able to parse these; a hybrid-unaware server would see `unknown, secp256r1, unknown, unknown, secp256r1, unknown, unknown, secp256r1, x25519`, which it would be able to process, although there is the potential that every "projection" of a hybrid list that is tolerable to a client does not result in list that is tolerable to the client.
+`supported_groups = combo_delimiter, secp256r1, nextgen1, combo_delimiter, secp256r1, nextgen4, standalone_delimiter, secp256r1, x25519` would indicate that the client's highest preference is the combination secp256r1+nextgen1, the next highest preference is the combination secp2561+nextgen4, then the single algorithm secp256r1, then the single algorithm x25519.  A hybrid-aware server would be able to parse these; a hybrid-unaware server would see `unknown, secp256r1, unknown, unknown, secp256r1, unknown, unknown, secp256r1, x25519`, which it would be able to process, although there is the potential that there are hybrid lists which, in their hybrid form, are tolerable to a client, but any "projection" created by a hybrid-unaware server results in a list that the client would not accept.  (Including, for example, a client that will only hybrid suites.)
 
 ### Benefits and drawbacks
 
