@@ -134,7 +134,8 @@ informative:
     title: OQS-OpenSSL-1-1-1_stable
     author:
       org: Open Quantum Safe Project
-    date: 2018-11
+    date: 2022-01
+  PST: DOI.10.1007/978-3-030-44223-1_5
   RACCOON:
     target: https://raccoon-attack.com/
     title: "Raccoon Attack: Finding and Exploiting Most-Significant-Bit-Oracles in TLS-DH(E)"
@@ -258,11 +259,11 @@ In addition to the primary cryptographic goal, there may be several additional g
 
     Ideally backwards compatibility should be achieved without extra round trips and without sending duplicate information; see below.
 
-- **High performance:** Use of hybrid key exchange should not be prohibitively expensive in terms of computational performance.  In general this will depend on the performance characteristics of the specific cryptographic algorithms used, and as such is outside the scope of this document.  See {{BCNS15}}, {{CECPQ1}}, {{FRODO}} for preliminary results about performance characteristics.
+- **High performance:** Use of hybrid key exchange should not be prohibitively expensive in terms of computational performance.  In general this will depend on the performance characteristics of the specific cryptographic algorithms used, and as such is outside the scope of this document.  See {{PST}} for preliminary results about performance characteristics.
 
 - **Low latency:** Use of hybrid key exchange should not substantially increase the latency experienced to establish a connection.  Factors affecting this may include the following.
     - The computational performance characteristics of the specific algorithms used.  See above.
-    - The size of messages to be transmitted.  Public key and ciphertext sizes for post-quantum algorithms range from hundreds of bytes to over one hundred kilobytes, so this impact can be substantial.  See {{BCNS15}}, {{FRODO}} for preliminary results in a laboratory setting, and {{LANGLEY}} for preliminary results on more realistic networks.
+    - The size of messages to be transmitted.  Public key and ciphertext sizes for post-quantum algorithms range from hundreds of bytes to over one hundred kilobytes, so this impact can be substantial.  See {{PST}} for preliminary results in a laboratory setting, and {{LANGLEY}} for preliminary results on more realistic networks.
     - Additional round trips added to the protocol.  See below.
 
 - **No extra round trips:** Attempting to negotiate hybrid key exchange should not lead to extra round trips in any of the three hybrid-aware/non-hybrid-aware scenarios listed above.  
@@ -442,7 +443,7 @@ There have been several Internet-Drafts describing mechanisms for embedding post
 There have been several prototype implementations for post-quantum and/or hybrid key exchange in TLS:
 
 - Experimental implementations in TLS 1.2: {{BCNS15}}, {{CECPQ1}}, {{FRODO}}, {{OQS-102}}, {{S2N}}
-- Experimental implementations in TLS 1.3: {{CECPQ2}}, {{OQS-111}}
+- Experimental implementations in TLS 1.3: {{CECPQ2}}, {{OQS-111}}, {{PST}}
 
 These experimental implementations have taken an ad hoc approach and not attempted to implement one of the drafts listed above.
 
