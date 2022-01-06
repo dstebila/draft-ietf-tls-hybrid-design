@@ -33,6 +33,23 @@ normative:
   TLS13: RFC8446
 
 informative:
+  AVIRAM:
+    target: https://mailarchive.ietf.org/arch/msg/tls/F4SVeL2xbGPaPB2GW_GkBbD_a5M/
+    title: "[TLS] Combining Secrets in Hybrid Key Exchange in TLS 1.3"
+    date: 2021-09-01
+    author:
+      -
+        ins: Nimrod Aviram
+      -
+        ins: Benjamin Dowling
+      -
+        ins: Ilan Komargodski
+      -
+        ins: Kenny Paterson
+      -
+        ins: Eyal Ronen
+      -
+        ins: Eylon Yogev
   BCNS15: DOI.10.1109/SP.2015.40
   BERNSTEIN: DOI.10.1007/978-3-540-88702-7
   BINDEL: DOI.10.1007/978-3-030-25510-7_12
@@ -421,6 +438,8 @@ As noted in {{kems}}, KEMs used in the manner described in this document MUST ex
 This document assumes that the length of each public key, ciphertext, and shared secret is fixed once the algorithm is fixed.  This is the case for all Round 3 finalists and alternate candidates.
 
 Note that variable-length secrets are, generally speaking, dangerous.  In particular, when using key material of variable length and processing it using hash functions, a timing side channel may arise.  In broad terms, when the secret is longer, the hash function may need to process more blocks internally.  In some unfortunate circumstances, this has led to timing attacks, e.g. the Lucky Thirteen {{LUCKY13}} and Raccoon {{RACCOON}} attacks.
+
+Furthermore, {{AVIRAM}} identified a risk of using variable-length secrets when the hash function used in the key derivation function is no longer collision-resistant.
 
 Therefore, this specification MUST only be used with algorithms which have fixed-length shared secrets (after the variant has been fixed by the algorithm identifier in the `NamedGroup` negotiation in {{construction-negotiation}}).
 
