@@ -292,7 +292,7 @@ TLS 1.3 does not require that ephemeral public keys be used only in a single key
 
 Each particular combination of algorithms in a hybrid key exchange will be represented as a `NamedGroup` and sent in the `supported_groups` extension.  No internal structure or grammar is implied or required in the value of the identifier; they are simply opaque identifiers.
 
-Each value representing a hybrid key exchange will correspond to an ordered pair of two algorithms.  For example, a future document could specify that one codepoint corresponds to secp256r1+ntruhrss701, and another corresponds to x25519+ntruhrss701.  (We note that this is independent from future documents standardizing solely post-quantum key exchange methods, which would have to be assigned their own identifier.)
+Each value representing a hybrid key exchange will correspond to an ordered pair of two algorithms.  For example, a future document could specify that one codepoint corresponds to secp256r1+PQALG1, and another corresponds to x25519+PQALG1.  (We note that this is independent from future documents standardizing solely post-quantum key exchange methods, which would have to be assigned their own identifier.)
 
 Specific values shall be standardized by IANA in the TLS Supported Groups registry.
 
@@ -312,7 +312,6 @@ Specific values shall be standardized by IANA in the TLS Supported Groups regist
 
           /* Reserved Code Points */
           ffdhe_private_use(0x01FC..0x01FF),
-          hybrid_private_use(0xTBD..0xTBD),
           ecdhe_private_use(0xFE00..0xFEFF),
           (0xFFFF)
     } NamedGroup;
