@@ -96,6 +96,7 @@ informative:
   HARNIK: DOI.10.1007/11426639_6
   HOFFMAN: I-D.hoffman-c2pq
   HHK: DOI.10.1007/978-3-319-70500-2_12
+  HPKE: RFC9180
   IKE-HYBRID: I-D.tjhai-ipsecme-hybrid-qske-ikev2
   IKE-PSK: RFC8784
   KIEFER: I-D.kiefer-tls-ecdhe-sidh
@@ -299,7 +300,7 @@ The main security property for KEMs is indistinguishability under adaptive chose
 
 A weaker security notion is indistinguishability under chosen plaintext attack (IND-CPA), which means that the shared secret values should be indistinguishable from random strings given a copy of the public key.  IND-CPA roughly corresponds to security against a passive attacker, and sometimes corresponds to one-time key exchange.
 
-Key exchange in TLS 1.3 is phrased in terms of Diffie--Hellman key exchange in a group.  DH key exchange can be modeled as a KEM, with `KeyGen` corresponding to selecting an exponent `x` as the secret key and computing the public key `g^x`; encapsulation corresponding to selecting an exponent `y`, computing the ciphertext `g^y` and the shared secret `g^(xy)`, and decapsulation as computing the shared secret `g^(xy)`. See {{?I-D.irtf-cfrg-hpke}} for more details of such Diffie--Hellman-based key encapsulation mechanisms.
+Key exchange in TLS 1.3 is phrased in terms of Diffie--Hellman key exchange in a group.  DH key exchange can be modeled as a KEM, with `KeyGen` corresponding to selecting an exponent `x` as the secret key and computing the public key `g^x`; encapsulation corresponding to selecting an exponent `y`, computing the ciphertext `g^y` and the shared secret `g^(xy)`, and decapsulation as computing the shared secret `g^(xy)`. See {{HPKE}} for more details of such Diffie--Hellman-based key encapsulation mechanisms.
 
 TLS 1.3 does not require that ephemeral public keys be used only in a single key exchange session; some implementations may reuse them, at the cost of limited forward secrecy.  As a result, any KEM used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is reused, such as achieving IND-CCA2 security or having a transform like the Fujisaki--Okamoto transform {{FO}} {{HHK}} applied.  While it is recommended that implementations avoid reuse of KEM public keys, implementations that do reuse KEM public keys MUST ensure that the number of reuses of a KEM public key abides by any bounds in the specification of the KEM or subsequent security analyses.  Implementations MUST NOT reuse randomness in the generation of KEM ciphertexts.
 
