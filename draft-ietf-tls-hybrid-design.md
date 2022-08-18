@@ -453,6 +453,8 @@ This document defines four initial hybrids for use within TLS 1.3
 
 where the components x25519, secp384r1, secp256r1 are the existing named groups.
 
+The intention is that the first two combinations (using kyber768) are for normal TLS sessions, while the latter two (using kyber512) are for sessions that have limits in record size or it is important to limit the total amount of communication.
+
 ## Details of kyber components
 
 The listed kyber512, kyber768 components are the named parameter sets of the key exchange method kyber {{Kyber}}.
