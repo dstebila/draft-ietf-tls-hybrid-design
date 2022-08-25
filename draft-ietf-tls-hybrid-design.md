@@ -457,8 +457,9 @@ The intention is that the first two combinations (using kyber768) are for normal
 
 ## Kyber version
 
-For kyber512 and kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST, and specifically the FIPS 202 version (and not the "90s" varient); the FIPS 202 version uses SHA-3 and SHAKE as its internal symmetric primitives.
-The Kyber team has updated their documentation twice since (labeled as version 3.0.1 and 3.0.2), however neither modifies the 202 version of Kyber.
+For kyber512 and kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST.  That submission defines two variants for each parameter set based on the symmetric primitives used.  This document uses the FIPS 202 varient (and not the "90s" varient); the FIPS 202 varient uses SHA-3 and SHAKE as its internal symmetric primitives.
+
+The Kyber team has updated their documentation twice since submitting to Round 3 (these updates are labeled as version 3.0.1 and 3.0.2), however neither modifies the FIPS 202 variant of Kyber.
 
 ## Details of kyber components
 
