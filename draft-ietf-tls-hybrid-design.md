@@ -101,6 +101,14 @@ informative:
   IKE-HYBRID: I-D.tjhai-ipsecme-hybrid-qske-ikev2
   IKE-PSK: RFC8784
   KIEFER: I-D.kiefer-tls-ecdhe-sidh
+  kyber:
+    target: https://csrc.nist.gov/CSRC/media/Projects/post-quantum-cryptography/documents/round-3/submissions/Kyber-Round3.zip
+    title: Crystals-Kyber NIST Round 3 submission
+    author:
+      -
+        ins: Roberto Avanzi, Joppe Bos, Léo Ducas, Eike Kiltz, Tancrède Lepoint,
+Vadim Lyubashevsky, John M. Schanck, Peter Schwabe, Gregor Seiler, Damien Stehlé
+    date: 2020-10-01
   LANGLEY:
     target: https://www.imperialviolet.org/2018/04/11/pqconftls.html
     title: Post-quantum confidentiality for TLS
@@ -331,7 +339,8 @@ Specific values shall be standardized by IANA in the TLS Supported Groups regist
           ffdhe6144(0x0103), ffdhe8192(0x0104),
 
           /* Hybrid Key Exchange Methods */
-          TBD(0xTBD), ...,
+          x25519_kyber768(TBD), secp384r1_kyber768(TBD),
+          x25519_kyber512(TBD), secp256r1_kyber512(TBD), ...,
 
           /* Reserved Code Points */
           ffdhe_private_use(0x01FC..0x01FF),
@@ -430,9 +439,38 @@ Concatenation of public keys in the `HybridKeyExchange` struct as described in {
 **Failures.**
 Some post-quantum key exchange algorithms, including Kyber, have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  Kyber has a cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients can retry if a failure is encountered.
 
+# Defined Hybrid Groups
+
+This document defines four initial hybrids for use within TLS 1.3
+
+~~~
++--------------------+---------------------|-------------|
+| Hybrid name        | Hybrid components   | Named Group |
++--------------------+---------------------|-------------|
+| x25519_kyber768    | x25519, kyber768    | TBD         |
+| secp384r1_kyber768 | secp384r1, kyber768 | TBD         |
+| x25519_kyber512    | x25519, kyber512    | TBD         |
+| secp256r1_kyber512 | secp256r1, kyber512 | TBD         |
++--------------------+---------------------|-------------|
+~~~
+
+where the components x25519, secp384r1, secp256r1 are the existing named groups.
+
+The intention is that the first two combinations (using kyber768) are for normal TLS sessions, while the latter two (using kyber512) are for sessions that have limits in record size or it is important to limit the total amount of communication.
+
+## Details of kyber components
+
+The listed kyber512, kyber768 components are the named parameter sets of the key exchange method kyber {{Kyber}}.
+When it is used, the client selects an ephemeral private key, generates the corresponding public key, and transmits that (as a component) within its keyshare.
+When the server receives this keyshare, it extracts the kyber public key, generates a ciphertext and shared secret.  It then transmits the ciphertext (as a component) within its keyshare.
+When the client receives this keyshare, it extracts the kyber ciphertext, and uses its private key to generate the shared secret.
+Both sides uses their copy of the shared secret as a component within the hybrid shared secret.
+where the client's key share is the Kyber public key, and the server's key share is the 
+
 # IANA Considerations
 
-Identifiers for specific key exchange algorithm combinations will be defined in later documents.
+IANA will assign identifiers from the TLS TLS Supported Groups section for the hybrid combinations defined in this document.
+These assignments should be made in a range that is distinct from the Elliptic Curve Groups and the Finite Field Groups ranges.
 
 # Security Considerations {#security-considerations}
 
