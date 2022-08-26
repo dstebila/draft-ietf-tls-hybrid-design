@@ -458,6 +458,12 @@ where the components x25519, secp384r1, secp256r1 are the existing named groups.
 
 The intention is that the first two combinations (using kyber768) are for normal TLS sessions, while the latter two (using kyber512) are for sessions that have limits in record size or it is important to limit the total amount of communication.
 
+## Kyber version
+
+For kyber512 and kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST.  That submission defines two variants for each parameter set based on the symmetric primitives used.  This document uses the FIPS 202 varient (and not the "90s" varient); the FIPS 202 varient uses SHA-3 and SHAKE as its internal symmetric primitives.
+
+The Kyber team has updated their documentation twice since submitting to Round 3 (these updates are labeled as version 3.0.1 and 3.0.2), however neither modifies the FIPS 202 variant of Kyber.
+
 ## Details of kyber components
 
 The listed kyber512, kyber768 components are the named parameter sets of the key exchange method kyber {{Kyber}}.
