@@ -214,6 +214,7 @@ Earlier versions of this document categorized various design decisions one could
 
 - Since draft-ietf-tls-hybrid-design-04:
     - Define four hybrid key exchange methods
+    - Updates to reflect NIST's selection of Kyber
     - Clarifications and rewordings based on working group comments
 - Since draft-ietf-tls-hybrid-design-03:
     - Some wording changes
