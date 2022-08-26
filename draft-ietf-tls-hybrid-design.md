@@ -212,6 +212,9 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.
 
+- Since draft-ietf-tls-hybrid-design-04:
+    - Define four hybrid key exchange methods
+    - Clarifications and rewordings based on working group comments
 - Since draft-ietf-tls-hybrid-design-03:
     - Some wording changes
     - Remove design considerations appendix
