@@ -1,8 +1,8 @@
 ---
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
-docname: draft-ietf-tls-hybrid-design-04
-date: 2022-01-11
+docname: draft-ietf-tls-hybrid-design-latest
+date: 2022-08-28
 category: info
 
 ipr: trust200902
@@ -10,6 +10,8 @@ keyword: Internet-Draft
 
 stand_alone: yes
 pi: [toc, sortrefs, symrefs]
+
+submissionType: IETF
 
 author:
   -
@@ -69,7 +71,7 @@ informative:
         ins: A. Langley
     date: 2018-12-12
   DODIS: DOI.10.1007/978-3-540-30576-7_11
-  DOWLING: DO.10.1007/s00145-021-09384-1
+  DOWLING: DOI.10.1007/s00145-021-09384-1
   ETSI:
     target: https://www.etsi.org/images/files/ETSIWhitePapers/QuantumSafeWhitepaper.pdf
     title: "Quantum safe cryptography and security: An introduction, benefits, enablers and challengers"
@@ -101,13 +103,12 @@ informative:
   IKE-HYBRID: I-D.tjhai-ipsecme-hybrid-qske-ikev2
   IKE-PSK: RFC8784
   KIEFER: I-D.kiefer-tls-ecdhe-sidh
-  kyber:
+  Kyber:
     target: https://csrc.nist.gov/CSRC/media/Projects/post-quantum-cryptography/documents/round-3/submissions/Kyber-Round3.zip
     title: Crystals-Kyber NIST Round 3 submission
     author:
       -
-        ins: Roberto Avanzi, Joppe Bos, Léo Ducas, Eike Kiltz, Tancrède Lepoint,
-Vadim Lyubashevsky, John M. Schanck, Peter Schwabe, Gregor Seiler, Damien Stehlé
+        ins: Roberto Avanzi, Joppe Bos, Léo Ducas, Eike Kiltz, Tancrède Lepoint, Vadim Lyubashevsky, John M. Schanck, Peter Schwabe, Gregor Seiler, Damien Stehlé
     date: 2020-10-01
   LANGLEY:
     target: https://www.imperialviolet.org/2018/04/11/pqconftls.html
@@ -264,7 +265,7 @@ Note that TLS 1.3 uses the phrase "groups" to refer to key exchange algorithms -
 
 A hybrid key exchange algorithm allows early adopters eager for post-quantum security to have the potential of post-quantum security (possibly from a less-well-studied algorithm) while still retaining at least the security currently offered by traditional algorithms.  They may even need to retain traditional algorithms due to regulatory constraints, for example FIPS compliance.
 
-Ideally, one would not use hybrid key exchange: one would have confidence in a single algorithm and parameterization that will stand the test of time.  However, this may not be the case in the face of quantum computers and cryptanalytic advances more generally.  
+Ideally, one would not use hybrid key exchange: one would have confidence in a single algorithm and parameterization that will stand the test of time.  However, this may not be the case in the face of quantum computers and cryptanalytic advances more generally.
 
 Many (though not all) post-quantum algorithms currently under consideration are relatively new; they have not been subject to the same depth of study as RSA and finite-field or elliptic curve Diffie--Hellman, and thus the security community does not necessarily have as much confidence in their fundamental security, or the concrete security level of specific parameterizations.
 
@@ -301,7 +302,7 @@ In addition to the primary cryptographic goal, there may be several additional g
     - The size of messages to be transmitted.  Public key and ciphertext sizes for post-quantum algorithms range from hundreds of bytes to over one hundred kilobytes, so this impact can be substantial.  See {{PST}} for preliminary results in a laboratory setting, and {{LANGLEY}} for preliminary results on more realistic networks.
     - Additional round trips added to the protocol.  See below.
 
-- **No extra round trips:** Attempting to negotiate hybrid key exchange should not lead to extra round trips in any of the three hybrid-aware/non-hybrid-aware scenarios listed above.  
+- **No extra round trips:** Attempting to negotiate hybrid key exchange should not lead to extra round trips in any of the three hybrid-aware/non-hybrid-aware scenarios listed above.
 
 - **Minimal duplicate information:** Attempting to negotiate hybrid key exchange should not mean having to send multiple public keys of the same type.
 
@@ -313,7 +314,7 @@ This document models key agreement as key encapsulation mechanisms (KEMs), which
 - `Encaps(pk) -> (ct, ss)`: A probabilistic encapsulation algorithm, which takes as input a public key `pk` and outputs a ciphertext `ct` and shared secret `ss`.
 - `Decaps(sk, ct) -> ss`: A decapsulation algorithm, which takes as input a secret key `sk` and ciphertext `ct` and outputs a shared secret `ss`, or in some cases a distinguished error value.
 
-The main security property for KEMs is indistinguishability under adaptive chosen ciphertext attack (IND-CCA2), which means that shared secret values should be indistinguishable from random strings even given the ability to have other arbitrary ciphertexts decapsulated.  IND-CCA2 corresponds to security against an active attacker, and the public key / secret key pair can be treated as a long-term key or reused.  A common design pattern for obtaining security under key reuse is to apply the Fujisaki--Okamoto (FO) transform {{FO}} or a variant thereof {{HHK}}.  
+The main security property for KEMs is indistinguishability under adaptive chosen ciphertext attack (IND-CCA2), which means that shared secret values should be indistinguishable from random strings even given the ability to have other arbitrary ciphertexts decapsulated.  IND-CCA2 corresponds to security against an active attacker, and the public key / secret key pair can be treated as a long-term key or reused.  A common design pattern for obtaining security under key reuse is to apply the Fujisaki--Okamoto (FO) transform {{FO}} or a variant thereof {{HHK}}.
 
 A weaker security notion is indistinguishability under chosen plaintext attack (IND-CPA), which means that the shared secret values should be indistinguishable from random strings given a copy of the public key.  IND-CPA roughly corresponds to security against a passive attacker, and sometimes corresponds to one-time key exchange.
 
@@ -475,7 +476,7 @@ When it is used, the client selects an ephemeral private key, generates the corr
 When the server receives this keyshare, it extracts the kyber public key, generates a ciphertext and shared secret.  It then transmits the ciphertext (as a component) within its keyshare.
 When the client receives this keyshare, it extracts the kyber ciphertext, and uses its private key to generate the shared secret.
 Both sides uses their copy of the shared secret as a component within the hybrid shared secret.
-where the client's key share is the Kyber public key, and the server's key share is the 
+where the client's key share is the Kyber public key, and the server's key share is the
 
 # IANA Considerations
 
