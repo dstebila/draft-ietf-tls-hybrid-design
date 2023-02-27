@@ -1,8 +1,8 @@
 ---
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
-docname: draft-ietf-tls-hybrid-design-latest
-date: 2022-08-28
+docname: draft-ietf-tls-hybrid-design-06
+date: 2023-02-27
 category: info
 
 ipr: trust200902
@@ -213,11 +213,13 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.
 
-- Since draft-ietf-tls-hybrid-design-04:
+- draft-ietf-tls-hybrid-design-06:
+    - Bump to version -06 to avoid expiry
+- draft-ietf-tls-hybrid-design-05:
     - Define four hybrid key exchange methods
     - Updates to reflect NIST's selection of Kyber
     - Clarifications and rewordings based on working group comments
-- Since draft-ietf-tls-hybrid-design-03:
+- draft-ietf-tls-hybrid-design-04:
     - Some wording changes
     - Remove design considerations appendix
 - draft-ietf-tls-hybrid-design-03:
