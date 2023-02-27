@@ -12,25 +12,25 @@
        Hybrid key exchange refers to using multiple key exchange algorithms simultaneously and combining the result with the goal of providing security even if all but one of the component algorithms is broken.  It is motivated by transition to post-quantum cryptography.  This document provides a construction for hybrid key exchange in the Transport Layer Security (TLS) protocol version 1.3. 
        Discussion of this work is encouraged to happen on the TLS IETF mailing list tls@ietf.org or on the GitHub repository which contains the draft: https://github.com/dstebila/draft-ietf-tls-hybrid-design. 
     " name="description">
-<meta content="xml2rfc 3.7.0" name="generator">
+<meta content="xml2rfc 3.14.1" name="generator">
 <meta content="Internet-Draft" name="keyword">
-<meta content="draft-ietf-tls-hybrid-design-04" name="ietf.draft">
+<meta content="draft-ietf-tls-hybrid-design-06" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.7.0
-    Python 3.9.9
+  xml2rfc 3.14.1
+    Python 3.10.10
     appdirs 1.4.4
-    ConfigArgParse 1.4
-    google-i18n-address 2.4.0
+    ConfigArgParse 1.5.3
+    google-i18n-address 2.5.2
     html5lib 1.1
     intervaltree 3.1.0
-    Jinja2 2.11.3
+    Jinja2 3.1.2
     kitchen 1.2.6
-    lxml 4.6.3
-    pycountry 20.7.3
-    pyflakes 2.3.1
-    PyYAML 5.4.1
-    requests 2.24.0
-    setuptools 59.0.1
+    lxml 4.9.1
+    MarkupSafe 2.1.1
+    pycountry 22.3.5
+    PyYAML 6.0
+    requests 2.28.1
+    setuptools 67.2.0
     six 1.16.0
 -->
 <link href="draft-ietf-tls-hybrid-design.xml" rel="alternate" type="application/rfc+xml">
@@ -845,11 +845,11 @@ table.left {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">ietf-tls-hybrid-design</td>
-<td class="right">January 2022</td>
+<td class="right">February 2023</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Stebila, et al.</td>
-<td class="center">Expires 15 July 2022</td>
+<td class="center">Expires 31 August 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -859,15 +859,15 @@ table.left {
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">Network Working Group</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-ietf-tls-hybrid-design-04</dd>
+<dd class="internet-draft">draft-ietf-tls-hybrid-design-06</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-01-11" class="published">11 January 2022</time>
+<time datetime="2023-02-27" class="published">27 February 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-07-15">15 July 2022</time></dd>
+<dd class="expires"><time datetime="2023-08-31">31 August 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -910,7 +910,7 @@ table.left {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 July 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 31 August 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -919,7 +919,7 @@ table.left {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2022 IETF Trust and the persons identified as the
+            Copyright (c) 2023 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -928,9 +928,9 @@ table.left {
             publication of this document. Please review these documents
             carefully, as they describe your rights and restrictions with
             respect to this document. Code Components extracted from this
-            document must include Simplified BSD License text as described in
+            document must include Revised BSD License text as described in
             Section 4.e of the Trust Legal Provisions and are provided without
-            warranty as described in the Simplified BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="toc">
@@ -938,72 +938,83 @@ table.left {
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.1">
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.1.2.1">
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
                 <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="xref">1.1</a>.  <a href="#name-revision-history" class="xref">Revision history</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.1.2.2">
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
                 <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="xref">1.2</a>.  <a href="#name-terminology" class="xref">Terminology</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.1.2.3">
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3">
                 <p id="section-toc.1-1.1.2.3.1" class="keepWithNext"><a href="#section-1.3" class="xref">1.3</a>.  <a href="#name-motivation-for-use-of-hybri" class="xref">Motivation for use of hybrid key exchange</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.1.2.4">
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.4">
                 <p id="section-toc.1-1.1.2.4.1"><a href="#section-1.4" class="xref">1.4</a>.  <a href="#name-scope" class="xref">Scope</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.1.2.5">
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.5">
                 <p id="section-toc.1-1.1.2.5.1"><a href="#section-1.5" class="xref">1.5</a>.  <a href="#name-goals" class="xref">Goals</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.2">
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="xref">2</a>.  <a href="#name-key-encapsulation-mechanism" class="xref">Key encapsulation mechanisms</a></p>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.3">
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-construction-for-hybrid-key" class="xref">Construction for hybrid key exchange</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.3.2.1">
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-negotiation" class="xref">Negotiation</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.3.2.2">
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-transmitting-public-keys-an" class="xref">Transmitting public keys and ciphertexts</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.3.2.3">
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-shared-secret-calculation" class="xref">Shared secret calculation</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.4">
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-discussion" class="xref">Discussion</a></p>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-defined-hybrid-groups" class="xref">Defined Hybrid Groups</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-kyber-version" class="xref">Kyber version</a></p>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a></p>
-</li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-acknowledgements" class="xref">Acknowledgements</a></p>
-</li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-references" class="xref">References</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="xref">8.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a></p>
-</li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="xref">8.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-details-of-kyber-components" class="xref">Details of kyber components</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-related-work" class="xref">Related work</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a></p>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-acknowledgements" class="xref">Acknowledgements</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-references" class="xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref">9.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="xref">9.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="xref">Appendix A</a>.  <a href="#name-related-work" class="xref">Related work</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1023,82 +1034,100 @@ table.left {
         </h3>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-1.1-1.1">
-            <strong>RFC Editor's Note:</strong> Please remove this section prior to publication of a final version of this document.<a href="#section-1.1-1.1" class="pilcrow">¶</a>
+            <p id="section-1.1-1.1.1"><strong>RFC Editor's Note:</strong> Please remove this section prior to publication of a final version of this document.<a href="#section-1.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-1.1-2">Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1.1-3.1">
-            <p id="section-1.1-3.1.1">Since draft-ietf-tls-hybrid-design-03:<a href="#section-1.1-3.1.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.1.1">draft-ietf-tls-hybrid-design-06:<a href="#section-1.1-3.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.1.2.1">Some wording changes<a href="#section-1.1-3.1.2.1" class="pilcrow">¶</a>
-</li>
-              <li class="normal" id="section-1.1-3.1.2.2">Remove design considerations appendix<a href="#section-1.1-3.1.2.2" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.1.2.1">Bump to version -06 to avoid expiry<a href="#section-1.1-3.1.2.1" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-1.1-3.2">
-            <p id="section-1.1-3.2.1">draft-ietf-tls-hybrid-design-03:<a href="#section-1.1-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.2.1">draft-ietf-tls-hybrid-design-05:<a href="#section-1.1-3.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.2.2.1">Remove specific code point examples and requested codepoint range for hybrid private use<a href="#section-1.1-3.2.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.2.2.1">Define four hybrid key exchange methods<a href="#section-1.1-3.2.2.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-1.1-3.2.2.2">Change "Open questions" to "Discussion"<a href="#section-1.1-3.2.2.2" class="pilcrow">¶</a>
+              <li class="normal" id="section-1.1-3.2.2.2">Updates to reflect NIST's selection of Kyber<a href="#section-1.1-3.2.2.2" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-1.1-3.2.2.3">Some wording changes<a href="#section-1.1-3.2.2.3" class="pilcrow">¶</a>
+              <li class="normal" id="section-1.1-3.2.2.3">Clarifications and rewordings based on working group comments<a href="#section-1.1-3.2.2.3" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-1.1-3.3">
-            <p id="section-1.1-3.3.1">draft-ietf-tls-hybrid-design-02:<a href="#section-1.1-3.3.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.3.1">draft-ietf-tls-hybrid-design-04:<a href="#section-1.1-3.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.3.2.1">Bump to version -02 to avoid expiry<a href="#section-1.1-3.3.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.3.2.1">Some wording changes<a href="#section-1.1-3.3.2.1" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-1.1-3.3.2.2">Remove design considerations appendix<a href="#section-1.1-3.3.2.2" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-1.1-3.4">
-            <p id="section-1.1-3.4.1">draft-ietf-tls-hybrid-design-01:<a href="#section-1.1-3.4.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.4.1">draft-ietf-tls-hybrid-design-03:<a href="#section-1.1-3.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.4.2.1">Forbid variable-length secret keys<a href="#section-1.1-3.4.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.4.2.1">Remove specific code point examples and requested codepoint range for hybrid private use<a href="#section-1.1-3.4.2.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-1.1-3.4.2.2">Use fixed-length KEM public keys/ciphertexts<a href="#section-1.1-3.4.2.2" class="pilcrow">¶</a>
+              <li class="normal" id="section-1.1-3.4.2.2">Change "Open questions" to "Discussion"<a href="#section-1.1-3.4.2.2" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-1.1-3.4.2.3">Some wording changes<a href="#section-1.1-3.4.2.3" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-1.1-3.5">
-            <p id="section-1.1-3.5.1">draft-ietf-tls-hybrid-design-00:<a href="#section-1.1-3.5.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.5.1">draft-ietf-tls-hybrid-design-02:<a href="#section-1.1-3.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.5.2.1">Allow key_exchange values from the same algorithm to be reused across multiple KeyShareEntry records in the same ClientHello.<a href="#section-1.1-3.5.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.5.2.1">Bump to version -02 to avoid expiry<a href="#section-1.1-3.5.2.1" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-1.1-3.6">
-            <p id="section-1.1-3.6.1">draft-stebila-tls-hybrid-design-03:<a href="#section-1.1-3.6.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.6.1">draft-ietf-tls-hybrid-design-01:<a href="#section-1.1-3.6.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.6.2.1">Add requirement for KEMs to provide protection against key reuse.<a href="#section-1.1-3.6.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.6.2.1">Forbid variable-length secret keys<a href="#section-1.1-3.6.2.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-1.1-3.6.2.2">Clarify FIPS-compliance of shared secret concatenation method.<a href="#section-1.1-3.6.2.2" class="pilcrow">¶</a>
+              <li class="normal" id="section-1.1-3.6.2.2">Use fixed-length KEM public keys/ciphertexts<a href="#section-1.1-3.6.2.2" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-1.1-3.7">
-            <p id="section-1.1-3.7.1">draft-stebila-tls-hybrid-design-02:<a href="#section-1.1-3.7.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.7.1">draft-ietf-tls-hybrid-design-00:<a href="#section-1.1-3.7.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.7.2.1">Design considerations from draft-stebila-tls-hybrid-design-00 and draft-stebila-tls-hybrid-design-01 are moved to the appendix.<a href="#section-1.1-3.7.2.1" class="pilcrow">¶</a>
-</li>
-              <li class="normal" id="section-1.1-3.7.2.2">A single construction is given in the main body.<a href="#section-1.1-3.7.2.2" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.7.2.1">Allow key_exchange values from the same algorithm to be reused across multiple KeyShareEntry records in the same ClientHello.<a href="#section-1.1-3.7.2.1" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-1.1-3.8">
-            <p id="section-1.1-3.8.1">draft-stebila-tls-hybrid-design-01:<a href="#section-1.1-3.8.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-3.8.1">draft-stebila-tls-hybrid-design-03:<a href="#section-1.1-3.8.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-3.8.2.1">Add (Comb-KDF-1) and (Comb-KDF-2) options.<a href="#section-1.1-3.8.2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.1-3.8.2.1">Add requirement for KEMs to provide protection against key reuse.<a href="#section-1.1-3.8.2.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-1.1-3.8.2.2">Add two candidate instantiations.<a href="#section-1.1-3.8.2.2" class="pilcrow">¶</a>
+              <li class="normal" id="section-1.1-3.8.2.2">Clarify FIPS-compliance of shared secret concatenation method.<a href="#section-1.1-3.8.2.2" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
-          <li class="normal" id="section-1.1-3.9">draft-stebila-tls-hybrid-design-00: Initial version.<a href="#section-1.1-3.9" class="pilcrow">¶</a>
+          <li class="normal" id="section-1.1-3.9">
+            <p id="section-1.1-3.9.1">draft-stebila-tls-hybrid-design-02:<a href="#section-1.1-3.9.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1.1-3.9.2.1">Design considerations from draft-stebila-tls-hybrid-design-00 and draft-stebila-tls-hybrid-design-01 are moved to the appendix.<a href="#section-1.1-3.9.2.1" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-1.1-3.9.2.2">A single construction is given in the main body.<a href="#section-1.1-3.9.2.2" class="pilcrow">¶</a>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-1.1-3.10">
+            <p id="section-1.1-3.10.1">draft-stebila-tls-hybrid-design-01:<a href="#section-1.1-3.10.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1.1-3.10.2.1">Add (Comb-KDF-1) and (Comb-KDF-2) options.<a href="#section-1.1-3.10.2.1" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-1.1-3.10.2.2">Add two candidate instantiations.<a href="#section-1.1-3.10.2.2" class="pilcrow">¶</a>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-1.1-3.11">draft-stebila-tls-hybrid-design-00: Initial version.<a href="#section-1.1-3.11" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -1110,15 +1139,18 @@ table.left {
         </h3>
 <p id="section-1.2-1">For the purposes of this document, it is helpful to be able to divide cryptographic algorithms into two classes:<a href="#section-1.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.2-2.1">"Traditional" algorithms: Algorithms which are widely deployed today, but which may be deprecated in the future.  In the context of TLS 1.3 in 2019, examples of traditional key exchange algorithms include elliptic curve Diffie-Hellman using secp256r1 or x25519, or finite-field Diffie-Hellman.<a href="#section-1.2-2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.2-2.1">"Traditional" algorithms: Algorithms which are widely deployed today, but which may be deprecated in the future.  In the context of TLS 1.3, examples of traditional key exchange algorithms include elliptic curve Diffie--Hellman using secp256r1 or x25519, or finite-field Diffie--Hellman.<a href="#section-1.2-2.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-1.2-2.2">"Next-generation" (or "next-gen") algorithms: Algorithms which are not yet widely deployed, but which may eventually be widely deployed.  An additional facet of these algorithms may be that we have less confidence in their security due to them being relatively new or less studied.  This includes "post-quantum" algorithms.<a href="#section-1.2-2.2" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-1.2-3">"Hybrid" key exchange, in this context, means the use of two (or more) key exchange algorithms based on different cryptographic assumptions, e.g., one traditional algorithm and one next-gen algorithm, with the purpose of the final session key being secure as long as at least one of the component key exchange algorithms remains unbroken.  We use the term "component" algorithms to refer to the algorithms combined in a hybrid key exchange.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">"Hybrid" key exchange, in this context, means the use of two (or more) key exchange algorithms based on different cryptographic assumptions, e.g., one traditional algorithm and one next-gen algorithm, with the purpose of the final session key being secure as long as at least one of the component key exchange algorithms remains unbroken.
+When one of the algorithms is traditional and one of them is postquantum, this is a Post-Quantum Traditional Hybrid Scheme <span>[<a href="#I-D.driscoll-pqt-hybrid-terminology" class="xref">I-D.driscoll-pqt-hybrid-terminology</a>]</span>; while this is the initial use case for this draft, we do not limit this draft to that case.
+We use the term "component" algorithms to refer to the algorithms combined in a hybrid key exchange.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
 <p id="section-1.2-4">We note that some authors prefer the phrase "composite" to refer to the use of multiple algorithms, to distinguish from "hybrid public key encryption" in which a key encapsulation mechanism and data encapsulation mechanism are combined to create public key encryption.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
-<p id="section-1.2-5">The primary motivation of this document is preparing for post-quantum algorithms.  However, it is possible that public key cryptography based on alternative mathematical constructions will be required independent of the advent of a quantum computer, for example because of a cryptanalytic breakthrough.  As such we opt for the more generic term "next-generation" algorithms rather than exclusively "post-quantum" algorithms.<a href="#section-1.2-5" class="pilcrow">¶</a></p>
-<p id="section-1.2-6">Note that TLS 1.3 uses the phrase "groups" to refer to key exchange algorithms - for example, the <code>supported_groups</code> extension - since all key exchange algorithms in TLS 1.3 are Diffie-Hellman-based.  As a result, some parts of this document will refer to data structures or messages with the term "group" in them despite using a key exchange algorithm that is not Diffie-Hellman-based nor a group.<a href="#section-1.2-6" class="pilcrow">¶</a></p>
+<p id="section-1.2-5">It is intended that the composite algorithms within a hybrid key exchange are to be performed, that is, negotiated and transmitted, within the TLS 1.3 handshake.  Any out-of-band method of exchanging keying material is considered out-of-scope.<a href="#section-1.2-5" class="pilcrow">¶</a></p>
+<p id="section-1.2-6">The primary motivation of this document is preparing for post-quantum algorithms.  However, it is possible that public key cryptography based on alternative mathematical constructions will be desired to mitigate risks independent of the advent of a quantum computer, for example because of a cryptanalytic breakthrough.  As such we opt for the more generic term "next-generation" algorithms rather than exclusively "post-quantum" algorithms.<a href="#section-1.2-6" class="pilcrow">¶</a></p>
+<p id="section-1.2-7">Note that TLS 1.3 uses the phrase "groups" to refer to key exchange algorithms -- for example, the <code>supported_groups</code> extension -- since all key exchange algorithms in TLS 1.3 are Diffie--Hellman-based.  As a result, some parts of this document will refer to data structures or messages with the term "group" in them despite using a key exchange algorithm that is not Diffie--Hellman-based nor a group.<a href="#section-1.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="motivation">
@@ -1128,10 +1160,10 @@ table.left {
         </h3>
 <p id="section-1.3-1">A hybrid key exchange algorithm allows early adopters eager for post-quantum security to have the potential of post-quantum security (possibly from a less-well-studied algorithm) while still retaining at least the security currently offered by traditional algorithms.  They may even need to retain traditional algorithms due to regulatory constraints, for example FIPS compliance.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
 <p id="section-1.3-2">Ideally, one would not use hybrid key exchange: one would have confidence in a single algorithm and parameterization that will stand the test of time.  However, this may not be the case in the face of quantum computers and cryptanalytic advances more generally.<a href="#section-1.3-2" class="pilcrow">¶</a></p>
-<p id="section-1.3-3">Many (though not all) post-quantum algorithms currently under consideration are relatively new; they have not been subject to the same depth of study as RSA and finite-field or elliptic curve Diffie-Hellman, and thus the security community does not necessarily have as much confidence in their fundamental security, or the concrete security level of specific parameterizations.<a href="#section-1.3-3" class="pilcrow">¶</a></p>
+<p id="section-1.3-3">Many (though not all) post-quantum algorithms currently under consideration are relatively new; they have not been subject to the same depth of study as RSA and finite-field or elliptic curve Diffie--Hellman, and thus the security community does not necessarily have as much confidence in their fundamental security, or the concrete security level of specific parameterizations.<a href="#section-1.3-3" class="pilcrow">¶</a></p>
 <p id="section-1.3-4">Moreover, it is possible that after next-generation algorithms are defined, and for a period of time thereafter, conservative users may not have full confidence in some algorithms.<a href="#section-1.3-4" class="pilcrow">¶</a></p>
-<p id="section-1.3-5">Some users may want to accelerate adoption of post-quantum cryptography due the threat of retroactive decryption: if a cryptographic assumption is broken due to the advent of a quantum computer or some other cryptanalytic breakthrough, confidentiality of information can be broken retroactively by any adversary who has passively recorded handshakes and encrypted communications.  Hybrid key exchange enables potential security against retroactive decryption while not fully abandoning classical cryptosystems.<a href="#section-1.3-5" class="pilcrow">¶</a></p>
-<p id="section-1.3-6">As such, there may be users for whom hybrid key exchange is an appropriate step prior to an eventual transition to next-generation algorithms.<a href="#section-1.3-6" class="pilcrow">¶</a></p>
+<p id="section-1.3-5">Some users may want to accelerate adoption of post-quantum cryptography due to the threat of retroactive decryption: if a cryptographic assumption is broken due to the advent of a quantum computer or some other cryptanalytic breakthrough, confidentiality of information can be broken retroactively by any adversary who has passively recorded handshakes and encrypted communications.  Hybrid key exchange enables potential security against retroactive decryption while not fully abandoning traditional cryptosystems.<a href="#section-1.3-5" class="pilcrow">¶</a></p>
+<p id="section-1.3-6">As such, there may be users for whom hybrid key exchange is an appropriate step prior to an eventual transition to next-generation algorithms. Users should consider the confidence they have in each hybrid component to assess that the hybrid system meets the desired motivation.<a href="#section-1.3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="scope">
@@ -1211,10 +1243,10 @@ Ideally backwards compatibility should be achieved without extra round trips and
           <code>Decaps(sk, ct) -&gt; ss</code>: A decapsulation algorithm, which takes as input a secret key <code>sk</code> and ciphertext <code>ct</code> and outputs a shared secret <code>ss</code>, or in some cases a distinguished error value.<a href="#section-2-2.3" class="pilcrow">¶</a>
 </li>
       </ul>
-<p id="section-2-3">The main security property for KEMs is indistinguishability under adaptive chosen ciphertext attack (IND-CCA2), which means that shared secret values should be indistinguishable from random strings even given the ability to have other arbitrary ciphertexts decapsulated.  IND-CCA2 corresponds to security against an active attacker, and the public key / secret key pair can be treated as a long-term key or reused.  A common design pattern for obtaining security under key reuse is to apply the Fujisaki-Okamoto (FO) transform <span>[<a href="#FO" class="xref">FO</a>]</span> or a variant thereof <span>[<a href="#HHK" class="xref">HHK</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-3">The main security property for KEMs is indistinguishability under adaptive chosen ciphertext attack (IND-CCA2), which means that shared secret values should be indistinguishable from random strings even given the ability to have other arbitrary ciphertexts decapsulated.  IND-CCA2 corresponds to security against an active attacker, and the public key / secret key pair can be treated as a long-term key or reused.  A common design pattern for obtaining security under key reuse is to apply the Fujisaki--Okamoto (FO) transform <span>[<a href="#FO" class="xref">FO</a>]</span> or a variant thereof <span>[<a href="#HHK" class="xref">HHK</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">A weaker security notion is indistinguishability under chosen plaintext attack (IND-CPA), which means that the shared secret values should be indistinguishable from random strings given a copy of the public key.  IND-CPA roughly corresponds to security against a passive attacker, and sometimes corresponds to one-time key exchange.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">Key exchange in TLS 1.3 is phrased in terms of Diffie-Hellman key exchange in a group.  DH key exchange can be modeled as a KEM, with <code>KeyGen</code> corresponding to selecting an exponent <code>x</code> as the secret key and computing the public key <code>g^x</code>; encapsulation corresponding to selecting an exponent <code>y</code>, computing the ciphertext <code>g^y</code> and the shared secret <code>g^(xy)</code>, and decapsulation as computing the shared secret <code>g^(xy)</code>. See <span>[<a href="#I-D.irtf-cfrg-hpke" class="xref">I-D.irtf-cfrg-hpke</a>]</span> for more details of such Diffie-Hellman-based key encapsulation mechanisms.<a href="#section-2-5" class="pilcrow">¶</a></p>
-<p id="section-2-6">TLS 1.3 does not require that ephemeral public keys be used only in a single key exchange session; some implementations may reuse them, at the cost of limited forward secrecy.  As a result, any KEM used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is reused, such as achieving IND-CCA2 security or having a transform like the Fujisaki-Okamoto transform <span>[<a href="#FO" class="xref">FO</a>]</span> <span>[<a href="#HHK" class="xref">HHK</a>]</span> applied.  While it is recommended that implementations avoid reuse of KEM public keys, implementations that do reuse KEM public keys MUST ensure that the number of reuses of a KEM public key abides by any bounds in the specification of the KEM or subsequent security analyses.  Implementations MUST NOT reuse randomness in the generation of KEM ciphertexts.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-5">Key exchange in TLS 1.3 is phrased in terms of Diffie--Hellman key exchange in a group.  DH key exchange can be modeled as a KEM, with <code>KeyGen</code> corresponding to selecting an exponent <code>x</code> as the secret key and computing the public key <code>g^x</code>; encapsulation corresponding to selecting an exponent <code>y</code>, computing the ciphertext <code>g^y</code> and the shared secret <code>g^(xy)</code>, and decapsulation as computing the shared secret <code>g^(xy)</code>. See <span>[<a href="#HPKE" class="xref">HPKE</a>]</span> for more details of such Diffie--Hellman-based key encapsulation mechanisms. Diffie--Hellman key exchange, when viewed as a KEM, does not formally satisfy IND-CCA2 security, but is still safe to use for ephemeral key exchange in TLS 1.3, see e.g. <span>[<a href="#DOWLING" class="xref">DOWLING</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">TLS 1.3 does not require that ephemeral public keys be used only in a single key exchange session; some implementations may reuse them, at the cost of limited forward secrecy.  As a result, any KEM used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is reused.  Finite-field and elliptic-curve Diffie--Hellman key exchange methods used in TLS 1.3 satisfy this criteria.  For generic KEMs, this means satisfying IND-CCA2 security or having a transform like the Fujisaki--Okamoto transform <span>[<a href="#FO" class="xref">FO</a>]</span> <span>[<a href="#HHK" class="xref">HHK</a>]</span> applied.  While it is recommended that implementations avoid reuse of KEM public keys, implementations that do reuse KEM public keys MUST ensure that the number of reuses of a KEM public key abides by any bounds in the specification of the KEM or subsequent security analyses.  Implementations MUST NOT reuse randomness in the generation of KEM ciphertexts.<a href="#section-2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="construction">
@@ -1228,9 +1260,9 @@ Ideally backwards compatibility should be achieved without extra round trips and
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-negotiation" class="section-name selfRef">Negotiation</a>
         </h3>
 <p id="section-3.1-1">Each particular combination of algorithms in a hybrid key exchange will be represented as a <code>NamedGroup</code> and sent in the <code>supported_groups</code> extension.  No internal structure or grammar is implied or required in the value of the identifier; they are simply opaque identifiers.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">Each value representing a hybrid key exchange will correspond to an ordered pair of two algorithms.  For example, a future document could specify that one codepoint corresponds to secp256r1+PQALG1, and another corresponds to x25519+PQALG1.  (We note that this is independent from future documents standardizing solely post-quantum key exchange methods, which would have to be assigned their own identifier.)<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">Each value representing a hybrid key exchange will correspond to an ordered pair of two or more algorithms.  For example, a future document could specify that one identifier corresponds to secp256r1+Kyber512, and another corresponds to x25519+Kyber512.  (We note that this is independent from future documents standardizing solely post-quantum key exchange methods, which would have to be assigned their own identifier.)<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1-3">Specific values shall be standardized by IANA in the TLS Supported Groups registry.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.1-4">
+<div class="alignLeft art-text artwork" id="section-3.1-4">
 <pre>
     enum {
 
@@ -1243,7 +1275,8 @@ Ideally backwards compatibility should be achieved without extra round trips and
           ffdhe6144(0x0103), ffdhe8192(0x0104),
 
           /* Hybrid Key Exchange Methods */
-          TBD(0xTBD), ...,
+          x25519_kyber768(TBD), secp384r1_kyber768(TBD),
+          x25519_kyber512(TBD), secp256r1_kyber512(TBD), ...,
 
           /* Reserved Code Points */
           ffdhe_private_use(0x01FC..0x01FF),
@@ -1259,9 +1292,9 @@ Ideally backwards compatibility should be achieved without extra round trips and
         <h3 id="name-transmitting-public-keys-an">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-transmitting-public-keys-an" class="section-name selfRef">Transmitting public keys and ciphertexts</a>
         </h3>
-<p id="section-3.2-1">We take the relatively simple "concatenation approach": the messages from the two algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  The values are directly concatenated, without any additional encoding or length fields; this assumes that the representation and length of elements is fixed once the algorithm is fixed.  If concatenation were to be used with values that are not fixed-length, a length prefix or other unambiguous encoding must be used to ensure that the composition of the two values is injective and requires a mechanism different from that specified in this document.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">We take the relatively simple "concatenation approach": the messages from the two or more algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  The values are directly concatenated, without any additional encoding or length fields; this assumes that the representation and length of elements is fixed once the algorithm is fixed.  If concatenation were to be used with values that are not fixed-length, a length prefix or other unambiguous encoding must be used to ensure that the composition of the two values is injective and requires a mechanism different from that specified in this document.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">Recall that in TLS 1.3 a KEM public key or KEM ciphertext is represented as a <code>KeyShareEntry</code>:<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.2-3">
+<div class="alignLeft art-text artwork" id="section-3.2-3">
 <pre>
     struct {
         NamedGroup group;
@@ -1270,7 +1303,7 @@ Ideally backwards compatibility should be achieved without extra round trips and
 </pre><a href="#section-3.2-3" class="pilcrow">¶</a>
 </div>
 <p id="section-3.2-4">These are transmitted in the <code>extension_data</code> fields of <code>KeyShareClientHello</code> and <code>KeyShareServerHello</code> extensions:<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.2-5">
+<div class="alignLeft art-text artwork" id="section-3.2-5">
 <pre>
     struct {
         KeyShareEntry client_shares&lt;0..2^16-1&gt;;
@@ -1292,15 +1325,15 @@ Ideally backwards compatibility should be achieved without extra round trips and
         <h3 id="name-shared-secret-calculation">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-shared-secret-calculation" class="section-name selfRef">Shared secret calculation</a>
         </h3>
-<p id="section-3.3-1">Here we also take a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  Again, we do not add any additional structure (length fields) in the concatenation procedure: among all Round 3 finalists and alternate candidates, once the algorithm and variant are specified, the shared secret output length is fixed.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-1">Here we also take a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  Again, we do not add any additional structure (length fields) in the concatenation procedure: for both the traditional groups and Kyber, the shared secret output length is fixed for a specific elliptic curve or parameter set.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">In other words, the shared secret is calculated as<a href="#section-3.3-2" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.3-3">
+<div class="alignLeft art-text artwork" id="section-3.3-3">
 <pre>
     concatenated_shared_secret = shared_secret_1 || shared_secret_2
 </pre><a href="#section-3.3-3" class="pilcrow">¶</a>
 </div>
 <p id="section-3.3-4">and inserted into the TLS 1.3 key schedule in place of the (EC)DHE shared secret:<a href="#section-3.3-4" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.3-5">
+<div class="alignLeft art-text artwork" id="section-3.3-5">
 <pre>
                                     0
                                     |
@@ -1344,50 +1377,95 @@ concatenated_shared_secret -&gt; HKDF-Extract = Handshake Secret
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-discussion" class="section-name selfRef">Discussion</a>
       </h2>
 <p id="section-4-1"><strong>Larger public keys and/or ciphertexts.</strong>
-The <code>HybridKeyExchange</code> struct in <a href="#construction-transmitting" class="xref">Section 3.2</a> limits public keys and ciphertexts to 2^16-1 bytes; this is bounded by the same (2^16-1)-byte limit on the <code>key_exchange</code> field in the <code>KeyShareEntry</code> struct.  Some post-quantum KEMs have larger public keys and/or ciphertexts; for example, Classic McEliece's smallest parameter set has public key size 261,120 bytes.  Hence this draft can not accommodate all current NIST Round 3 candidates.<a href="#section-4-1" class="pilcrow">¶</a></p>
+The <code>HybridKeyExchange</code> struct in <a href="#construction-transmitting" class="xref">Section 3.2</a> limits public keys and ciphertexts to 2^16-1 bytes; this is bounded by the same (2^16-1)-byte limit on the <code>key_exchange</code> field in the <code>KeyShareEntry</code> struct.  Some post-quantum KEMs have larger public keys and/or ciphertexts; for example, Classic McEliece's smallest parameter set has public key size 261,120 bytes.  However, all defined parameter sets for Kyber have public keys and ciphertexts that fall within the TLS constraints.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2"><strong>Duplication of key shares.</strong>
-Concatenation of public keys in the <code>HybridKeyExchange</code> struct as described in <a href="#construction-transmitting" class="xref">Section 3.2</a> can result in sending duplicate key shares.  For example, if a client wanted to offer support for two combinations, say "secp256r1+sikep503" and "x25519+sikep503", it would end up sending two sikep503 public keys, since the <code>KeyShareEntry</code> for each combination contains its own copy of a sikep503 key.  This duplication may be more problematic for post-quantum algorithms which have larger public keys.<a href="#section-4-2" class="pilcrow">¶</a></p>
+Concatenation of public keys in the <code>HybridKeyExchange</code> struct as described in <a href="#construction-transmitting" class="xref">Section 3.2</a> can result in sending duplicate key shares.  For example, if a client wanted to offer support for two combinations, say "secp256r1+kyber512" and "x25519+kyber512", it would end up sending two kyber512 public keys, since the <code>KeyShareEntry</code> for each combination contains its own copy of a kyber512 key.  This duplication may be more problematic for post-quantum algorithms which have larger public keys.  On the other hand, if the client wants to offer, for example "secp256r1+kyber512" and "secp256r1" (for backwards compatibility), there is relatively little duplicated data (as the secp256r1 keys are comparatively small).<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3"><strong>Failures.</strong>
-Some post-quantum key exchange algorithms have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  All current NIST Round 3 candidates have either 0 or cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients can retry if a failure is encountered.<a href="#section-4-3" class="pilcrow">¶</a></p>
+Some post-quantum key exchange algorithms, including Kyber, have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  Kyber has a cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients can retry if a failure is encountered.<a href="#section-4-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="defined-hybrid-groups">
+<section id="section-5">
+      <h2 id="name-defined-hybrid-groups">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-defined-hybrid-groups" class="section-name selfRef">Defined Hybrid Groups</a>
+      </h2>
+<p id="section-5-1">This document defines four initial hybrids for use within TLS 1.3<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5-2">
+<pre>
++--------------------+---------------------|-------------|
+| Hybrid name        | Hybrid components   | Named Group |
++--------------------+---------------------|-------------|
+| x25519_kyber768    | x25519, kyber768    | TBD         |
+| secp384r1_kyber768 | secp384r1, kyber768 | TBD         |
+| x25519_kyber512    | x25519, kyber512    | TBD         |
+| secp256r1_kyber512 | secp256r1, kyber512 | TBD         |
++--------------------+---------------------|-------------|
+</pre><a href="#section-5-2" class="pilcrow">¶</a>
+</div>
+<p id="section-5-3">where the components x25519, secp384r1, secp256r1 are the existing named groups.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">The intention is that the first two combinations (using kyber768) are for normal TLS sessions, while the latter two (using kyber512) are for sessions that have limits in record size or it is important to limit the total amount of communication.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<div id="kyber-version">
+<section id="section-5.1">
+        <h3 id="name-kyber-version">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-kyber-version" class="section-name selfRef">Kyber version</a>
+        </h3>
+<p id="section-5.1-1">For kyber512 and kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST.  That submission defines two variants for each parameter set based on the symmetric primitives used.  This document uses the FIPS 202 varient (and not the "90s" varient); the FIPS 202 varient uses SHA-3 and SHAKE as its internal symmetric primitives.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">The Kyber team has updated their documentation twice since submitting to Round 3 (these updates are labeled as version 3.0.1 and 3.0.2), however neither modifies the FIPS 202 variant of Kyber.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="details-of-kyber-components">
+<section id="section-5.2">
+        <h3 id="name-details-of-kyber-components">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-details-of-kyber-components" class="section-name selfRef">Details of kyber components</a>
+        </h3>
+<p id="section-5.2-1">The listed kyber512, kyber768 components are the named parameter sets of the key exchange method kyber <span>[<a href="#Kyber" class="xref">Kyber</a>]</span>.
+When it is used, the client selects an ephemeral private key, generates the corresponding public key, and transmits that (as a component) within its keyshare.
+When the server receives this keyshare, it extracts the kyber public key, generates a ciphertext and shared secret.  It then transmits the ciphertext (as a component) within its keyshare.
+When the client receives this keyshare, it extracts the kyber ciphertext, and uses its private key to generate the shared secret.
+Both sides uses their copy of the shared secret as a component within the hybrid shared secret.
+where the client's key share is the Kyber public key, and the server's key share is the<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-5">
+<section id="section-6">
       <h2 id="name-iana-considerations">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-5-1">Identifiers for specific key exchange algorithm combinations will be defined in later documents.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">IANA will assign identifiers from the TLS TLS Supported Groups section for the hybrid combinations defined in this document.
+These assignments should be made in a range that is distinct from the Elliptic Curve Groups and the Finite Field Groups ranges.<a href="#section-6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-6">
+<section id="section-7">
       <h2 id="name-security-considerations">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-6-1">The shared secrets computed in the hybrid key exchange should be computed in a way that achieves the "hybrid" property: the resulting secret is secure as long as at least one of the component key exchange algorithms is unbroken.  See <span>[<a href="#GIACON" class="xref">GIACON</a>]</span> and <span>[<a href="#BINDEL" class="xref">BINDEL</a>]</span> for an investigation of these issues.  Under the assumption that shared secrets are fixed length once the combination is fixed, the construction from <a href="#construction-shared-secret" class="xref">Section 3.3</a> corresponds to the dual-PRF combiner of <span>[<a href="#BINDEL" class="xref">BINDEL</a>]</span> which is shown to preserve security under the assumption that the hash function is a dual-PRF.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">As noted in <a href="#kems" class="xref">Section 2</a>, KEMs used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is reused, such as achieving IND-CCA2 security or having a transform like the Fujisaki-Okamoto transform applied.  Some IND-CPA-secure post-quantum KEMs (i.e., without countermeasures such as the FO transform) are completely insecure under public key reuse; for example, some lattice-based IND-CPA-secure KEMs are vulnerable to attacks that recover the private key after just a few thousand samples <span>[<a href="#FLUHRER" class="xref">FLUHRER</a>]</span>.<a href="#section-6-2" class="pilcrow">¶</a></p>
-<p id="section-6-3"><strong>Public keys, ciphertexts, and secrets should be constant length.</strong>
-This document assumes that the length of each public key, ciphertext, and shared secret is fixed once the algorithm is fixed.  This is the case for all Round 3 finalists and alternate candidates.<a href="#section-6-3" class="pilcrow">¶</a></p>
-<p id="section-6-4">Note that variable-length secrets are, generally speaking, dangerous.  In particular, when using key material of variable length and processing it using hash functions, a timing side channel may arise.  In broad terms, when the secret is longer, the hash function may need to process more blocks internally.  In some unfortunate circumstances, this has led to timing attacks, e.g. the Lucky Thirteen <span>[<a href="#LUCKY13" class="xref">LUCKY13</a>]</span> and Raccoon <span>[<a href="#RACCOON" class="xref">RACCOON</a>]</span> attacks.<a href="#section-6-4" class="pilcrow">¶</a></p>
-<p id="section-6-5">Furthermore, <span>[<a href="#AVIRAM" class="xref">AVIRAM</a>]</span> identified a risk of using variable-length secrets when the hash function used in the key derivation function is no longer collision-resistant.<a href="#section-6-5" class="pilcrow">¶</a></p>
-<p id="section-6-6">Therefore, this specification MUST only be used with algorithms which have fixed-length shared secrets (after the variant has been fixed by the algorithm identifier in the <code>NamedGroup</code> negotiation in <a href="#construction-negotiation" class="xref">Section 3.1</a>).<a href="#section-6-6" class="pilcrow">¶</a></p>
+<p id="section-7-1">The shared secrets computed in the hybrid key exchange should be computed in a way that achieves the "hybrid" property: the resulting secret is secure as long as at least one of the component key exchange algorithms is unbroken.  See <span>[<a href="#GIACON" class="xref">GIACON</a>]</span> and <span>[<a href="#BINDEL" class="xref">BINDEL</a>]</span> for an investigation of these issues.  Under the assumption that shared secrets are fixed length once the combination is fixed, the construction from <a href="#construction-shared-secret" class="xref">Section 3.3</a> corresponds to the dual-PRF combiner of <span>[<a href="#BINDEL" class="xref">BINDEL</a>]</span> which is shown to preserve security under the assumption that the hash function is a dual-PRF.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">As noted in <a href="#kems" class="xref">Section 2</a>, KEMs used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is reused, such as achieving IND-CCA2 security or having a transform like the Fujisaki--Okamoto transform applied.  Kyber has such security properties.  However, some other post-quantum KEMs are designed to be IND-CPA-secure (i.e., without countermeasures such as the FO transform) are completely insecure under public key reuse; for example, some lattice-based IND-CPA-secure KEMs are vulnerable to attacks that recover the private key after just a few thousand samples <span>[<a href="#FLUHRER" class="xref">FLUHRER</a>]</span>.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3"><strong>Public keys, ciphertexts, and secrets should be constant length.</strong>
+This document assumes that the length of each public key, ciphertext, and shared secret is fixed once the algorithm is fixed.  This is the case for Kyber.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">Note that variable-length secrets are, generally speaking, dangerous.  In particular, when using key material of variable length and processing it using hash functions, a timing side channel may arise.  In broad terms, when the secret is longer, the hash function may need to process more blocks internally.  In some unfortunate circumstances, this has led to timing attacks, e.g. the Lucky Thirteen <span>[<a href="#LUCKY13" class="xref">LUCKY13</a>]</span> and Raccoon <span>[<a href="#RACCOON" class="xref">RACCOON</a>]</span> attacks.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">Furthermore, <span>[<a href="#AVIRAM" class="xref">AVIRAM</a>]</span> identified a risk of using variable-length secrets when the hash function used in the key derivation function is no longer collision-resistant.<a href="#section-7-5" class="pilcrow">¶</a></p>
+<p id="section-7-6">Therefore, this specification MUST only be used with algorithms which have fixed-length shared secrets (after the variant has been fixed by the algorithm identifier in the <code>NamedGroup</code> negotiation in <a href="#construction-negotiation" class="xref">Section 3.1</a>).<a href="#section-7-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="acknowledgements">
-<section id="section-7">
+<section id="section-8">
       <h2 id="name-acknowledgements">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
       </h2>
-<p id="section-7-1">These ideas have grown from discussions with many colleagues, including Christopher Wood, Matt Campagna, Eric Crockett, authors of the various hybrid Internet-Drafts and implementations cited in this document, and members of the TLS working group.  The immediate impetus for this document came from discussions with attendees at the Workshop on Post-Quantum Software in Mountain View, California, in January 2019.  Daniel J. Bernstein and Tanja Lange commented on the risks of reuse of ephemeral public keys.  Matt Campagna and the team at Amazon Web Services provided additional suggestions.  Nimrod Aviram proposed restricting to fixed-length secrets.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">These ideas have grown from discussions with many colleagues, including Christopher Wood, Matt Campagna, Eric Crockett, authors of the various hybrid Internet-Drafts and implementations cited in this document, and members of the TLS working group.  The immediate impetus for this document came from discussions with attendees at the Workshop on Post-Quantum Software in Mountain View, California, in January 2019.  Daniel J. Bernstein and Tanja Lange commented on the risks of reuse of ephemeral public keys.  Matt Campagna and the team at Amazon Web Services provided additional suggestions.  Nimrod Aviram proposed restricting to fixed-length secrets.<a href="#section-8-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<section id="section-8">
+<section id="section-9">
       <h2 id="name-references">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
-<section id="section-8.1">
+<section id="section-9.1">
         <h3 id="name-normative-references">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="TLS13">[TLS13]</dt>
@@ -1396,14 +1474,14 @@ This document assumes that the length of each public key, ciphertext, and shared
 <dd class="break"></dd>
 </dl>
 </section>
-<section id="section-8.2">
+<section id="section-9.2">
         <h3 id="name-informative-references">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="AVIRAM">[AVIRAM]</dt>
         <dd>
-<span class="refAuthor">Nimrod Aviram, .</span>, <span class="refAuthor">Benjamin Dowling, .</span>, <span class="refAuthor">Ilan Komargodski, .</span>, <span class="refAuthor">Kenny Paterson, .</span>, <span class="refAuthor">Eyal Ronen, .</span>, and <span class="refAuthor">. Eylon Yogev</span>, <span class="refTitle">"[TLS] Combining Secrets in Hybrid Key Exchange in TLS 1.3"</span>, <time datetime="2021-09-01" class="refDate">1 September 2021</time>, <span>&lt;<a href="https://mailarchive.ietf.org/arch/msg/tls/F4SVeL2xbGPaPB2GW_GkBbD_a5M/">https://mailarchive.ietf.org/arch/msg/tls/F4SVeL2xbGPaPB2GW_GkBbD_a5M/</a>&gt;</span>. </dd>
+<span class="refAuthor">Nimrod Aviram</span>, <span class="refAuthor">Benjamin Dowling</span>, <span class="refAuthor">Ilan Komargodski</span>, <span class="refAuthor">Kenny Paterson</span>, <span class="refAuthor">Eyal Ronen</span>, and <span class="refAuthor">Eylon Yogev</span>, <span class="refTitle">"[TLS] Combining Secrets in Hybrid Key Exchange in TLS 1.3"</span>, <time datetime="2021-09-01" class="refDate">1 September 2021</time>, <span>&lt;<a href="https://mailarchive.ietf.org/arch/msg/tls/F4SVeL2xbGPaPB2GW_GkBbD_a5M/">https://mailarchive.ietf.org/arch/msg/tls/F4SVeL2xbGPaPB2GW_GkBbD_a5M/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="BCNS15">[BCNS15]</dt>
         <dd>
@@ -1419,7 +1497,7 @@ This document assumes that the length of each public key, ciphertext, and shared
 <dd class="break"></dd>
 <dt id="CAMPAGNA">[CAMPAGNA]</dt>
         <dd>
-<span class="refAuthor">Campagna, M.</span> and <span class="refAuthor">E. Crockett</span>, <span class="refTitle">"Hybrid Post-Quantum Key Encapsulation Methods (PQ KEM) for Transport Layer Security 1.2 (TLS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-campagna-tls-bike-sike-hybrid-07</span>, <time datetime="2021-09-02" class="refDate">2 September 2021</time>, <span>&lt;<a href="https://www.ietf.org/archive/id/draft-campagna-tls-bike-sike-hybrid-07.txt">https://www.ietf.org/archive/id/draft-campagna-tls-bike-sike-hybrid-07.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Campagna, M.</span> and <span class="refAuthor">E. Crockett</span>, <span class="refTitle">"Hybrid Post-Quantum Key Encapsulation Methods (PQ KEM) for Transport Layer Security 1.2 (TLS)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-campagna-tls-bike-sike-hybrid-07</span>, <time datetime="2021-09-02" class="refDate">2 September 2021</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-campagna-tls-bike-sike-hybrid-07">https://datatracker.ietf.org/doc/html/draft-campagna-tls-bike-sike-hybrid-07</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="CECPQ1">[CECPQ1]</dt>
         <dd>
@@ -1433,9 +1511,13 @@ This document assumes that the length of each public key, ciphertext, and shared
         <dd>
 <span class="refAuthor">Dodis, Y.</span> and <span class="refAuthor">J. Katz</span>, <span class="refTitle">"Chosen-Ciphertext Security of Multiple Encryption"</span>, <span class="seriesInfo">Theory of Cryptography pp. 188-209</span>, <span class="seriesInfo">DOI 10.1007/978-3-540-30576-7_11</span>, <time datetime="2005" class="refDate">2005</time>, <span>&lt;<a href="https://doi.org/10.1007/978-3-540-30576-7_11">https://doi.org/10.1007/978-3-540-30576-7_11</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="DOWLING">[DOWLING]</dt>
+        <dd>
+<span class="refAuthor">Dowling, B.</span>, <span class="refAuthor">Fischlin, M.</span>, <span class="refAuthor">Günther, F.</span>, and <span class="refAuthor">D. Stebila</span>, <span class="refTitle">"A Cryptographic Analysis of the TLS 1.3 Handshake Protocol"</span>, <span class="seriesInfo">Journal of Cryptology vol. 34, no. 4</span>, <span class="seriesInfo">DOI 10.1007/s00145-021-09384-1</span>, <time datetime="2021-07" class="refDate">July 2021</time>, <span>&lt;<a href="https://doi.org/10.1007/s00145-021-09384-1">https://doi.org/10.1007/s00145-021-09384-1</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="ETSI">[ETSI]</dt>
         <dd>
-<span class="refAuthor">Campagna, M., Ed.</span> and <span class="refAuthor">. others</span>, <span class="refTitle">"Quantum safe cryptography and security: An introduction, benefits, enablers and challengers"</span>, <span class="seriesInfo">ETSI White Paper No. 8 </span>, <time datetime="2015-06" class="refDate">June 2015</time>, <span>&lt;<a href="https://www.etsi.org/images/files/ETSIWhitePapers/QuantumSafeWhitepaper.pdf">https://www.etsi.org/images/files/ETSIWhitePapers/QuantumSafeWhitepaper.pdf</a>&gt;</span>. </dd>
+<span class="refAuthor">Campagna, M., Ed.</span> and <span class="refAuthor">others</span>, <span class="refTitle">"Quantum safe cryptography and security: An introduction, benefits, enablers and challengers"</span>, <span class="seriesInfo">ETSI White Paper No. 8 </span>, <time datetime="2015-06" class="refDate">June 2015</time>, <span>&lt;<a href="https://www.etsi.org/images/files/ETSIWhitePapers/QuantumSafeWhitepaper.pdf">https://www.etsi.org/images/files/ETSIWhitePapers/QuantumSafeWhitepaper.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="EVEN">[EVEN]</dt>
         <dd>
@@ -1451,7 +1533,7 @@ This document assumes that the length of each public key, ciphertext, and shared
 <dd class="break"></dd>
 <dt id="FO">[FO]</dt>
         <dd>
-<span class="refAuthor">Fujisaki, E.</span> and <span class="refAuthor">T. Okamoto</span>, <span class="refTitle">"Secure Integration of Asymmetric and Symmetric Encryption Schemes"</span>, <span class="seriesInfo">Journal of Cryptology Vol. 26, pp. 80-101</span>, <span class="seriesInfo">DOI 10.1007/s00145-011-9114-1</span>, <time datetime="2011-12" class="refDate">December 2011</time>, <span>&lt;<a href="https://doi.org/10.1007/s00145-011-9114-1">https://doi.org/10.1007/s00145-011-9114-1</a>&gt;</span>. </dd>
+<span class="refAuthor">Fujisaki, E.</span> and <span class="refAuthor">T. Okamoto</span>, <span class="refTitle">"Secure Integration of Asymmetric and Symmetric Encryption Schemes"</span>, <span class="seriesInfo">Journal of Cryptology vol. 26, no. 1, pp. 80-101</span>, <span class="seriesInfo">DOI 10.1007/s00145-011-9114-1</span>, <time datetime="2011-12" class="refDate">December 2011</time>, <span>&lt;<a href="https://doi.org/10.1007/s00145-011-9114-1">https://doi.org/10.1007/s00145-011-9114-1</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="FRODO">[FRODO]</dt>
         <dd>
@@ -1471,15 +1553,19 @@ This document assumes that the length of each public key, ciphertext, and shared
 <dd class="break"></dd>
 <dt id="HOFFMAN">[HOFFMAN]</dt>
         <dd>
-<span class="refAuthor">Hoffman, P.</span>, <span class="refTitle">"The Transition from Classical to Post-Quantum Cryptography"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-hoffman-c2pq-07</span>, <time datetime="2020-05-26" class="refDate">26 May 2020</time>, <span>&lt;<a href="https://www.ietf.org/archive/id/draft-hoffman-c2pq-07.txt">https://www.ietf.org/archive/id/draft-hoffman-c2pq-07.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Hoffman, P. E.</span>, <span class="refTitle">"The Transition from Classical to Post-Quantum Cryptography"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-hoffman-c2pq-07</span>, <time datetime="2020-05-26" class="refDate">26 May 2020</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-hoffman-c2pq-07">https://datatracker.ietf.org/doc/html/draft-hoffman-c2pq-07</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.irtf-cfrg-hpke">[I-D.irtf-cfrg-hpke]</dt>
+<dt id="HPKE">[HPKE]</dt>
         <dd>
-<span class="refAuthor">Barnes, R. L.</span>, <span class="refAuthor">Bhargavan, K.</span>, <span class="refAuthor">Lipp, B.</span>, and <span class="refAuthor">C. A. Wood</span>, <span class="refTitle">"Hybrid Public Key Encryption"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-irtf-cfrg-hpke-12</span>, <time datetime="2021-09-02" class="refDate">2 September 2021</time>, <span>&lt;<a href="https://www.ietf.org/archive/id/draft-irtf-cfrg-hpke-12.txt">https://www.ietf.org/archive/id/draft-irtf-cfrg-hpke-12.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Barnes, R.</span>, <span class="refAuthor">Bhargavan, K.</span>, <span class="refAuthor">Lipp, B.</span>, and <span class="refAuthor">C. Wood</span>, <span class="refTitle">"Hybrid Public Key Encryption"</span>, <span class="seriesInfo">RFC 9180</span>, <span class="seriesInfo">DOI 10.17487/RFC9180</span>, <time datetime="2022-02" class="refDate">February 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9180">https://www.rfc-editor.org/info/rfc9180</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.driscoll-pqt-hybrid-terminology">[I-D.driscoll-pqt-hybrid-terminology]</dt>
+        <dd>
+<span class="refAuthor">D, F.</span>, <span class="refTitle">"Terminology for Post-Quantum Traditional Hybrid Schemes"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-driscoll-pqt-hybrid-terminology-01</span>, <time datetime="2022-10-20" class="refDate">20 October 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-driscoll-pqt-hybrid-terminology-01">https://datatracker.ietf.org/doc/html/draft-driscoll-pqt-hybrid-terminology-01</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IKE-HYBRID">[IKE-HYBRID]</dt>
         <dd>
-<span class="refAuthor">Tjhai, C.</span>, <span class="refAuthor">Tomlinson, M.</span>, <span class="refAuthor">Bartlett, G.</span>, <span class="refAuthor">Fluhrer, S.</span>, <span class="refAuthor">Geest, D. V.</span>, <span class="refAuthor">Garcia-Morchon, O.</span>, and <span class="refAuthor">V. Smyslov</span>, <span class="refTitle">"Framework to Integrate Post-quantum Key Exchanges into Internet Key Exchange Protocol Version 2 (IKEv2)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-tjhai-ipsecme-hybrid-qske-ikev2-04</span>, <time datetime="2019-07-09" class="refDate">9 July 2019</time>, <span>&lt;<a href="https://www.ietf.org/archive/id/draft-tjhai-ipsecme-hybrid-qske-ikev2-04.txt">https://www.ietf.org/archive/id/draft-tjhai-ipsecme-hybrid-qske-ikev2-04.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Tjhai, C.</span>, <span class="refAuthor">Tomlinson, M.</span>, <span class="refAuthor">grbartle@cisco.com</span>, <span class="refAuthor">Fluhrer, S.</span>, <span class="refAuthor">Van Geest, D.</span>, <span class="refAuthor">Garcia-Morchon, O.</span>, and <span class="refAuthor">V. Smyslov</span>, <span class="refTitle">"Framework to Integrate Post-quantum Key Exchanges into Internet Key Exchange Protocol Version 2 (IKEv2)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-tjhai-ipsecme-hybrid-qske-ikev2-04</span>, <time datetime="2019-07-09" class="refDate">9 July 2019</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-tjhai-ipsecme-hybrid-qske-ikev2-04">https://datatracker.ietf.org/doc/html/draft-tjhai-ipsecme-hybrid-qske-ikev2-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IKE-PSK">[IKE-PSK]</dt>
         <dd>
@@ -1487,7 +1573,11 @@ This document assumes that the length of each public key, ciphertext, and shared
 <dd class="break"></dd>
 <dt id="KIEFER">[KIEFER]</dt>
         <dd>
-<span class="refAuthor">Kiefer, F.</span> and <span class="refAuthor">K. Kwiatkowski</span>, <span class="refTitle">"Hybrid ECDHE-SIDH Key Exchange for TLS"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-kiefer-tls-ecdhe-sidh-00</span>, <time datetime="2018-11-05" class="refDate">5 November 2018</time>, <span>&lt;<a href="https://www.ietf.org/archive/id/draft-kiefer-tls-ecdhe-sidh-00.txt">https://www.ietf.org/archive/id/draft-kiefer-tls-ecdhe-sidh-00.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Kiefer, F.</span> and <span class="refAuthor">K. Kwiatkowski</span>, <span class="refTitle">"Hybrid ECDHE-SIDH Key Exchange for TLS"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-kiefer-tls-ecdhe-sidh-00</span>, <time datetime="2018-11-05" class="refDate">5 November 2018</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-kiefer-tls-ecdhe-sidh-00">https://datatracker.ietf.org/doc/html/draft-kiefer-tls-ecdhe-sidh-00</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Kyber">[Kyber]</dt>
+        <dd>
+<span class="refAuthor">Roberto Avanzi, Joppe Bos, Léo Ducas, Eike Kiltz, Tancrède Lepoint, Vadim Lyubashevsky, John M Schanck, Peter Schwabe, Gregor Seiler, Damien Stehlé</span>, <span class="refTitle">"Crystals-Kyber NIST Round 3 submission"</span>, <time datetime="2020-10-01" class="refDate">1 October 2020</time>, <span>&lt;<a href="https://csrc.nist.gov/CSRC/media/Projects/post-quantum-cryptography/documents/round-3/submissions/Kyber-Round3.zip">https://csrc.nist.gov/CSRC/media/Projects/post-quantum-cryptography/documents/round-3/submissions/Kyber-Round3.zip</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="LANGLEY">[LANGLEY]</dt>
         <dd>
@@ -1495,11 +1585,11 @@ This document assumes that the length of each public key, ciphertext, and shared
 <dd class="break"></dd>
 <dt id="LUCKY13">[LUCKY13]</dt>
         <dd>
-<span class="refAuthor">Al Fardan, N.J.</span> and <span class="refAuthor">K.G. Paterson</span>, <span class="refTitle">"Lucky Thirteen: Breaking the TLS and DTLS record protocols"</span>, <span>n.d.</span>, <span>&lt;<a href="https://ieeexplore.ieee.org/iel7/6547086/6547088/06547131.pdf">https://ieeexplore.ieee.org/iel7/6547086/6547088/06547131.pdf</a>&gt;</span>. </dd>
+<span class="refAuthor">Al Fardan, N. J.</span> and <span class="refAuthor">K. G. Paterson</span>, <span class="refTitle">"Lucky Thirteen: Breaking the TLS and DTLS record protocols"</span>, <span>n.d.</span>, <span>&lt;<a href="https://ieeexplore.ieee.org/iel7/6547086/6547088/06547131.pdf">https://ieeexplore.ieee.org/iel7/6547086/6547088/06547131.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="NIELSEN">[NIELSEN]</dt>
         <dd>
-<span class="refAuthor">Nielsen, M.A.</span> and <span class="refAuthor">I.L. Chuang</span>, <span class="refTitle">"Quantum Computation and Quantum Information"</span>, <span class="seriesInfo">Cambridge University Press </span>, <time datetime="2000" class="refDate">2000</time>. </dd>
+<span class="refAuthor">Nielsen, M. A.</span> and <span class="refAuthor">I. L. Chuang</span>, <span class="refTitle">"Quantum Computation and Quantum Information"</span>, <span class="seriesInfo">Cambridge University Press </span>, <time datetime="2000" class="refDate">2000</time>. </dd>
 <dd class="break"></dd>
 <dt id="NIST">[NIST]</dt>
         <dd>
@@ -1535,15 +1625,15 @@ This document assumes that the length of each public key, ciphertext, and shared
 <dd class="break"></dd>
 <dt id="SCHANCK">[SCHANCK]</dt>
         <dd>
-<span class="refAuthor">Schanck, J. M.</span> and <span class="refAuthor">D. Stebila</span>, <span class="refTitle">"A Transport Layer Security (TLS) Extension For Establishing An Additional Shared Secret"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-schanck-tls-additional-keyshare-00</span>, <time datetime="2017-04-17" class="refDate">17 April 2017</time>, <span>&lt;<a href="https://www.ietf.org/archive/id/draft-schanck-tls-additional-keyshare-00.txt">https://www.ietf.org/archive/id/draft-schanck-tls-additional-keyshare-00.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Schanck, J. M.</span> and <span class="refAuthor">D. Stebila</span>, <span class="refTitle">"A Transport Layer Security (TLS) Extension For Establishing An Additional Shared Secret"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-schanck-tls-additional-keyshare-00</span>, <time datetime="2017-04-17" class="refDate">17 April 2017</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-schanck-tls-additional-keyshare-00">https://datatracker.ietf.org/doc/html/draft-schanck-tls-additional-keyshare-00</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WHYTE12">[WHYTE12]</dt>
         <dd>
-<span class="refAuthor">Schanck, J. M.</span>, <span class="refAuthor">Whyte, W.</span>, and <span class="refAuthor">Z. Zhang</span>, <span class="refTitle">"Quantum-Safe Hybrid (QSH) Ciphersuite for Transport Layer Security (TLS) version 1.2"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-whyte-qsh-tls12-02</span>, <time datetime="2016-07-22" class="refDate">22 July 2016</time>, <span>&lt;<a href="https://www.ietf.org/archive/id/draft-whyte-qsh-tls12-02.txt">https://www.ietf.org/archive/id/draft-whyte-qsh-tls12-02.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Schanck, J. M.</span>, <span class="refAuthor">Whyte, W.</span>, and <span class="refAuthor">Z. Zhang</span>, <span class="refTitle">"Quantum-Safe Hybrid (QSH) Ciphersuite for Transport Layer Security (TLS) version 1.2"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-whyte-qsh-tls12-02</span>, <time datetime="2016-07-22" class="refDate">22 July 2016</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-whyte-qsh-tls12-02">https://datatracker.ietf.org/doc/html/draft-whyte-qsh-tls12-02</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WHYTE13">[WHYTE13]</dt>
         <dd>
-<span class="refAuthor">Whyte, W.</span>, <span class="refAuthor">Zhang, Z.</span>, <span class="refAuthor">Fluhrer, S.</span>, and <span class="refAuthor">O. Garcia-Morchon</span>, <span class="refTitle">"Quantum-Safe Hybrid (QSH) Key Exchange for Transport Layer Security (TLS) version 1.3"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-whyte-qsh-tls13-06</span>, <time datetime="2017-10-03" class="refDate">3 October 2017</time>, <span>&lt;<a href="https://www.ietf.org/archive/id/draft-whyte-qsh-tls13-06.txt">https://www.ietf.org/archive/id/draft-whyte-qsh-tls13-06.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Whyte, W.</span>, <span class="refAuthor">Zhang, Z.</span>, <span class="refAuthor">Fluhrer, S.</span>, and <span class="refAuthor">O. Garcia-Morchon</span>, <span class="refTitle">"Quantum-Safe Hybrid (QSH) Key Exchange for Transport Layer Security (TLS) version 1.3"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-whyte-qsh-tls13-06</span>, <time datetime="2017-10-03" class="refDate">3 October 2017</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-whyte-qsh-tls13-06">https://datatracker.ietf.org/doc/html/draft-whyte-qsh-tls13-06</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="XMSS">[XMSS]</dt>
         <dd>
@@ -1557,33 +1647,33 @@ This document assumes that the length of each public key, ciphertext, and shared
 </section>
 </section>
 <div id="related-work">
-<section id="section-appendix.a">
+<section id="appendix-A">
       <h2 id="name-related-work">
-<a href="#section-appendix.a" class="section-number selfRef">Appendix A. </a><a href="#name-related-work" class="section-name selfRef">Related work</a>
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-related-work" class="section-name selfRef">Related work</a>
       </h2>
-<p id="section-appendix.a-1">Quantum computing and post-quantum cryptography in general are outside the scope of this document.  For a general introduction to quantum computing, see a standard textbook such as <span>[<a href="#NIELSEN" class="xref">NIELSEN</a>]</span>.  For an overview of post-quantum cryptography as of 2009, see <span>[<a href="#BERNSTEIN" class="xref">BERNSTEIN</a>]</span>.  For the current status of the NIST Post-Quantum Cryptography Standardization Project, see <span>[<a href="#NIST" class="xref">NIST</a>]</span>.  For additional perspectives on the general transition from classical to post-quantum cryptography, see for example <span>[<a href="#ETSI" class="xref">ETSI</a>]</span> and <span>[<a href="#HOFFMAN" class="xref">HOFFMAN</a>]</span>, among others.<a href="#section-appendix.a-1" class="pilcrow">¶</a></p>
-<p id="section-appendix.a-2">There have been several Internet-Drafts describing mechanisms for embedding post-quantum and/or hybrid key exchange in TLS:<a href="#section-appendix.a-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">Quantum computing and post-quantum cryptography in general are outside the scope of this document.  For a general introduction to quantum computing, see a standard textbook such as <span>[<a href="#NIELSEN" class="xref">NIELSEN</a>]</span>.  For an overview of post-quantum cryptography as of 2009, see <span>[<a href="#BERNSTEIN" class="xref">BERNSTEIN</a>]</span>.  For the current status of the NIST Post-Quantum Cryptography Standardization Project, see <span>[<a href="#NIST" class="xref">NIST</a>]</span>.  For additional perspectives on the general transition from traditional to post-quantum cryptography, see for example <span>[<a href="#ETSI" class="xref">ETSI</a>]</span> and <span>[<a href="#HOFFMAN" class="xref">HOFFMAN</a>]</span>, among others.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">There have been several Internet-Drafts describing mechanisms for embedding post-quantum and/or hybrid key exchange in TLS:<a href="#appendix-A-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-appendix.a-3.1">Internet-Drafts for TLS 1.2: <span>[<a href="#WHYTE12" class="xref">WHYTE12</a>]</span>, <span>[<a href="#CAMPAGNA" class="xref">CAMPAGNA</a>]</span><a href="#section-appendix.a-3.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-A-3.1">Internet-Drafts for TLS 1.2: <span>[<a href="#WHYTE12" class="xref">WHYTE12</a>]</span>, <span>[<a href="#CAMPAGNA" class="xref">CAMPAGNA</a>]</span><a href="#appendix-A-3.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-appendix.a-3.2">Internet-Drafts for TLS 1.3: <span>[<a href="#KIEFER" class="xref">KIEFER</a>]</span>, <span>[<a href="#SCHANCK" class="xref">SCHANCK</a>]</span>, <span>[<a href="#WHYTE13" class="xref">WHYTE13</a>]</span><a href="#section-appendix.a-3.2" class="pilcrow">¶</a>
+        <li class="normal" id="appendix-A-3.2">Internet-Drafts for TLS 1.3: <span>[<a href="#KIEFER" class="xref">KIEFER</a>]</span>, <span>[<a href="#SCHANCK" class="xref">SCHANCK</a>]</span>, <span>[<a href="#WHYTE13" class="xref">WHYTE13</a>]</span><a href="#appendix-A-3.2" class="pilcrow">¶</a>
 </li>
       </ul>
-<p id="section-appendix.a-4">There have been several prototype implementations for post-quantum and/or hybrid key exchange in TLS:<a href="#section-appendix.a-4" class="pilcrow">¶</a></p>
+<p id="appendix-A-4">There have been several prototype implementations for post-quantum and/or hybrid key exchange in TLS:<a href="#appendix-A-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-appendix.a-5.1">Experimental implementations in TLS 1.2: <span>[<a href="#BCNS15" class="xref">BCNS15</a>]</span>, <span>[<a href="#CECPQ1" class="xref">CECPQ1</a>]</span>, <span>[<a href="#FRODO" class="xref">FRODO</a>]</span>, <span>[<a href="#OQS-102" class="xref">OQS-102</a>]</span>, <span>[<a href="#S2N" class="xref">S2N</a>]</span><a href="#section-appendix.a-5.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-A-5.1">Experimental implementations in TLS 1.2: <span>[<a href="#BCNS15" class="xref">BCNS15</a>]</span>, <span>[<a href="#CECPQ1" class="xref">CECPQ1</a>]</span>, <span>[<a href="#FRODO" class="xref">FRODO</a>]</span>, <span>[<a href="#OQS-102" class="xref">OQS-102</a>]</span>, <span>[<a href="#S2N" class="xref">S2N</a>]</span><a href="#appendix-A-5.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-appendix.a-5.2">Experimental implementations in TLS 1.3: <span>[<a href="#CECPQ2" class="xref">CECPQ2</a>]</span>, <span>[<a href="#OQS-111" class="xref">OQS-111</a>]</span>, <span>[<a href="#PST" class="xref">PST</a>]</span><a href="#section-appendix.a-5.2" class="pilcrow">¶</a>
+        <li class="normal" id="appendix-A-5.2">Experimental implementations in TLS 1.3: <span>[<a href="#CECPQ2" class="xref">CECPQ2</a>]</span>, <span>[<a href="#OQS-111" class="xref">OQS-111</a>]</span>, <span>[<a href="#PST" class="xref">PST</a>]</span><a href="#appendix-A-5.2" class="pilcrow">¶</a>
 </li>
       </ul>
-<p id="section-appendix.a-6">These experimental implementations have taken an ad hoc approach and not attempted to implement one of the drafts listed above.<a href="#section-appendix.a-6" class="pilcrow">¶</a></p>
-<p id="section-appendix.a-7">Unrelated to post-quantum but still related to the issue of combining multiple types of keying material in TLS is the use of pre-shared keys, especially the recent TLS working group document on including an external pre-shared key <span>[<a href="#EXTERN-PSK" class="xref">EXTERN-PSK</a>]</span>.<a href="#section-appendix.a-7" class="pilcrow">¶</a></p>
-<p id="section-appendix.a-8">Considering other IETF standards, there is work on post-quantum preshared keys in IKEv2 <span>[<a href="#IKE-PSK" class="xref">IKE-PSK</a>]</span> and a framework for hybrid key exchange in IKEv2 <span>[<a href="#IKE-HYBRID" class="xref">IKE-HYBRID</a>]</span>.  The XMSS hash-based signature scheme has been published as an informational RFC by the IRTF <span>[<a href="#XMSS" class="xref">XMSS</a>]</span>.<a href="#section-appendix.a-8" class="pilcrow">¶</a></p>
-<p id="section-appendix.a-9">In the academic literature, <span>[<a href="#EVEN" class="xref">EVEN</a>]</span> initiated the study of combining multiple symmetric encryption schemes; <span>[<a href="#ZHANG" class="xref">ZHANG</a>]</span>, <span>[<a href="#DODIS" class="xref">DODIS</a>]</span>, and <span>[<a href="#HARNIK" class="xref">HARNIK</a>]</span> examined combining multiple public key encryption schemes, and <span>[<a href="#HARNIK" class="xref">HARNIK</a>]</span> coined the term "robust combiner" to refer to a compiler that constructs a hybrid scheme from individual schemes while preserving security properties.  <span>[<a href="#GIACON" class="xref">GIACON</a>]</span> and <span>[<a href="#BINDEL" class="xref">BINDEL</a>]</span> examined combining multiple key encapsulation mechanisms.<a href="#section-appendix.a-9" class="pilcrow">¶</a></p>
+<p id="appendix-A-6">These experimental implementations have taken an ad hoc approach and not attempted to implement one of the drafts listed above.<a href="#appendix-A-6" class="pilcrow">¶</a></p>
+<p id="appendix-A-7">Unrelated to post-quantum but still related to the issue of combining multiple types of keying material in TLS is the use of pre-shared keys, especially the recent TLS working group document on including an external pre-shared key <span>[<a href="#EXTERN-PSK" class="xref">EXTERN-PSK</a>]</span>.<a href="#appendix-A-7" class="pilcrow">¶</a></p>
+<p id="appendix-A-8">Considering other IETF standards, there is work on post-quantum preshared keys in IKEv2 <span>[<a href="#IKE-PSK" class="xref">IKE-PSK</a>]</span> and a framework for hybrid key exchange in IKEv2 <span>[<a href="#IKE-HYBRID" class="xref">IKE-HYBRID</a>]</span>.  The XMSS hash-based signature scheme has been published as an informational RFC by the IRTF <span>[<a href="#XMSS" class="xref">XMSS</a>]</span>.<a href="#appendix-A-8" class="pilcrow">¶</a></p>
+<p id="appendix-A-9">In the academic literature, <span>[<a href="#EVEN" class="xref">EVEN</a>]</span> initiated the study of combining multiple symmetric encryption schemes; <span>[<a href="#ZHANG" class="xref">ZHANG</a>]</span>, <span>[<a href="#DODIS" class="xref">DODIS</a>]</span>, and <span>[<a href="#HARNIK" class="xref">HARNIK</a>]</span> examined combining multiple public key encryption schemes, and <span>[<a href="#HARNIK" class="xref">HARNIK</a>]</span> coined the term "robust combiner" to refer to a compiler that constructs a hybrid scheme from individual schemes while preserving security properties.  <span>[<a href="#GIACON" class="xref">GIACON</a>]</span> and <span>[<a href="#BINDEL" class="xref">BINDEL</a>]</span> examined combining multiple key encapsulation mechanisms.<a href="#appendix-A-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="section-appendix.b">
+<section id="appendix-B">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
