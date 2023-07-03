@@ -410,7 +410,7 @@ In other words, the shared secret is calculated as
     concatenated_shared_secret = shared_secret_1 || shared_secret_2
 ~~~
 
-and inserted into the TLS 1.3 key schedule in place of the (EC)DHE shared secret:
+and inserted into the TLS 1.3 key schedule in place of the (EC)DHE shared secret, as shown in {{fig-key-schedule}}.
 
 ~~~~
                                     0
@@ -442,6 +442,7 @@ concatenated_shared_secret -> HKDF-Extract = Handshake Secret
                                     +-----> Derive-Secret(...)
                                     +-----> Derive-Secret(...)
 ~~~~
+{: #fig-key-schedule title="Key schedule for hybrid key exchange"}
 
 **FIPS-compliance of shared secret concatenation.**
 {{NIST-SP-800-56C}} or {{NIST-SP-800-135}} give NIST recommendations for key derivation methods in key exchange protocols.  Some hybrid combinations may combine the shared secret from a NIST-approved algorithm (e.g., ECDH using the nistp256/secp256r1 curve) with a shared secret from a non-approved algorithm (e.g., post-quantum).  {{NIST-SP-800-56C}} lists simple concatenation as an approved method for generation of a hybrid shared secret in which one of the constituent shared secret is from an approved method.
@@ -459,20 +460,15 @@ Some post-quantum key exchange algorithms, including Kyber, have non-zero probab
 
 # Defined Hybrid Groups
 
-This document defines four initial hybrids for use within TLS 1.3
+This document defines four initial hybrids for use within TLS 1.3, as shown in {{tab-defined-groups}}, where the components x25519, secp384r1, secp256r1 are the existing named groups.
 
-~~~
-+--------------------+---------------------|-------------|
-| Hybrid name        | Hybrid components   | Named Group |
-+--------------------+---------------------|-------------|
-| x25519_kyber768    | x25519, kyber768    | TBD         |
-| secp384r1_kyber768 | secp384r1, kyber768 | TBD         |
+| Hybrid name        | Hybrid components   | Named group |
+|--------------------|---------------------|-------------|
 | x25519_kyber512    | x25519, kyber512    | TBD         |
 | secp256r1_kyber512 | secp256r1, kyber512 | TBD         |
-+--------------------+---------------------|-------------|
-~~~
-
-where the components x25519, secp384r1, secp256r1 are the existing named groups.
+| x25519_kyber768    | x25519, kyber768    | TBD         |
+| secp384r1_kyber768 | secp384r1, kyber768 | TBD         |
+{: #tab-defined-groups title="Hybrid key exchanged methods defined by this document"}
 
 The intention is that the first two combinations (using kyber768) are for normal TLS sessions, while the latter two (using kyber512) are for sessions that have limits in record size or it is important to limit the total amount of communication.
 
