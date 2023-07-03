@@ -138,6 +138,12 @@ informative:
     title: Post-Quantum Cryptography
     author:
       org: National Institute of Standards and Technology (NIST)
+  NIST-FIPS-202:
+    target: https://doi.org/10.6028/NIST.FIPS.202
+    title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions"
+    author:
+      org: National Institute of Standards and Technology (NIST)
+    date: 2015-08
   NIST-SP-800-56C:
     target: https://doi.org/10.6028/NIST.SP.800-56Cr2
     title: Recommendation for Key-Derivation Methods in Key-Establishment Schemes
@@ -162,6 +168,12 @@ informative:
     author:
       org: Open Quantum Safe Project
     date: 2022-01
+  OQS-PROV:
+    target: https://github.com/open-quantum-safe/oqs-provider/
+    title: OQS Provider for OpenSSL 3
+    author:
+      org: Open Quantum Safe Project
+    date: 2023-07
   PST: DOI.10.1007/978-3-030-44223-1_5
   RACCOON:
     target: https://raccoon-attack.com/
@@ -466,7 +478,7 @@ The intention is that the first two combinations (using kyber768) are for normal
 
 ## Kyber version
 
-For kyber512 and kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST.  That submission defines two variants for each parameter set based on the symmetric primitives used.  This document uses the FIPS 202 varient (and not the "90s" varient); the FIPS 202 varient uses SHA-3 and SHAKE as its internal symmetric primitives.
+For kyber512 and kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST.  That submission defines two variants for each parameter set based on the symmetric primitives used.  This document uses the FIPS 202 variant (and not the "90s" variant); the FIPS 202 variant uses SHA-3 and SHAKE {{NIST-FIPS-202}} as its internal symmetric primitives.
 
 The Kyber team has updated their documentation twice since submitting to Round 3 (these updates are labeled as version 3.0.1 and 3.0.2), however neither modifies the FIPS 202 variant of Kyber.
 
@@ -516,7 +528,7 @@ There have been several Internet-Drafts describing mechanisms for embedding post
 There have been several prototype implementations for post-quantum and/or hybrid key exchange in TLS:
 
 - Experimental implementations in TLS 1.2: {{BCNS15}}, {{CECPQ1}}, {{FRODO}}, {{OQS-102}}, {{S2N}}
-- Experimental implementations in TLS 1.3: {{CECPQ2}}, {{OQS-111}}, {{PST}}
+- Experimental implementations in TLS 1.3: {{CECPQ2}}, {{OQS-111}}, {{OQS-PROV}}, {{PST}}
 
 These experimental implementations have taken an ad hoc approach and not attempted to implement one of the drafts listed above.
 
