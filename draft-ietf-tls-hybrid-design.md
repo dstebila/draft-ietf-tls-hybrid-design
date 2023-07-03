@@ -1,8 +1,8 @@
 ---
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
-docname: draft-ietf-tls-hybrid-design-06
-date: 2023-02-27
+docname: draft-ietf-tls-hybrid-design-latest
+date: 2023-07-03
 category: info
 
 ipr: trust200902
@@ -97,7 +97,6 @@ informative:
   FRODO: DOI.10.1145/2976749.2978425
   GIACON: DOI.10.1007/978-3-319-76578-5_7
   HARNIK: DOI.10.1007/11426639_6
-  HOFFMAN: I-D.hoffman-c2pq
   HHK: DOI.10.1007/978-3-319-70500-2_12
   HPKE: RFC9180
   IKE-HYBRID: I-D.tjhai-ipsecme-hybrid-qske-ikev2
@@ -507,7 +506,7 @@ These ideas have grown from discussions with many colleagues, including Christop
 
 # Related work {#related-work}
 
-Quantum computing and post-quantum cryptography in general are outside the scope of this document.  For a general introduction to quantum computing, see a standard textbook such as {{NIELSEN}}.  For an overview of post-quantum cryptography as of 2009, see {{BERNSTEIN}}.  For the current status of the NIST Post-Quantum Cryptography Standardization Project, see {{NIST}}.  For additional perspectives on the general transition from traditional to post-quantum cryptography, see for example {{ETSI}} and {{HOFFMAN}}, among others.
+Quantum computing and post-quantum cryptography in general are outside the scope of this document.  For a general introduction to quantum computing, see a standard textbook such as {{NIELSEN}}.  For an overview of post-quantum cryptography as of 2009, see {{BERNSTEIN}}.  For the current status of the NIST Post-Quantum Cryptography Standardization Project, see {{NIST}}.  For additional perspectives on the general transition from traditional to post-quantum cryptography, see for example {{ETSI}}, among others.
 
 There have been several Internet-Drafts describing mechanisms for embedding post-quantum and/or hybrid key exchange in TLS:
 
