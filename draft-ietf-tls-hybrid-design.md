@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2023-07-03
+date: 2023-07-28
 category: info
 
 ipr: trust200902
@@ -478,12 +478,12 @@ For kyber512 and kyber768, this document refers to the same named parameter sets
 
 The Kyber team has updated their documentation twice since submitting to Round 3 (these updates are labeled as version 3.0.1 and 3.0.2), however neither modifies the FIPS 202 variant of Kyber.
 
-## Details of kyber components
+## Details of Kyber components
 
-The listed kyber512, kyber768 components are the named parameter sets of the key exchange method kyber {{Kyber}}.
+The listed kyber512, kyber768 components are the named parameter sets of the key exchange method Kyber {{Kyber}}.
 When it is used, the client selects an ephemeral private key, generates the corresponding public key, and transmits that (as a component) within its keyshare.
-When the server receives this keyshare, it extracts the kyber public key, generates a ciphertext and shared secret.  It then transmits the ciphertext (as a component) within its keyshare.
-When the client receives this keyshare, it extracts the kyber ciphertext, and uses its private key to generate the shared secret.
+When the server receives this keyshare, it extracts the Kyber public key, generates a ciphertext and shared secret.  It then transmits the ciphertext (as a component) within its keyshare.
+When the client receives this keyshare, it extracts the Kyber ciphertext, and uses its private key to generate the shared secret.
 Both sides use their copy of the shared secret as a component within the hybrid shared secret.
 
 # IANA Considerations
