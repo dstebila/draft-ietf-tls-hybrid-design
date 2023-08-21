@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2023-07-28
+date: 2023-08-21
 category: info
 
 ipr: trust200902
@@ -27,12 +27,13 @@ author:
   -
     ins: S. Gueron
     name: Shay Gueron
-    organization: University of Haifa and Amazon Web Services
-    abbrev: U. Haifa, Amazon Web Services
+    organization: University of Haifa
+    abbrev: U. Haifa
     email: shay.gueron@gmail.com
 
 normative:
   TLS13: RFC8446
+  X25519Kyber768: I-D.draft-tls-westerbaan-xyber768d00
 
 informative:
   AVIRAM:
@@ -224,6 +225,9 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.
 
+- draft-ietf-tls-hybrid-design-07:
+    - Editorial changes
+    - Add reference to [X25519Kyber768] draft
 - draft-ietf-tls-hybrid-design-06:
     - Bump to version -06 to avoid expiry
 - draft-ietf-tls-hybrid-design-05:
@@ -357,8 +361,7 @@ Specific values shall be registered by IANA in the TLS Supported Groups registry
           ffdhe6144(0x0103), ffdhe8192(0x0104),
 
           /* Hybrid Key Exchange Methods */
-          x25519_kyber768(TBD), secp384r1_kyber768(TBD),
-          x25519_kyber512(TBD), secp256r1_kyber512(TBD), ...,
+          X25519Kyber768Draft00(0x6399), ...,
 
           /* Reserved Code Points */
           ffdhe_private_use(0x01FC..0x01FF),
@@ -460,23 +463,25 @@ Some post-quantum key exchange algorithms, including Kyber, have non-zero probab
 
 # Defined Hybrid Groups
 
-This document defines four initial hybrids for use within TLS 1.3, as shown in {{tab-defined-groups}}, where the components x25519, secp384r1, secp256r1 are the existing named groups.
+This document defines or references four initial hybrids for use within TLS 1.3, as shown in {{tab-defined-groups}}, where the components x25519, secp384r1, secp256r1 are the existing named groups.
 
-| Hybrid name        | Hybrid components   | Named group |
-|--------------------|---------------------|-------------|
-| x25519_kyber512    | x25519, kyber512    | TBD         |
-| secp256r1_kyber512 | secp256r1, kyber512 | TBD         |
-| x25519_kyber768    | x25519, kyber768    | TBD         |
-| secp384r1_kyber768 | secp384r1, kyber768 | TBD         |
+| Hybrid name             | Hybrid components   | Named group |
+|-------------------------|---------------------|-------------|
+| x25519_kyber512         | x25519, Kyber512    | TBD         |
+| secp256r1_kyber512      | secp256r1, Kyber512 | TBD         |
+| X25519Kyber768Draft00   | x25519, Kyber768    | 0x6399      |
+| secp384r1_kyber768      | secp384r1, Kyber768 | TBD         |
 {: #tab-defined-groups title="Hybrid key exchanged methods defined by this document"}
 
-The intention is that the first two combinations (using kyber768) are for normal TLS sessions, while the latter two (using kyber512) are for sessions that have limits in record size or it is important to limit the total amount of communication.
+The intention is that the combinations using Kyber768 are for normal TLS sessions, while the combiantions for Kyber512 are for sessions that have limits in record size or it is important to limit the total amount of communication.
 
 ## Kyber version
 
-For kyber512 and kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST.  That submission defines two variants for each parameter set based on the symmetric primitives used.  This document uses the FIPS 202 variant (and not the "90s" variant); the FIPS 202 variant uses SHA-3 and SHAKE {{NIST-FIPS-202}} as its internal symmetric primitives.
+For Kyber512 and Kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST.  That submission defines two variants for each parameter set based on the symmetric primitives used.  This document uses the FIPS 202 variant (and not the "90s" variant); the FIPS 202 variant uses SHA-3 and SHAKE {{NIST-FIPS-202}} as its internal symmetric primitives.
 
 The Kyber team has updated their documentation twice since submitting to Round 3 (these updates are labeled as version 3.0.1 and 3.0.2), however neither modifies the FIPS 202 variant of Kyber.
+
+The X25519Kyber768Draft00 hybrid (0x6399) is defined in {{X25519Kyber768}}.
 
 ## Details of Kyber components
 
