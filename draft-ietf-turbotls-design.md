@@ -1,15 +1,15 @@
 ---
-title: Hybrid key exchange in TLS 1.3
-abbrev: ietf-tls-hybrid-design
-docname: draft-ietf-tls-hybrid-design-latest
-date: 2023-08-21
+title: TurboTLS for faster connection establishment
+abbrev: ietf-turbotls-design
+docname: draft-ietf-turbotls-design-latest
+date: 2023-09-05
 category: info
 
-ipr: trust200902
+? ipr: trust200902
 keyword: Internet-Draft
 
-stand_alone: yes
-pi: [toc, sortrefs, symrefs]
+? stand_alone: yes
+? pi: [toc, sortrefs, symrefs]
 
 submissionType: IETF
 
@@ -20,16 +20,21 @@ author:
     organization: University of Waterloo
     email: dstebila@uwaterloo.ca
   -
-    ins: S. Fluhrer
-    name: Scott Fluhrer
-    organization: Cisco Systems
-    email: sfluhrer@cisco.com
+    ins: D. Joseph
+    name: David Joseph
+    organization: SandboxAQ 
+    email: dj@sandboxaq.com
   -
-    ins: S. Gueron
-    name: Shay Gueron
-    organization: University of Haifa
-    abbrev: U. Haifa
-    email: shay.gueron@gmail.com
+    ins: C. Aguilar-Melchor
+    name: Carlos Aguilar-Melchor
+    organization: SandboxAQ
+    email: carlos.aguilar@sandboxaq.com
+
+  -
+    ins: J. Goertzen
+    name: Jason Goertzen
+    organization: SandboxAQ
+    email: jason.goertzen@sandboxquantum.com
 
 normative:
   TLS13: RFC8446
