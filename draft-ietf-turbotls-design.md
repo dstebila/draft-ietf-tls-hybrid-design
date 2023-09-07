@@ -38,9 +38,6 @@ author:
 
 normative:
   TLS13: RFC8446
-  X25519Kyber768: I-D.draft-tls-westerbaan-xyber768d00
-  SECP256R1Kyber768: I-D.draft-kwiatkowski-tls-ecdhe-kyber
-  KyberDraft00: I-D.draft-cfrg-schwabe-kyber
 
 informative:
   AVIRAM:
@@ -214,9 +211,9 @@ informative:
 
 --- abstract
 
-Hybrid key exchange refers to using multiple key exchange algorithms simultaneously and combining the result with the goal of providing security even if all but one of the component algorithms is broken.  It is motivated by transition to post-quantum cryptography.  This document provides a construction for hybrid key exchange in the Transport Layer Security (TLS) protocol version 1.3.
+This document provides a protocol definition for handshaking over UDP in the Transport Layer Security (TLS) protocol (version independent). In parallel, a TCP session is established, and once this is done, the TLS session reverts to TCP. In the event that the UDP handshaking portion fails, TurboTLS falls back to TLS-over-TCP as is usually done, resulting in negligible latency cost in the case of failure. The document also describes a mechanism for maximising UDP-TLS-handshake compatibility with middleboxes, known as _request-based-fragmentation_
 
-Discussion of this work is encouraged to happen on the TLS IETF mailing list tls@ietf.org or on the GitHub repository which contains the draft: https://github.com/dstebila/draft-ietf-tls-hybrid-design.
+Discussion of this work is encouraged to happen on the TLS IETF mailing list tls@ietf.org or on the GitHub repository which contains the draft: https://github.com/PhDJsandboxaq/draft-ietf-turbotls-design/.
 
 --- middle
 
@@ -230,43 +227,9 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 > **RFC Editor's Note:** Please remove this section prior to publication of a final version of this document.
 
-Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.
+Earlier versions of this document categorized various design decisions one could make when implementing TurboTLS.
 
-- draft-ietf-tls-hybrid-design-078:
-    - Add reference to {{SECP256R1Kyber768}} and {{KyberDraft00}} drafts
-- draft-ietf-tls-hybrid-design-07:
-    - Editorial changes
-    - Add reference to {{X25519Kyber768}} draft
-- draft-ietf-tls-hybrid-design-06:
-    - Bump to version -06 to avoid expiry
-- draft-ietf-tls-hybrid-design-05:
-    - Define four hybrid key exchange methods
-    - Updates to reflect NIST's selection of Kyber
-    - Clarifications and rewordings based on working group comments
-- draft-ietf-tls-hybrid-design-04:
-    - Some wording changes
-    - Remove design considerations appendix
-- draft-ietf-tls-hybrid-design-03:
-    - Remove specific code point examples and requested codepoint range for hybrid private use
-    - Change "Open questions" to "Discussion"
-    - Some wording changes
-- draft-ietf-tls-hybrid-design-02:
-    - Bump to version -02 to avoid expiry
-- draft-ietf-tls-hybrid-design-01:
-    - Forbid variable-length secret keys
-    - Use fixed-length KEM public keys/ciphertexts
-- draft-ietf-tls-hybrid-design-00:
-    - Allow key_exchange values from the same algorithm to be reused across multiple KeyShareEntry records in the same ClientHello.
-- draft-stebila-tls-hybrid-design-03:
-    - Add requirement for KEMs to provide protection against key reuse.
-    - Clarify FIPS-compliance of shared secret concatenation method.
-- draft-stebila-tls-hybrid-design-02:
-    - Design considerations from draft-stebila-tls-hybrid-design-00 and draft-stebila-tls-hybrid-design-01 are moved to the appendix.
-    - A single construction is given in the main body.
-- draft-stebila-tls-hybrid-design-01:
-    - Add (Comb-KDF-1) and (Comb-KDF-2) options.
-    - Add two candidate instantiations.
-- draft-stebila-tls-hybrid-design-00: Initial version.
+- empty (06/09/2023)
 
 ## Terminology {#terminology}
 
