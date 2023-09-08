@@ -368,7 +368,7 @@ Specific values shall be registered by IANA in the TLS Supported Groups registry
           ffdhe6144(0x0103), ffdhe8192(0x0104),
 
           /* Hybrid Key Exchange Methods */
-          X25519Kyber768Draft00(0x6399), 
+          X25519Kyber768Draft00(0x6399),
           SecP256r1Kyber768Draft00 (0x639A), ...,
 
           /* Reserved Code Points */
