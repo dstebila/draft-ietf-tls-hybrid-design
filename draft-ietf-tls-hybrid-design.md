@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2023-08-21
+date: 2023-09-07
 category: info
 
 ipr: trust200902
@@ -227,7 +227,10 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.
 
-- draft-ietf-tls-hybrid-design-078:
+- draft-ietf-tls-hybrid-design-09:
+    - Removal of TBD hybrid combinations using Kyber512 or secp384r1
+    - Editorial changes
+- draft-ietf-tls-hybrid-design-08:
     - Add reference to {{SECP256R1Kyber768}} and {{KyberDraft00}} drafts
 - draft-ietf-tls-hybrid-design-07:
     - Editorial changes
@@ -349,7 +352,7 @@ TLS 1.3 does not require that ephemeral public keys be used only in a single key
 
 Each particular combination of algorithms in a hybrid key exchange will be represented as a `NamedGroup` and sent in the `supported_groups` extension.  No internal structure or grammar is implied or required in the value of the identifier; they are simply opaque identifiers.
 
-Each value representing a hybrid key exchange will correspond to an ordered pair of two or more algorithms.  For example, a future document could specify that one identifier corresponds to secp256r1+Kyber512, and another corresponds to x25519+Kyber512.  (We note that this is independent from future documents standardizing solely post-quantum key exchange methods, which would have to be assigned their own identifier.)
+Each value representing a hybrid key exchange will correspond to an ordered pair of two or more algorithms.  (We note that this is independent from future documents standardizing solely post-quantum key exchange methods, which would have to be assigned their own identifier.)
 
 Specific values shall be registered by IANA in the TLS Supported Groups registry.
 
@@ -365,7 +368,8 @@ Specific values shall be registered by IANA in the TLS Supported Groups registry
           ffdhe6144(0x0103), ffdhe8192(0x0104),
 
           /* Hybrid Key Exchange Methods */
-          X25519Kyber768Draft00(0x6399), ...,
+          X25519Kyber768Draft00(0x6399), 
+          SecP256r1Kyber768Draft00 (0x639A), ...,
 
           /* Reserved Code Points */
           ffdhe_private_use(0x01FC..0x01FF),
@@ -460,14 +464,14 @@ concatenated_shared_secret -> HKDF-Extract = Handshake Secret
 The `HybridKeyExchange` struct in {{construction-transmitting}} limits public keys and ciphertexts to 2^16-1 bytes; this is bounded by the same (2^16-1)-byte limit on the `key_exchange` field in the `KeyShareEntry` struct.  Some post-quantum KEMs have larger public keys and/or ciphertexts; for example, Classic McEliece's smallest parameter set has public key size 261,120 bytes.  However, all defined parameter sets for Kyber have public keys and ciphertexts that fall within the TLS constraints.
 
 **Duplication of key shares.**
-Concatenation of public keys in the `HybridKeyExchange` struct as described in {{construction-transmitting}} can result in sending duplicate key shares.  For example, if a client wanted to offer support for two combinations, say "secp256r1+kyber512" and "x25519+kyber512", it would end up sending two kyber512 public keys, since the `KeyShareEntry` for each combination contains its own copy of a kyber512 key.  This duplication may be more problematic for post-quantum algorithms which have larger public keys.  On the other hand, if the client wants to offer, for example "secp256r1+kyber512" and "secp256r1" (for backwards compatibility), there is relatively little duplicated data (as the secp256r1 keys are comparatively small).
+Concatenation of public keys in the `HybridKeyExchange` struct as described in {{construction-transmitting}} can result in sending duplicate key shares.  For example, if a client wanted to offer support for two combinations, say "SecP256r1Kyber768Draft00" and "X25519Kyber768Draft00", it would end up sending two kyber768 public keys, since the `KeyShareEntry` for each combination contains its own copy of a kyber768 key.  This duplication may be more problematic for post-quantum algorithms which have larger public keys.  On the other hand, if the client wants to offer, for example "SecP256r1Kyber768Draft00" and "secp256r1" (for backwards compatibility), there is relatively little duplicated data (as the secp256r1 keys are comparatively small).
 
 **Failures.**
 Some post-quantum key exchange algorithms, including Kyber, have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  Kyber has a cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients can retry if a failure is encountered.
 
 # Defined Hybrid Groups
 
-This document defines or references four initial hybrids for use within TLS 1.3, as shown in {{tab-defined-groups}}, where the components x25519, secp384r1, secp256r1 are the existing named groups.
+This document defines or references four initial hybrids for use within TLS 1.3, as shown in {{tab-defined-groups}}, where the components x25519 and secp256r1 are the existing named groups.
 
 | Hybrid name               | Hybrid components   | Named group |
 |---------------------------|---------------------|-------------|
@@ -475,20 +479,17 @@ This document defines or references four initial hybrids for use within TLS 1.3,
 | SecP256r1Kyber768Draft00  | secp256r1, Kyber768 | 0x639A      |
 {: #tab-defined-groups title="Hybrid key exchanged methods defined by this document"}
 
-The intention is that the combinations using Kyber768 are for normal TLS sessions, while the combiantions for Kyber512 are for sessions that have limits in record size or it is important to limit the total amount of communication.
-
 ## Kyber version
 
-For Kyber512 and Kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST.  That submission defines two variants for each parameter set based on the symmetric primitives used.  This document uses the FIPS 202 variant (and not the "90s" variant); the FIPS 202 variant uses SHA-3 and SHAKE {{NIST-FIPS-202}} as its internal symmetric primitives.
+For Kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST.  That submission defines two variants for each parameter set based on the symmetric primitives used.  This document uses the FIPS 202 variant (and not the "90s" variant); the FIPS 202 variant uses SHA-3 and SHAKE {{NIST-FIPS-202}} as its internal symmetric primitives.
 
-The Kyber team has updated their documentation twice since submitting to Round 3 (these updates are labeled as version 3.0.1 and 3.0.2), however neither modifies the FIPS 202 variant of Kyber.
-This version is documented in {{KyberDraft00}}.
+The Kyber team has updated their documentation twice since submitting to Round 3 (these updates are labeled as version 3.0.1 and 3.0.2), however neither modifies the FIPS 202 variant of Kyber. This version is documented in {{KyberDraft00}}.
 
 The X25519Kyber768Draft00 hybrid (0x6399) is defined in {{X25519Kyber768}}.  The SecP256r1Kyber768Draft00 hybrid (0x639A) is defined in {{SECP256R1Kyber768}}.
 
 ## Details of Kyber components
 
-The listed kyber512, kyber768 components are the named parameter sets of the key exchange method Kyber {{Kyber}}.
+The listed kyber768 components are the named parameter sets of the key exchange method Kyber {{Kyber}}.
 When it is used, the client selects an ephemeral private key, generates the corresponding public key, and transmits that (as a component) within its keyshare.
 When the server receives this keyshare, it extracts the Kyber public key, generates a ciphertext and shared secret.  It then transmits the ciphertext (as a component) within its keyshare.
 When the client receives this keyshare, it extracts the Kyber ciphertext, and uses its private key to generate the shared secret.
