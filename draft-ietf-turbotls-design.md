@@ -229,6 +229,7 @@ UDP
 TCP
 TLS
 QUIC
+DNS
 connection-based protocol
 connectionless protocol
 
@@ -273,7 +274,13 @@ It intentionally does not address:
 
 
 # Transport Layer Security {#TLS}
+The Transport Layer Security (TLS) protocol is ubiquitous and provides security services to many network applications.  TLS runs over TCP.  As shown in **DJ ref fig**, the main flow for TLS 1.3 connection establishment {{RFC 8446}} in a web browser is as follows. 
 
+First of all, the client makes a DNS query to convert the requested domain name into an IP address.  Simultaneously, browsers request an HTTPS resource record [draft-ietf-dnsop-svcb-https-11](https://datatracker.ietf.org/doc/draft-ietf-dnsop-svcb-https/11/) from the DNS server which can provide additional information about the server's HTTPS configuration.  Next, the client and server perform the TCP three-way handshake.  Once the TCP handshake is complete and a TCP connection is established, the TLS handshake can start; it requires one round trip -- one client-to-server C->S flow and one server-to-client S->C flow -- before the client can start transmitting application data.  
+
+In total (not including the DNS resolution) this results in two round trips before the client can send the first byte of application data (the TCP handshake, plus the first C->S and S->C flows of the TLS handshake), and one further round trip before the client receives its first byte of response.
+
+TLS does have a pre-shared key mode that allows for an abbreviated handshake permitting application data to be sent in the first C->S TLS flow, but this requires that the client and server have a pre-shared key in advance, established either through some out-of-band mechanism or saved from a previous TLS connection for session resumption. 
 
 # Construction for TurboTLS {#construction}
 
@@ -287,7 +294,9 @@ It intentionally does not address:
 
 # Security Considerations {#security-considerations}
 
-# Transparent proxying {#security-proxy}
+## Transparent proxying {#security-proxy}
+
+## Denial-of-Service {#security-DoS}
 
 # Acknowledgements
 
