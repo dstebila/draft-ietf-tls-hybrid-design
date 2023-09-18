@@ -280,7 +280,6 @@ In total (not including the DNS resolution) this results in two round trips befo
 TLS does have a pre-shared key mode that allows for an abbreviated handshake permitting application data to be sent in the first C->S TLS flow, but this requires that the client and server have a pre-shared key in advance, established either through some out-of-band mechanism or saved from a previous TLS connection for session resumption. 
 
 # Construction for TurboTLS {#construction}
-
 TLS client                          DNS server
               DNS: A request
     ────────────────────────────────────►
