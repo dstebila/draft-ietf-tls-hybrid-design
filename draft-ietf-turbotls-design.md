@@ -329,11 +329,30 @@ TLS does have a pre-shared key mode that allows for an abbreviated handshake per
                                                                   TCP: TLS app data             │
                                                          ────────────────────────────────────►  │
 ```
+As described in \Cref{fig:turbotls}, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
+Switching from TCP to UDP for handshake establishment means we cannot rely on TCP's features, namely connection-oriented, reliable, in-order delivery.  
+However, since the rest of the connection will still run over TCP and only part of the handshake runs over UDP,
+we can reproduce the required functionality in a lightweight way without adding latency and allowing for a simple implementation.
 
-## Client request-based fragmentation {#CRBF}
+## Fragmentation {#Construction-fragmentation}
+One of the major problems to deal with is that of fragmentation.  TLS handshake messages can be too large to fit in a single packet -- especially with long certificate chains or if post-quantum algorithms are used.  
 
-## TLS-over-TCP fallback {#construction-fallback}
+Obviously the client can fragment its first C->S flow across multiple UDP packets.  To allow a server to link fragments received across multiple UDP requests, we add a 12-byte connection identifier field, containing a client-selected random value _id_ that is used across all TurboTLS fragments sent by the client. The connection identifier is also included in the first message on the established TLS connection to allow the server to link together data received on the UDP and TCP connections. To allow the server to reassemble fragments if they arrive out-of-order, each fragment includes the total length of the original message as well as the offset of the current fragment; this can allow the server to easily copy fragments into the right position within a buffer as they are received.
 
+Similarly, the server can fragment its first S->C flow across multiple UDP packets.  One additional problem here however is that the S->C flow is typically larger than the C->S flow (as it typically contains one or more certificates), so the server may have to send more UDP response packets than UDP request packets.  As noted by \cite{song-atr-large-resp-03} in the context of DNSSEC, many network devices do not behave well when receiving multiple UDP responses to a single UDP request, and may close the port after the first packet, dropping the request.  Subsequent packets received at a closed port lead to ICMP failure alerts, which can be a nuisance.
+
+### Client request-based fragmentation {#Construction-CRBF}
+We employ a recent method proposed by Goertzen and Stebila \cite{arxiv.2211.14196} for DNSSEC: request-based fragmentation.  In the context of large resource records in DNSSEC, \cite{arxiv.2211.14196} had the first response be a truncated response that included information about the size of the response, and then the client sent multiple additional requests, in parallel, for the remaining fragments.  This ensured that there was only one UDP response for each UDP request.  We adapt that method for TurboTLS: the client, in its first C->S flow, fragments its own C->S data across multiple UDP packets, and additionally sends (in parallel) enough nearly-empty UDP requests for a predicted upper bound on the number of fragments the server will need to fit its response.  This preserves the model of each UDP request receiving a single UDP response, reducing the impact of misbehaving network devices and also reducing the potential for DDoS amplification attacks.
+
+## TLS-over-TCP fallback {#Construction-fallback}
+UDP does not have reliable delivery, so packets may be lost.  Since the first TurboTLS round-trip includes the TCP handshake, we can immediately fall back to TCP if a UDP packet is lost in either direction.  This will induce a latency cost of however long the client decides to wait for UDP packets to arrive before giving up and assuming they were lost.
+
+In an implementation, the client delay could be a fixed number of milliseconds, or could be variable depending on observed network conditions; this need not be fixed by a standard.
+We believe that in many cases a client delay of just 2ms after the TCP reply is received in the first round trip will be enough to ensure UDP responses are received a large majority of the time.  In other words, by tolerating a potential 2ms of extra latency on $X$\% of connections, we can save an entire round-trip on a large proportion ($100-X$\%) of the connections. 
+This mechanic was not implemented in the experimental results presented here and constitutes future work.
+
+## TurboTLS support advertisment {#Construction-advertisment}
+To protect servers who do not support TurboTLS from being bombarded with unwanted UDP traffic, it would be preferable if clients only used TurboTLS with servers that they already know support it.  Clients could cache this information from previous non-TurboTLS connections, but in fact we can do better.  Even on the first visit to a server, we can communicate server support for TurboTLS to the client, without an extra round trip, using the HTTPS resource record in DNS \cite{ietf-dnsop-svcb-https-11}.  Today when web browsers perform the DNS lookup for the domain name in question, they typically send three requests in parallel: an A query for an IPv4 address, an AAAA query for an IPv6 address, and a query for an HTTPS resource record \cite{ietf-dnsop-svcb-https-11}.  Servers can advertise support for TurboTLS with an additional flag in the HTTPS resource record and clients can check for it without incurring any extra latency.
 
 # Discussion {#discussion}
 
