@@ -281,6 +281,40 @@ TLS does have a pre-shared key mode that allows for an abbreviated handshake per
 
 # Construction for TurboTLS {#construction}
 
+TLS client                          DNS server
+              DNS: A request
+    ────────────────────────────────────►
+             DNS: AAAA request
+    ────────────────────────────────────►
+            DNS: HTTPS RR request
+    ────────────────────────────────────►
+              DNS: A response
+    ◄────────────────────────────────────
+             DNS: AAAA response
+    ◄────────────────────────────────────
+            DNS: HTTPS RR response
+    ◄────────────────────────────────────
+
+TLS client                          TLS server
+                TCP: syn
+    ────────────────────────────────────►
+               TCP: syn-ack
+    ◄────────────────────────────────────
+
+                TCP: ack
+    ────────────────────────────────────►
+               TCP: TLS CH
+    ────────────────────────────────────►
+               TCP: TLS SH
+    ◄────────────────────────────────────
+             TCP: TLS app data
+    ◄────────────────────────────────────
+
+               TCP: TLS fin
+    ────────────────────────────────────►
+             TCP: TLS app data
+    ────────────────────────────────────►
+
 ## Client request-based fragmentation {#CRBF}
 
 ## TLS-over-TCP fallback {#construction-fallback}
