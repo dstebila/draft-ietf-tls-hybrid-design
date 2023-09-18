@@ -329,7 +329,7 @@ TLS does have a pre-shared key mode that allows for an abbreviated handshake per
                                                                   TCP: TLS app data             │
                                                          ────────────────────────────────────►  │
 ```
-As described in \Cref{fig:turbotls}, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
+As described in **ref fig**, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
 Switching from TCP to UDP for handshake establishment means we cannot rely on TCP's features, namely connection-oriented, reliable, in-order delivery.  
 However, since the rest of the connection will still run over TCP and only part of the handshake runs over UDP,
 we can reproduce the required functionality in a lightweight way without adding latency and allowing for a simple implementation.
