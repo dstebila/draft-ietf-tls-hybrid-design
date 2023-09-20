@@ -366,18 +366,27 @@ TurboTLS benefits from a nice feature: TurboTLS makes no change whatsoever to th
 We now consider the implications for TurboTLS of various types of denial-of-service and distributed denial-of-service attacks, including whether a TurboTLS server is a victim in a DoS attack or being leveraged by an attacker to direct a DDoS attack elsewhere. TurboTLS runs on top of both TCP and UDP so we have to consider attacks involving both protocols. 
 
 ### Attacks _on_ TurboTLS servers
-The most significant TCP DoS attack is the SYN flood attack where a target machine is overwhelmed by TCP SYN messages faster than it can process them. This is because a server, upon receiving a SYN, typically stores the source IP, TCP packet index number, and port in a `SYN queue', and this represents a half-open connection. An attacker could flood the server with SYN messages thereby exhausting its memory. The server cannot just arbitrarily drop connections because then legitimate users may find themselves unable to connect. There are many protections against SYN flood attacks, one of which is allocating only very small amounts (micro blocks) of memory to half-open connections. Another is using TCP cryptographic cookies \cite{syncookies,rfc6013} whereby the sequence number of the ACK encodes information about the SYN queue entry so that the server can reconstruct the entry even if it was not stored due to having a full SYN queue. TCP cookies enjoy support in the Linux kernel -- this and other such mitigations are already sufficient to protect TurboTLS from SYN floods.
+The most significant TCP DoS attack is the SYN flood attack where a target machine is overwhelmed by TCP SYN messages faster than it can process them. This is because a server, upon receiving a SYN, typically stores the source IP, TCP packet index number, and port in a `SYN queue', and this represents a half-open connection. An attacker could flood the server with SYN messages thereby exhausting its memory. The server cannot just arbitrarily drop connections because then legitimate users may find themselves unable to connect. There are multiple protections against SYN flood attacks, such as:
+
+- Allocating only very small amounts (micro blocks) of memory to half-open connections.
+  
+- Using TCP cryptographic cookies \cite{syncookies,rfc6013} whereby the sequence number of the ACK encodes information about the SYN queue entry so that the server can reconstruct the entry even if it was not stored due to having a full SYN queue. TCP cookies enjoy support in the Linux kernel -- this and other such mitigations are already sufficient to protect TurboTLS from SYN floods.
 
 In general there are several vectors to consider for resource exhaustion attacks on a server running TurboTLS.  
 The server needs to maintain a buffer of received UDP packets containing fragments of a TLS CH message.
-To avoid memory exhaustion attacks, a server can safely bound the memory allocated to this buffer and flush old entries on a regular basis (e.g. after two seconds).
-In the worst case, a legitimate client whose UDP packets are rejected from a busy server or flushed early will be able to fall back to vanilla TLS over TCP, and will incur negligible latency loss (compared to TLS over TCP) in doing so, because TurboTLS starts the TCP handshake in parallel to the first C->S UDP flow.
-An attacker spoofing IP addresses and sending well-formed CH messages could also try to exhaust a server's CPU resources by causing a large amount of cryptographic computation.
-Again, a server under attack can limit the CPU resources allocated to UDP-received CH messages, and then fall back to vanilla TLS over TCP.
+
+* To avoid memory exhaustion attacks, a server can safely bound the memory allocated to this buffer and flush old entries on a regular basis (e.g. after two seconds).
+  - In the worst case, a legitimate client whose UDP packets are rejected from a busy server or flushed early will be able to fall back to vanilla TLS over TCP, and will incur negligible latency loss (compared to TLS over TCP) in doing so, because TurboTLS starts the TCP handshake in parallel to the first C->S UDP flow.
+* An attacker spoofing IP addresses and sending well-formed CH messages could also try to exhaust a server's CPU resources by causing a large amount of cryptographic computation.
+  - Again, a server under attack can limit the CPU resources allocated to UDP-received CH messages, and then fall back to vanilla TLS over TCP.
 In the worst case, legitimate clients affected by this and having to fall back to vanilla TLS over TCP will incur negligible latency loss compared to TLS over TCP since the TCP handshake has already been started in parallel.
 
 ### Attacks _leveraging_ TurboTLS servers
-UDP reflection attacks present another threat. Typical defenses against these are blocking unused ports, rate limiting based on expected traffic loads from peers (exorbitant traffic loads are likely to be malicious), or blocking IPs of other known vulnerable servers. However such defenses are provided by middleboxes and therefore do not affect the protocol. 
+UDP reflection attacks present another threat. Typical defenses against these are:
+- blocking unused ports,
+- rate limiting based on expected traffic loads from peers (exorbitant traffic loads are likely to be malicious),
+- blocking IPs of other known vulnerable servers.
+However such defenses are provided by middleboxes and therefore do not affect the protocol. 
 
 It should be noted here that the redundant UDP packets sent along with CH are part of the TurboTLS-specific technique we call request-based-fragmentation to mitigate _against_ a client's middlebox defenses incorrectly filtering TurboTLS connections, as otherwise multiple UDP responses to a single UDP request could be flagged as malicious behaviour. Furthermore, the one-to-oneness of the UDP request/response significantly reduces the impact of any amplification attack which tries to utilize a TurboTLS server as a reflector: an attacker would have to send one UDP packet for every reflected packet generated by the server, meaning that initial requests and responses are of comparable sizes, making the amplification factor so low that it would be an ineffective use of resources. Furthermore, the UDP requests ultimately must contain a fully formed CH before the server responds, limiting the amplification factor.
 
