@@ -1,17 +1,17 @@
-# Hybrid key exchange in TLS 1.3
+# TurboTLS for faster connection establishment
 
-This is the working area for the IETF [TLS Working Group](https://datatracker.ietf.org/wg/tls/documents/) Internet-Draft, "Hybrid key exchange in TLS 1.3".
+This is the working area for the IETF [TURBOTLS Working Group](https://datatracker.ietf.org/wg/turbotls/documents/) Internet-Draft, "TurboTLS for faster connection establishment".
 
-* [Editor's Copy](https://dstebila.github.io/draft-ietf-tls-hybrid-design/#go.draft-ietf-tls-hybrid-design.html)
-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-tls-hybrid-design)
-* [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-tls-hybrid-design)
-* [Compare Editor's Copy to Working Group Draft](https://dstebila.github.io/draft-ietf-tls-hybrid-design/#go.draft-ietf-tls-hybrid-design.diff)
+* [Editor's Copy](https://PhDJsandboxaq.github.io/draft-ietf-turbotls-design/#go.draft-ietf-turbotls-design.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-turbotls-design)
+* [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-turbotls-design)
+* [Compare Editor's Copy to Working Group Draft](https://PhDJsandboxaq.github.io/draft-ietf-turbotls-design/#go.draft-ietf-turbotls-design.diff)
 
 
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/dstebila/draft-ietf-tls-hybrid-design/blob/master/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/PhDJsandboxaq/draft-ietf-turbotls-design/blob/master/CONTRIBUTING.md).
 
 Contributions can be made by creating pull requests.
 The GitHub interface supports creating pull requests using the Edit (✏) button.
