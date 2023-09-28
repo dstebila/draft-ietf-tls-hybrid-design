@@ -341,55 +341,100 @@ In total (not including the DNS resolution) this results in two round trips befo
 
 TLS does have a pre-shared key mode that allows for an abbreviated handshake permitting application data to be sent in the first C->S TLS flow, but this requires that the client and server have a pre-shared key in advance, established either through some out-of-band mechanism or saved from a previous TLS connection for session resumption.
 
-# Construction for TurboTLS {#construction}
+# Construction for TLS {#construction}
+## Protocol diagram TLS {#construction-diag-tls}
 ```
-┌──────────┐                        ┌──────────┐    ┌──────────┐                        ┌──────────┐
-│TLS client│                        │DNS server│    │TLS client│                        │DNS server│
-└──────────┘                        └──────────┘    └──────────┘                        └──────────┘
-               DNS: A request                                      DNS: A request
-     ────────────────────────────────────►               ────────────────────────────────────►
-              DNS: AAAA request                                   DNS: AAAA request
-     ────────────────────────────────────►               ────────────────────────────────────►
-             DNS: HTTPS RR request                               DNS: HTTPS RR request
-     ────────────────────────────────────►               ────────────────────────────────────►
-               DNS: A response                                     DNS: A response
-     ◄────────────────────────────────────               ◄────────────────────────────────────
-              DNS: AAAA response                                  DNS: AAAA response
-     ◄────────────────────────────────────               ◄────────────────────────────────────
-             DNS: HTTPS RR response                        DNS: HTTPS RR response w/ TTLS flag
-     ◄────────────────────────────────────               ◄────────────────────────────────────
 
-┌──────────┐                        ┌──────────┐    ┌──────────┐                        ┌──────────┐
-│TLS client│                        │TLS server│    │TLS client│                        │TLS server│
-└──────────┘                        └──────────┘    └──────────┘                        └──────────┘
-                 TCP: SYN                                  UDP: TurboTLS id, TLS CH frag#1
-     ────────────────────────────────────►  │            ────────────────────────────────────►  │
-                TCP: SYN-ACK                │RT1           UDP: TurboTLS id, TLS CH frag#1      │
-     ◄────────────────────────────────────  │            ────────────────────────────────────►  │
-                                                           UDP: TurboTLS id, empty frag#1       │
-                 TCP: ACK                                ────────────────────────────────────►  │
-     ────────────────────────────────────►  │              UDP: TurboTLS id, empty frag#2       │
-                TCP: TLS CH                 │            ────────────────────────────────────►  │
-     ────────────────────────────────────►  │                                                   │
-                TCP: TLS SH                 │RT2                     TCP: SYN                   │
-     ◄────────────────────────────────────  │            ────────────────────────────────────►  │
-              TCP: TLS app data             │                                                   │RT1
-     ◄────────────────────────────────────  │              UDP: TurboTLS id, TLS resp frag#1    │
-                                                         ◄────────────────────────────────────  │
-                TCP: TLS *, FIN                            UDP: TurboTLS id, TLS resp frag#2    │
-     ────────────────────────────────────►  │            ◄────────────────────────────────────  │
-              TCP: TLS app data             │RT3           UDP: TurboTLS id, TLS resp frag#3    │
-     ────────────────────────────────────►  │            ◄────────────────────────────────────  │
-                                                                                                │
-                                                                    TCP: SYN-ACK                │
-                                                         ◄────────────────────────────────────  │
+ ┌──────────┐                        ┌──────────┐
+ │TLS client│                        │DNS server│
+ └──────────┘                        └──────────┘
+                DNS: A request
+      ────────────────────────────────────►
+               DNS: AAAA request
+      ────────────────────────────────────►
+              DNS: HTTPS RR request
+      ────────────────────────────────────►
+                DNS: A response
+      ◄────────────────────────────────────
+               DNS: AAAA response
+      ◄────────────────────────────────────
+              DNS: HTTPS RR response
+      ◄────────────────────────────────────
 
-                                                                     TCP: ACK
-                                                         ────────────────────────────────────►  │
-                                                           TCP: TurboTLS id, TLS *, FIN         │
-                                                         ────────────────────────────────────►  │RT2
-                                                                  TCP: TLS app data             │
-                                                         ────────────────────────────────────►  │
+ ┌──────────┐                        ┌──────────┐
+ │TLS client│                        │TLS server│
+ └──────────┘                        └──────────┘
+                  TCP: SYN
+      ────────────────────────────────────►  │
+                 TCP: SYN-ACK                │RT1
+      ◄────────────────────────────────────  │
+
+                  TCP: ACK
+      ────────────────────────────────────►  │
+                 TCP: TLS CH                 │
+      ────────────────────────────────────►  │
+                 TCP: TLS SH                 │RT2
+      ◄────────────────────────────────────  │
+               TCP: TLS app data             │
+      ◄────────────────────────────────────  │
+
+                 TCP: TLS *, FIN
+      ────────────────────────────────────►  │
+               TCP: TLS app data             │RT3
+      ────────────────────────────────────►  │
+
+```
+## Protocol diagram TurboTLS {#construction-diag-turbotls}
+```
+
+ ┌──────────┐                        ┌──────────┐
+ │TLS client│                        │DNS server│
+ └──────────┘                        └──────────┘
+                DNS: A request
+      ────────────────────────────────────►
+               DNS: AAAA request
+      ────────────────────────────────────►
+              DNS: HTTPS RR request
+      ────────────────────────────────────►
+                DNS: A response
+      ◄────────────────────────────────────
+               DNS: AAAA response
+      ◄────────────────────────────────────
+        DNS: HTTPS RR response w/ TTLS flag
+      ◄────────────────────────────────────
+
+ ┌──────────┐                        ┌──────────┐
+ │TLS client│                        │TLS server│
+ └──────────┘                        └──────────┘
+        UDP: TurboTLS id, TLS CH frag#1
+      ────────────────────────────────────►  │
+        UDP: TurboTLS id, TLS CH frag#1      │
+      ────────────────────────────────────►  │
+        UDP: TurboTLS id, empty frag#1       │
+      ────────────────────────────────────►  │
+        UDP: TurboTLS id, empty frag#2       │
+      ────────────────────────────────────►  │
+                                             │
+                  TCP: SYN                   │
+      ────────────────────────────────────►  │
+                                             │RT1
+        UDP: TurboTLS id, TLS resp frag#1    │
+      ◄────────────────────────────────────  │
+        UDP: TurboTLS id, TLS resp frag#2    │
+      ◄────────────────────────────────────  │
+        UDP: TurboTLS id, TLS resp frag#3    │
+      ◄────────────────────────────────────  │
+                                             │
+                 TCP: SYN-ACK                │
+      ◄────────────────────────────────────  │
+
+                  TCP: ACK
+      ────────────────────────────────────►  │
+        TCP: TurboTLS id, TLS *, FIN         │
+      ────────────────────────────────────►  │RT2
+               TCP: TLS app data             │
+      ────────────────────────────────────►  │
+
 ```
 As described in **ref fig**, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
 Switching from TCP to UDP for handshake establishment means we cannot rely on TCP's features, namely connection-oriented, reliable, in-order delivery.
