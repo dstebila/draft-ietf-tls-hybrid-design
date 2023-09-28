@@ -5,11 +5,11 @@ docname: draft-ietf-turbotls-design-latest
 date: 2023-09-05
 category: info
 
-? ipr: trust200902
+ipr: trust200902
 keyword: Internet-Draft
 
-? stand_alone: yes
-? pi: [toc, sortrefs, symrefs]
+stand_alone: yes
+pi: [toc, sortrefs, symrefs]
 
 submissionType: IETF
 
@@ -38,6 +38,9 @@ author:
 
 normative:
   TLS13: RFC8446
+  TLS12: RFC5246
+  UDP: RFC768
+  TCP: RFC793
 
 informative:
   AVIRAM:
