@@ -347,23 +347,23 @@ We first demonstrate protocol diagrams of the handshaking parts of TLS and Turbo
 ## Protocol diagram TLS {#construction-diag-tls}
 lalala
 
-```
+~~~~~
 
-┌──────────┐                        ┌──────────┐
+┌----------┐                        ┌----------┐
 │TLS client│                        │DNS server│
-└──────────┘                        └──────────┘
+└----------┘                        └----------┘
                DNS: A request
-     ────────────────────────────────────►
+     ------------------------------------►
               DNS: AAAA request
-     ────────────────────────────────────►
+     ------------------------------------►
              DNS: HTTPS RR request
-     ────────────────────────────────────►
+     ------------------------------------►
                DNS: A response
-     ◄────────────────────────────────────
+     ◄------------------------------------
               DNS: AAAA response
-     ◄────────────────────────────────────
+     ◄------------------------------------
              DNS: HTTPS RR response
-     ◄────────────────────────────────────
+     ◄------------------------------------
 
 ┌──────────┐                        ┌──────────┐
 │TLS client│                        │TLS server│
@@ -386,12 +386,12 @@ lalala
      ────────────────────────────────────►  │
               TCP: TLS app data             │RT3
      ────────────────────────────────────►  │
-```
+~~~~~
 
 ## Protocol diagram TurboTLS {#construction-diag-turbotls}
 lalala
 
-```
+~~~~~
 
 ┌──────────┐                        ┌──────────┐
 │TLS client│                        │DNS server│
@@ -440,7 +440,7 @@ lalala
      ────────────────────────────────────►  │RT2
               TCP: TLS app data             │
      ────────────────────────────────────►  │
-```
+~~~~~
 As described in **ref fig**, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
 Switching from TCP to UDP for handshake establishment means we cannot rely on TCP's features, namely connection-oriented, reliable, in-order delivery.
 However, since the rest of the connection will still run over TCP and only part of the handshake runs over UDP,
