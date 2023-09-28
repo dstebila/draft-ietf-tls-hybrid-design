@@ -43,6 +43,15 @@ normative:
   TCP: RFC793
 
 informative:
+  SW19:
+    target: https://datatracker.ietf.org/doc/html/draft-song-atr-large-resp-00
+    title: "ATR: Additional Truncated Response for Large DNS Response"
+    date: 2017-09-10
+    author:
+      -
+        ins: Linjian Song
+      -
+        ins: Shengling Wan
   AVIRAM:
     target: https://mailarchive.ietf.org/arch/msg/tls/F4SVeL2xbGPaPB2GW_GkBbD_a5M/
     title: "[TLS] Combining Secrets in Hybrid Key Exchange in TLS 1.3"
@@ -342,7 +351,7 @@ One of the major problems to deal with is that of fragmentation.  TLS handshake 
 
 Obviously the client can fragment its first C->S flow across multiple UDP packets.  To allow a server to link fragments received across multiple UDP requests, we add a 12-byte connection identifier field, containing a client-selected random value _id_ that is used across all TurboTLS fragments sent by the client. The connection identifier is also included in the first message on the established TLS connection to allow the server to link together data received on the UDP and TCP connections. To allow the server to reassemble fragments if they arrive out-of-order, each fragment includes the total length of the original message as well as the offset of the current fragment; this can allow the server to easily copy fragments into the right position within a buffer as they are received.
 
-Similarly, the server can fragment its first S->C flow across multiple UDP packets.  One additional problem here however is that the S->C flow is typically larger than the C->S flow (as it typically contains one or more certificates), so the server may have to send more UDP response packets than UDP request packets.  As noted by \cite{song-atr-large-resp-03} in the context of DNSSEC, many network devices do not behave well when receiving multiple UDP responses to a single UDP request, and may close the port after the first packet, dropping the request.  Subsequent packets received at a closed port lead to ICMP failure alerts, which can be a nuisance.
+Similarly, the server can fragment its first S->C flow across multiple UDP packets.  One additional problem here however is that the S->C flow is typically larger than the C->S flow (as it typically contains one or more certificates), so the server may have to send more UDP response packets than UDP request packets.  As noted by {{SW19}} in the context of DNSSEC, many network devices do not behave well when receiving multiple UDP responses to a single UDP request, and may close the port after the first packet, dropping the request.  Subsequent packets received at a closed port lead to ICMP failure alerts, which can be a nuisance.
 
 ### Client request-based fragmentation {#Construction-CRBF}
 We employ a recent method proposed by Goertzen and Stebila \cite{arxiv.2211.14196} for DNSSEC: request-based fragmentation.  In the context of large resource records in DNSSEC, \cite{arxiv.2211.14196} had the first response be a truncated response that included information about the size of the response, and then the client sent multiple additional requests, in parallel, for the remaining fragments.  This ensured that there was only one UDP response for each UDP request.  We adapt that method for TurboTLS: the client, in its first C->S flow, fragments its own C->S data across multiple UDP packets, and additionally sends (in parallel) enough nearly-empty UDP requests for a predicted upper bound on the number of fragments the server will need to fit its response.  This preserves the model of each UDP request receiving a single UDP response, reducing the impact of misbehaving network devices and also reducing the potential for DDoS amplification attacks.
