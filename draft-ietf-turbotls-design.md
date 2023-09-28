@@ -343,8 +343,10 @@ TLS does have a pre-shared key mode that allows for an abbreviated handshake per
 
 # Construction for TLS {#construction}
 We first demonstrate protocol diagrams of the handshaking parts of TLS and TurboTLS.
+
 ## Protocol diagram TLS {#construction-diag-tls}
 lalala
+
 ~~~~~
 ┌──────────┐                        ┌──────────┐
 │TLS client│                        │DNS server│
@@ -384,8 +386,10 @@ lalala
               TCP: TLS app data             │RT3
      ────────────────────────────────────►  │
 ~~~~~
+
 ## Protocol diagram TurboTLS {#construction-diag-turbotls}
 lalala
+
 ~~~~~
 ┌──────────┐                        ┌──────────┐
 │TLS client│                        │DNS server│
