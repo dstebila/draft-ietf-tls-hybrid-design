@@ -348,6 +348,7 @@ We first demonstrate protocol diagrams of the handshaking parts of TLS and Turbo
 lalala
 
 ~~~~~
+
 ┌──────────┐                        ┌──────────┐
 │TLS client│                        │DNS server│
 └──────────┘                        └──────────┘
@@ -391,6 +392,7 @@ lalala
 lalala
 
 ~~~~~
+
 ┌──────────┐                        ┌──────────┐
 │TLS client│                        │DNS server│
 └──────────┘                        └──────────┘
