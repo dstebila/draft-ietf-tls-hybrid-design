@@ -315,7 +315,7 @@ This document focuses on TurboTLS {{TurboTLS}}. It covers everything needed to a
 
 - **How to implement via a transparent proxy:** The document gives a brief description of how one can implement TurboTLS via a transparent proxy, which has two implications. The first is that it demonstrates clearly that the security of TLS is unchanged, as a server and client can have their entire transcript intercepted by two proxies (one in front of each), which TurboTLS-ify the interaction. Thus the view server and client is unchanged versus standard TLS. The second is that the TLS proxy represents a way for legacy systems to benefit from faster connection establishment without requiring direct upgrades.
 
-- **Performance considerations** Due to the parallelization of the UDP flow and TCP flows, as well as the TCP fallback mechanism, TurboTLS will have some impact on bandwidth requirements. We discuss these briefly, as well as the expected benefit from reducing a round trip when TurboTLS works and the small latency overhead when it doesn't and reverts to TLS-over-TCP. 
+- **Performance considerations** Due to the parallelization of the UDP flow and TCP flows, as well as the TCP fallback mechanism, TurboTLS will have some impact on bandwidth requirements. We discuss these briefly, as well as the expected benefit from reducing a round trip when TurboTLS works and the small latency overhead when it doesn't and reverts to TLS-over-TCP.
 
 It intentionally does not address:
 
@@ -333,13 +333,13 @@ It intentionally does not address:
 
 
 # Transport Layer Security {#TLS}
-The Transport Layer Security (TLS) protocol is ubiquitous and provides security services to many network applications.  TLS runs over TCP.  As shown in **DJ ref fig**, the main flow for TLS 1.3 connection establishment {{TLS13}} in a web browser is as follows. 
+The Transport Layer Security (TLS) protocol is ubiquitous and provides security services to many network applications.  TLS runs over TCP.  As shown in **DJ ref fig**, the main flow for TLS 1.3 connection establishment {{TLS13}} in a web browser is as follows.
 
-First of all, the client makes a DNS query to convert the requested domain name into an IP address.  Simultaneously, browsers request an HTTPS resource record [draft-ietf-dnsop-svcb-https-11](https://datatracker.ietf.org/doc/draft-ietf-dnsop-svcb-https/11/) from the DNS server which can provide additional information about the server's HTTPS configuration.  Next, the client and server perform the TCP three-way handshake.  Once the TCP handshake is complete and a TCP connection is established, the TLS handshake can start; it requires one round trip -- one client-to-server C->S flow and one server-to-client S->C flow -- before the client can start transmitting application data.  
+First of all, the client makes a DNS query to convert the requested domain name into an IP address.  Simultaneously, browsers request an HTTPS resource record [draft-ietf-dnsop-svcb-https-11](https://datatracker.ietf.org/doc/draft-ietf-dnsop-svcb-https/11/) from the DNS server which can provide additional information about the server's HTTPS configuration.  Next, the client and server perform the TCP three-way handshake.  Once the TCP handshake is complete and a TCP connection is established, the TLS handshake can start; it requires one round trip -- one client-to-server C->S flow and one server-to-client S->C flow -- before the client can start transmitting application data.
 
 In total (not including the DNS resolution) this results in two round trips before the client can send the first byte of application data (the TCP handshake, plus the first C->S and S->C flows of the TLS handshake), and one further round trip before the client receives its first byte of response.
 
-TLS does have a pre-shared key mode that allows for an abbreviated handshake permitting application data to be sent in the first C->S TLS flow, but this requires that the client and server have a pre-shared key in advance, established either through some out-of-band mechanism or saved from a previous TLS connection for session resumption. 
+TLS does have a pre-shared key mode that allows for an abbreviated handshake permitting application data to be sent in the first C->S TLS flow, but this requires that the client and server have a pre-shared key in advance, established either through some out-of-band mechanism or saved from a previous TLS connection for session resumption.
 
 # Construction for TurboTLS {#construction}
 ```
@@ -392,12 +392,12 @@ TLS does have a pre-shared key mode that allows for an abbreviated handshake per
                                                          ────────────────────────────────────►  │
 ```
 As described in **ref fig**, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
-Switching from TCP to UDP for handshake establishment means we cannot rely on TCP's features, namely connection-oriented, reliable, in-order delivery.  
+Switching from TCP to UDP for handshake establishment means we cannot rely on TCP's features, namely connection-oriented, reliable, in-order delivery.
 However, since the rest of the connection will still run over TCP and only part of the handshake runs over UDP,
 we can reproduce the required functionality in a lightweight way without adding latency and allowing for a simple implementation.
 
 ## Fragmentation {#Construction-fragmentation}
-One of the major problems to deal with is that of fragmentation.  TLS handshake messages can be too large to fit in a single packet -- especially with long certificate chains or if post-quantum algorithms are used.  
+One of the major problems to deal with is that of fragmentation.  TLS handshake messages can be too large to fit in a single packet -- especially with long certificate chains or if post-quantum algorithms are used.
 
 Obviously the client can fragment its first C->S flow across multiple UDP packets.  To allow a server to link fragments received across multiple UDP requests, we add a 12-byte connection identifier field, containing a client-selected random value _id_ that is used across all TurboTLS fragments sent by the client. The connection identifier is also included in the first message on the established TLS connection to allow the server to link together data received on the UDP and TCP connections. To allow the server to reassemble fragments if they arrive out-of-order, each fragment includes the total length of the original message as well as the offset of the current fragment; this can allow the server to easily copy fragments into the right position within a buffer as they are received.
 
@@ -410,7 +410,7 @@ We employ a recent method proposed by Goertzen and Stebila {{GS22}} for DNSSEC: 
 UDP does not have reliable delivery, so packets may be lost.  Since the first TurboTLS round-trip includes the TCP handshake, we can immediately fall back to TCP if a UDP packet is lost in either direction.  This will induce a latency cost of however long the client decides to wait for UDP packets to arrive before giving up and assuming they were lost.
 
 In an implementation, the client delay could be a fixed number of milliseconds, or could be variable depending on observed network conditions; this need not be fixed by a standard.
-We believe that in many cases a client delay of just 2ms after the TCP reply is received in the first round trip will be enough to ensure UDP responses are received a large majority of the time.  In other words, by tolerating a potential 2ms of extra latency on $X$\% of connections, we can save an entire round-trip on a large proportion ($100-X$\%) of the connections. 
+We believe that in many cases a client delay of just 2ms after the TCP reply is received in the first round trip will be enough to ensure UDP responses are received a large majority of the time.  In other words, by tolerating a potential 2ms of extra latency on $X$\% of connections, we can save an entire round-trip on a large proportion ($100-X$\%) of the connections.
 This mechanic was not implemented in the experimental results presented here and constitutes future work.
 
 ## TurboTLS support advertisment {#Construction-advertisment}
@@ -425,7 +425,7 @@ To protect servers who do not support TurboTLS from being bombarded with unwante
 TurboTLS benefits from a nice feature: TurboTLS makes no change whatsoever to the content of a TLS handshake, only changes the delivery mechanism.  As a result, all cryptographic properties of TLS are untouched.  In fact, it is possible to implement TurboTLS without changing the client or server's TLS library at all, and instead use transparent proxies on both the client and server side to change the network delivery from pure TCP in TLS to UDP+TCP in TurboTLS. Of course in such a construction the initial client or server, who does not know TurboTLS, will observe two round trip times, but if each proxy is close to its host (say on the same machine), then the two round trip times will be negligible, and the higher latency client--server distance will only be covered over one round trip.
 
 ## Denial-of-Service {#security-DoS}
-We now consider the implications for TurboTLS of various types of denial-of-service and distributed denial-of-service attacks, including whether a TurboTLS server is a victim in a DoS attack or being leveraged by an attacker to direct a DDoS attack elsewhere. TurboTLS runs on top of both TCP and UDP so we have to consider attacks involving both protocols. 
+We now consider the implications for TurboTLS of various types of denial-of-service and distributed denial-of-service attacks, including whether a TurboTLS server is a victim in a DoS attack or being leveraged by an attacker to direct a DDoS attack elsewhere. TurboTLS runs on top of both TCP and UDP so we have to consider attacks involving both protocols.
 
 ### Attacks _on_ TurboTLS servers
 The most significant TCP DoS attack is the SYN flood attack where a target machine is overwhelmed by TCP SYN messages faster than it can process them. This is because a server, upon receiving a SYN, typically stores the source IP, TCP packet index number, and port in a `SYN queue', and this represents a half-open connection. An attacker could flood the server with SYN messages thereby exhausting its memory. The server cannot just arbitrarily drop connections because then legitimate users may find themselves unable to connect. There are multiple protections against SYN flood attacks, such as:
@@ -434,7 +434,7 @@ The most significant TCP DoS attack is the SYN flood attack where a target machi
 
 - Using TCP cryptographic cookies {{Ber05}} {{Sim11}} whereby the sequence number of the ACK encodes information about the SYN queue entry so that the server can reconstruct the entry even if it was not stored due to having a full SYN queue. TCP cookies enjoy support in the Linux kernel -- this and other such mitigations are already sufficient to protect TurboTLS from SYN floods.
 
-In general there are several vectors to consider for resource exhaustion attacks on a server running TurboTLS.  
+In general there are several vectors to consider for resource exhaustion attacks on a server running TurboTLS.
 The server needs to maintain a buffer of received UDP packets containing fragments of a TLS CH message.
 
 * To avoid memory exhaustion attacks, a server can safely bound the memory allocated to this buffer and flush old entries on a regular basis (e.g. after two seconds).
@@ -448,7 +448,7 @@ UDP reflection attacks present another threat. Typical defenses against these ar
 - blocking unused ports,
 - rate limiting based on expected traffic loads from peers (exorbitant traffic loads are likely to be malicious),
 - blocking IPs of other known vulnerable servers.
-However such defenses are provided by middleboxes and therefore do not affect the protocol. 
+However such defenses are provided by middleboxes and therefore do not affect the protocol.
 
 It should be noted here that the redundant UDP packets sent along with CH are part of the TurboTLS-specific technique we call request-based-fragmentation to mitigate _against_ a client's middlebox defenses incorrectly filtering TurboTLS connections, as otherwise multiple UDP responses to a single UDP request could be flagged as malicious behaviour. Furthermore, the one-to-oneness of the UDP request/response significantly reduces the impact of any amplification attack which tries to utilize a TurboTLS server as a reflector: an attacker would have to send one UDP packet for every reflected packet generated by the server, meaning that initial requests and responses are of comparable sizes, making the amplification factor so low that it would be an ineffective use of resources. Furthermore, the UDP requests ultimately must contain a fully formed CH before the server responds, limiting the amplification factor.
 
