@@ -102,7 +102,6 @@ informative:
     author:
       -
         ins: W. Simpson
-    
   AVIRAM:
     target: https://mailarchive.ietf.org/arch/msg/tls/F4SVeL2xbGPaPB2GW_GkBbD_a5M/
     title: "[TLS] Combining Secrets in Hybrid Key Exchange in TLS 1.3"
@@ -309,11 +308,11 @@ Many will make the choice to move from TLS to QUIC, however some will not for a 
 This document focuses on TurboTLS {{TurboTLS}}. It covers everything needed to achieve the handshaking portion of a TLS connection over UDP, including
 
 - **Construction in principle:** It provides an outline of which flows are sent over UDP, which are sent over TCP and in what order.
-  
+
 - **TLS-over-TCP fallback:** The document describes what to do in the case of failure due to UDP packet loss or filtering. The scheme should revert to TLS-over-TCP incurring a small latency overhead that should be minimal in comparison with standard TLS-over-TCP without a TurboTLS attempt.
-  
+
 - **Client request-based fragmentation:** Due to the impact of post-quantum cryptography such as larger keys certain considerations have to be taken into account. One is that a Server Hello is likely to require multiple UDP packets, thus to eliminate the possibility of reflection attacks and failures due to middle-box filtering, we describe how to create a one-to-one correspondence between Client Hello packets and Server Hello packets.
-  
+
 - **How to implement via a transparent proxy:** The document gives a brief description of how one can implement TurboTLS via a transparent proxy, which has two implications. The first is that it demonstrates clearly that the security of TLS is unchanged, as a server and client can have their entire transcript intercepted by two proxies (one in front of each), which TurboTLS-ify the interaction. Thus the view server and client is unchanged versus standard TLS. The second is that the TLS proxy represents a way for legacy systems to benefit from faster connection establishment without requiring direct upgrades.
 
 - **Performance considerations** Due to the parallelization of the UDP flow and TCP flows, as well as the TCP fallback mechanism, TurboTLS will have some impact on bandwidth requirements. We discuss these briefly, as well as the expected benefit from reducing a round trip when TurboTLS works and the small latency overhead when it doesn't and reverts to TLS-over-TCP. 
@@ -432,7 +431,7 @@ We now consider the implications for TurboTLS of various types of denial-of-serv
 The most significant TCP DoS attack is the SYN flood attack where a target machine is overwhelmed by TCP SYN messages faster than it can process them. This is because a server, upon receiving a SYN, typically stores the source IP, TCP packet index number, and port in a `SYN queue', and this represents a half-open connection. An attacker could flood the server with SYN messages thereby exhausting its memory. The server cannot just arbitrarily drop connections because then legitimate users may find themselves unable to connect. There are multiple protections against SYN flood attacks, such as:
 
 - Allocating only very small amounts (micro blocks) of memory to half-open connections.
-  
+
 - Using TCP cryptographic cookies {{Ber05}} {{Sim11}} whereby the sequence number of the ACK encodes information about the SYN queue entry so that the server can reconstruct the entry even if it was not stored due to having a full SYN queue. TCP cookies enjoy support in the Linux kernel -- this and other such mitigations are already sufficient to protect TurboTLS from SYN floods.
 
 In general there are several vectors to consider for resource exhaustion attacks on a server running TurboTLS.  
