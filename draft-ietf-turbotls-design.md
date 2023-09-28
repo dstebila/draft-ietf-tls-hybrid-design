@@ -343,7 +343,7 @@ TLS does have a pre-shared key mode that allows for an abbreviated handshake per
 
 # Construction for TLS {#construction}
 ## Protocol diagram TLS {#construction-diag-tls}
-```
+~~~~~
 ┌──────────┐                        ┌──────────┐
 │TLS client│                        │DNS server│
 └──────────┘                        └──────────┘
@@ -381,9 +381,9 @@ TLS does have a pre-shared key mode that allows for an abbreviated handshake per
      ────────────────────────────────────►  │
               TCP: TLS app data             │RT3
      ────────────────────────────────────►  │
-```
+~~~~~
 ## Protocol diagram TurboTLS {#construction-diag-turbotls}
-```
+~~~~~
 ┌──────────┐                        ┌──────────┐
 │TLS client│                        │DNS server│
 └──────────┘                        └──────────┘
@@ -431,8 +431,7 @@ TLS does have a pre-shared key mode that allows for an abbreviated handshake per
      ────────────────────────────────────►  │RT2
               TCP: TLS app data             │
      ────────────────────────────────────►  │
-
-```
+~~~~~
 As described in **ref fig**, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
 Switching from TCP to UDP for handshake establishment means we cannot rely on TCP's features, namely connection-oriented, reliable, in-order delivery.
 However, since the rest of the connection will still run over TCP and only part of the handshake runs over UDP,
