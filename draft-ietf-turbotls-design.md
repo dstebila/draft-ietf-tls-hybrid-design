@@ -299,6 +299,14 @@ This mechanic was not implemented in the experimental results presented here and
 ## TurboTLS support advertisment {#Construction-advertisment}
 To protect servers who do not support TurboTLS from being bombarded with unwanted UDP traffic, it would be preferable if clients only used TurboTLS with servers that they already know support it.  Clients could cache this information from previous non-TurboTLS connections, but in fact we can do better.  Even on the first visit to a server, we can communicate server support for TurboTLS to the client, without an extra round trip, using the HTTPS resource record in DNS {{SBN22}}.  Today when web browsers perform the DNS lookup for the domain name in question, they typically send three requests in parallel: an A query for an IPv4 address, an AAAA query for an IPv6 address, and a query for an HTTPS resource record {{SBN22}}.  Servers can advertise support for TurboTLS with an additional flag in the HTTPS resource record and clients can check for it without incurring any extra latency.
 
+## Specification: Handshake embedding into UDP {#Construction-embedding}
+
+### Client Hello {#Construction-embedding-CH}
+
+### Server Hello {#Construction-embedding-SH}
+
+### Early data {#Construction-embedding-early-data}
+
 # Discussion {#discussion}
 
 
