@@ -120,13 +120,10 @@ This document gives a construction for TurboTLS, which at its core is a method f
 
 ## Terminology {#terminology}
 
-UDP
-TCP
-TLS
-QUIC
-DNS
-connection-based protocol
-connectionless protocol
+- **UDP*** Universal Datagram Protocol: a connectionless transport protocol, whereby packets are sent, but without any codified way of knowing that such packets have been successfully received. This leads to low reliability but can be appropriate where applications are time sensitive.
+- **TCP** Transmission Control Protocol: a connection-oriented protocol that ensures the successful delivery of packets. Before a communication over TCP can start in earnest, a connection must be established. This is done via a TCP handshake consisting of a SYN, a SYN ACK and an ACK.
+- **TLS** Transport Layer Security: a cryptographic protocol that enables a client and server to authenticate one another, and communicate confidentially. TLS initializes with a handshake where cryptographic primitives are executed and session parameters are agreed upon, and then a session over which applications exchange encrypted communications.
+- **QUIC** (not an acronym): a security protocol that embeds TLS functionality directly into UDP-based transport. Due to the drawbacks of UDP, QUIC implements its own reliability, packet reordering, and packet dropping procedures as well as the security properties.
 
 
 ## Motivation for handshaking over UDP {#motivation}
