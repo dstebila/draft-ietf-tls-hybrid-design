@@ -294,7 +294,7 @@ In an implementation, the client delay could be a fixed number of milliseconds, 
 We believe that in many cases a client delay of just 2ms after the TCP reply is received in the first round trip will be enough to ensure UDP responses are received a large majority of the time.  In other words, by tolerating a potential 2ms of extra latency on $X$\% of connections, we can save an entire round-trip on a large proportion ($100-X$\%) of the connections.
 This mechanic was not implemented in the experimental results presented here and constitutes future work.
 
-### Early data, post-handshake messages, and TCP fallback
+### Early data, post-handshake messages, and TCP fallback {#Construction-early-data}
 
 As part of the TLS 1.3 specification, a server is able to send encrypted application data and connection maintenance related messages after it sends its server finished message. One could wait until the TCP connection is established and is associated with the correct UDP handshake. This would remove the benefit that TurboTLS offers as it requires the server to wait for the TCP connection to finish being established. We therefore propose that all post-handshake messages and early data message attempt to be transmitted over UDP. These messages should therefore be wrapped with the standard TurboTLS headers (session ID and index) to ensure that can be associated with the correct TLS session. Once the TCP connection is established, the client's first message should include the index of the last in order UDP based packet that was received. The server can then determine what needs to be retransmitted over the reliable TCP connection. 
 
@@ -309,7 +309,6 @@ To protect servers who do not support TurboTLS from being bombarded with unwante
 
 ### Server Hello {#Construction-embedding-SH}
 
-### Early data {#Construction-embedding-early-data}
 
 # Discussion {#discussion}
 
