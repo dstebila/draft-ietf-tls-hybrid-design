@@ -22,7 +22,7 @@ author:
   -
     ins: D. Joseph
     name: David Joseph
-    organization: SandboxAQ 
+    organization: SandboxAQ
     email: dj@sandboxaq.com
   -
     ins: C. Aguilar-Melchor
@@ -114,7 +114,7 @@ Discussion of this work is encouraged to happen on the TLS IETF mailing list tls
 
 # Introduction {#introduction}
 
-This document gives a construction for TurboTLS, which at its core is a method for handshaking over UDP in TLS before switching back to TCP for the TLS session. A technique called client request-based fragmentation is described to reduce the possibility of portions of the handshake over UDP being filtered by poorly configured middle-boxes, and a fallback procedure to standard TLS-over-TCP (at minimal latency overhead) is provided.
+This document gives a construction for TurboTLS {{TURBOTLS}}, which at its core is a method for handshaking over UDP in TLS before switching back to TCP for the TLS session. A technique called client request-based fragmentation is described to reduce the possibility of portions of the handshake over UDP being filtered by poorly configured middle-boxes, and a fallback procedure to standard TLS-over-TCP (at minimal latency overhead) is provided.
 
 
 
@@ -135,7 +135,7 @@ Many will make the choice to move from TLS to QUIC, however some will not for a 
 
 ## Scope {#scope}
 
-This document focuses on TurboTLS {{TurboTLS}}. It covers everything needed to achieve the handshaking portion of a TLS connection over UDP, including
+This document focuses on TurboTLS. It covers everything needed to achieve the handshaking portion of a TLS connection over UDP, including
 
 - **Construction in principle:** It provides an outline of which flows are sent over UDP, which are sent over TCP and in what order.
 
@@ -175,7 +175,7 @@ TLS does have a pre-shared key mode that allows for an abbreviated handshake per
 We first demonstrate protocol diagrams of the handshaking parts of TLS and TurboTLS.
 
 ## Protocol diagram TLS {#construction-diag-tls}
-lalala
+
 
 ~~~~~
 
@@ -271,6 +271,7 @@ lalala
               TCP: TLS app data             │
      ------------------------------------>  │
 ~~~~~
+
 As described in **ref fig**, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
 Switching from TCP to UDP for handshake establishment means we cannot rely on TCP's features, namely connection-oriented, reliable, in-order delivery.
 However, since the rest of the connection will still run over TCP and only part of the handshake runs over UDP,
