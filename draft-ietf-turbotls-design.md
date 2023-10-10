@@ -37,7 +37,7 @@ author:
     email: jason.goertzen@sandboxquantum.com
 
 normative:
-  TurboTLS:
+  TURBOTLS:
     target: https://arxiv.org/abs/2302.05311
     title: "TurboTLS: TLS connection establishment with 1 less round trip"
     author:
