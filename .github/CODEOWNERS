@@ -1,0 +1,3 @@
+# Automatically generated CODEOWNERS
+# Regenerate with `make update-codeowners`
+draft-ietf-turbotls-design.md dstebila@uwaterloo.ca dj@sandboxaq.com carlos.aguilar@sandboxaq.com jason.goertzen@sandboxquantum.com

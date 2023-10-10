@@ -37,180 +37,71 @@ author:
     email: jason.goertzen@sandboxquantum.com
 
 normative:
+  TurboTLS:
+    target: https://arxiv.org/abs/2302.05311
+    title: "TurboTLS: TLS connection establishment with 1 less round trip"
+    author:
+      -
+        ins: Carlos Aguilar-Melchor
+      -
+        ins: Thomas Bailleux
+      -
+        ins: Jason Goertzen
+      -
+        ins: Adrien Guinet
+      -
+        ins: David Joseph
+      -
+        ins: Douglas Stebila
   TLS13: RFC8446
   TLS12: RFC5246
   UDP: RFC768
   TCP: RFC793
 
 informative:
-  AVIRAM:
-    target: https://mailarchive.ietf.org/arch/msg/tls/F4SVeL2xbGPaPB2GW_GkBbD_a5M/
-    title: "[TLS] Combining Secrets in Hybrid Key Exchange in TLS 1.3"
-    date: 2021-09-01
+  SW19:
+    target: https://datatracker.ietf.org/doc/html/draft-song-atr-large-resp-00
+    title: "ATR: Additional Truncated Response for Large DNS Response"
+    date: 2017-09-10
     author:
       -
-        ins: Nimrod Aviram
+        ins: Linjian Song
       -
-        ins: Benjamin Dowling
-      -
-        ins: Ilan Komargodski
-      -
-        ins: Kenny Paterson
-      -
-        ins: Eyal Ronen
-      -
-        ins: Eylon Yogev
-  BCNS15: DOI.10.1109/SP.2015.40
-  BERNSTEIN: DOI.10.1007/978-3-540-88702-7
-  BINDEL: DOI.10.1007/978-3-030-25510-7_12
-  CAMPAGNA: I-D.campagna-tls-bike-sike-hybrid
-  CECPQ1:
-    target: https://security.googleblog.com/2016/07/experimenting-with-post-quantum.html
-    title: Experimenting with Post-Quantum Cryptography
+        ins: Shengling Wan
+  GS22:
+    target: https://link.springer.com/chapter/10.1007/978-3-031-40003-2_20
+    title: "Post-Quantum Signatures in DNSSEC via Request-Based Fragmentation"
+    date: 2022-11-25
     author:
       -
-        ins: M. Braithwaite
-    date: 2016-07-07
-  CECPQ2:
-    target: https://www.imperialviolet.org/2018/12/12/cecpq2.html
-    title: CECPQ2
+        ins: Douglas Stebila
+      -
+        ins: Jason Goertzen
+  SBN22:
+    target: https://datatracker.ietf.org/doc/draft-ietf-dnsop-svcb-https/
+    title: "Service binding and parameter specification via the DNS (DNS SVCB and HTTPS RRs)"
+    date: 2023-09-11
     author:
       -
-        ins: A. Langley
-    date: 2018-12-12
-  DODIS: DOI.10.1007/978-3-540-30576-7_11
-  DOWLING: DOI.10.1007/s00145-021-09384-1
-  ETSI:
-    target: https://www.etsi.org/images/files/ETSIWhitePapers/QuantumSafeWhitepaper.pdf
-    title: "Quantum safe cryptography and security: An introduction, benefits, enablers and challengers"
+        ins: Benjamin M. Schwartz
+      -
+        ins: Mike Bishop
+      -
+        ins: Erik Nygren
+  Ber05:
+    target: https://cr.yp.to/syncookies.html
+    title: SYN cookies
+    date: 2005-12-01
     author:
       -
-        role: editor
-        ins: M. Campagna
-      -
-        ins: others
-    seriesinfo: ETSI White Paper No. 8
-    date: 2015-06
-  EVEN: DOI.10.1007/978-1-4684-4730-9_4
-  EXTERN-PSK: RFC8773
-  FLUHRER:
-    target: https://eprint.iacr.org/2016/085
-    title: "Cryptanalysis of ring-LWE based key exchange with key share reuse"
+        ins: Daniel J. Bernstein
+  Sim11:
+    target: https://www.rfc-editor.org/rfc/rfc6013
+    title: "TCP Cookie Transactions (TCPCT)"
+    date: 2011
     author:
       -
-        ins: S. Fluhrer
-    seriesinfo: Cryptology ePrint Archive, Report 2016/085
-    date: 2016-01
-  FO: DOI.10.1007/s00145-011-9114-1
-  FRODO: DOI.10.1145/2976749.2978425
-  GIACON: DOI.10.1007/978-3-319-76578-5_7
-  HARNIK: DOI.10.1007/11426639_6
-  HHK: DOI.10.1007/978-3-319-70500-2_12
-  HPKE: RFC9180
-  IKE-HYBRID: I-D.tjhai-ipsecme-hybrid-qske-ikev2
-  IKE-PSK: RFC8784
-  KIEFER: I-D.kiefer-tls-ecdhe-sidh
-  Kyber:
-    target: https://csrc.nist.gov/CSRC/media/Projects/post-quantum-cryptography/documents/round-3/submissions/Kyber-Round3.zip
-    title: Crystals-Kyber NIST Round 3 submission
-    author:
-      -
-        ins: Roberto Avanzi, Joppe Bos, Léo Ducas, Eike Kiltz, Tancrède Lepoint, Vadim Lyubashevsky, John M. Schanck, Peter Schwabe, Gregor Seiler, Damien Stehlé
-    date: 2020-10-01
-  LANGLEY:
-    target: https://www.imperialviolet.org/2018/04/11/pqconftls.html
-    title: Post-quantum confidentiality for TLS
-    author:
-      -
-        ins: A. Langley
-    date: 2018-04-11
-  LUCKY13:
-    target: https://ieeexplore.ieee.org/iel7/6547086/6547088/06547131.pdf
-    title: "Lucky Thirteen: Breaking the TLS and DTLS record protocols"
-    author:
-    -
-      ins: N. J. Al Fardan
-    -
-      ins: K. G. Paterson
-  NIELSEN:
-    title: Quantum Computation and Quantum Information
-    author:
-      -
-        ins: M. A. Nielsen
-      -
-        ins: I. L. Chuang
-    seriesinfo: Cambridge University Press
-    date: 2000
-  NIST:
-    target: https://www.nist.gov/pqcrypto
-    title: Post-Quantum Cryptography
-    author:
-      org: National Institute of Standards and Technology (NIST)
-  NIST-FIPS-202:
-    target: https://doi.org/10.6028/NIST.FIPS.202
-    title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions"
-    author:
-      org: National Institute of Standards and Technology (NIST)
-    date: 2015-08
-  NIST-SP-800-56C:
-    target: https://doi.org/10.6028/NIST.SP.800-56Cr2
-    title: Recommendation for Key-Derivation Methods in Key-Establishment Schemes
-    author:
-      org: National Institute of Standards and Technology (NIST)
-    date: 2020-08
-  NIST-SP-800-135:
-    target: https://doi.org/10.6028/NIST.SP.800-135r1
-    title: Recommendation for Existing Application-Specific Key Derivation Functions
-    author:
-      org: National Institute of Standards and Technology (NIST)
-    date: 2011-12
-  OQS-102:
-    target: https://github.com/open-quantum-safe/openssl/tree/OQS-OpenSSL_1_0_2-stable
-    title: OQS-OpenSSL-1-0-2_stable
-    author:
-      org: Open Quantum Safe Project
-    date: 2018-11
-  OQS-111:
-    target: https://github.com/open-quantum-safe/openssl/tree/OQS-OpenSSL_1_1_1-stable
-    title: OQS-OpenSSL-1-1-1_stable
-    author:
-      org: Open Quantum Safe Project
-    date: 2022-01
-  OQS-PROV:
-    target: https://github.com/open-quantum-safe/oqs-provider/
-    title: OQS Provider for OpenSSL 3
-    author:
-      org: Open Quantum Safe Project
-    date: 2023-07
-  PST: DOI.10.1007/978-3-030-44223-1_5
-  RACCOON:
-    target: https://raccoon-attack.com/
-    title: "Raccoon Attack: Finding and Exploiting Most-Significant-Bit-Oracles in TLS-DH(E)"
-    author:
-    -
-      ins: R. Merget
-    -
-      ins: M. Brinkmann
-    -
-      ins: N. Aviram
-    -
-      ins: J. Somorovsky
-    -
-      ins: J. Mittmann
-    -
-      ins: J. Schwenk
-    date: 2020-09
-  S2N:
-    target: https://aws.amazon.com/blogs/security/post-quantum-tls-now-supported-in-aws-kms/
-    title: Post-quantum TLS now supported in AWS KMS
-    author:
-      org: Amazon Web Services
-    date: 2019-11-04
-  SCHANCK: I-D.schanck-tls-additional-keyshare
-  TURBOTLS: DOI.10.48550/arXiv.2302.05311
-  WHYTE12: I-D.whyte-qsh-tls12
-  WHYTE13: I-D.whyte-qsh-tls13
-  XMSS: RFC8391
+        ins: W. Simpson
   ZHANG: DOI.10.1007/978-3-540-24632-9_26
 
 --- abstract
@@ -223,19 +114,16 @@ Discussion of this work is encouraged to happen on the TLS IETF mailing list tls
 
 # Introduction {#introduction}
 
-This document gives a construction for TurboTLS, which at its core is a method for handshaking over UDP in TLS before switching back to TCP for the TLS session. A technique called client request-based fragmentation is described to reduce the possibility of portions of the handshake over UDP being filtered by poorly configured middle-boxes, and a fallback procedure to standard TLS-over-TCP (at minimal latency overhead) is provided.
+This document gives a construction for TurboTLS {{TURBOTLS}}, which at its core is a method for handshaking over UDP in TLS before switching back to TCP for the TLS session. A technique called client request-based fragmentation is described to reduce the possibility of portions of the handshake over UDP being filtered by poorly configured middle-boxes, and a fallback procedure to standard TLS-over-TCP (at minimal latency overhead) is provided.
 
 
 
 ## Terminology {#terminology}
 
-UDP
-TCP
-TLS
-QUIC
-DNS
-connection-based protocol
-connectionless protocol
+- **UDP*** Universal Datagram Protocol: a connectionless transport protocol, whereby packets are sent, but without any codified way of knowing that such packets have been successfully received. This leads to low reliability but can be appropriate where applications are time sensitive.
+- **TCP** Transmission Control Protocol: a connection-oriented protocol that ensures the successful delivery of packets. Before a communication over TCP can start in earnest, a connection must be established. This is done via a TCP handshake consisting of a SYN, a SYN ACK and an ACK.
+- **TLS** Transport Layer Security: a cryptographic protocol that enables a client and server to authenticate one another, and communicate confidentially. TLS initializes with a handshake where cryptographic primitives are executed and session parameters are agreed upon, and then a session over which applications exchange encrypted communications.
+- **QUIC** (not an acronym): a security protocol that embeds TLS functionality directly into UDP-based transport. Due to the drawbacks of UDP, QUIC implements its own reliability, packet reordering, and packet dropping procedures as well as the security properties.
 
 
 ## Motivation for handshaking over UDP {#motivation}
@@ -283,56 +171,107 @@ In total (not including the DNS resolution) this results in two round trips befo
 
 TLS does have a pre-shared key mode that allows for an abbreviated handshake permitting application data to be sent in the first C->S TLS flow, but this requires that the client and server have a pre-shared key in advance, established either through some out-of-band mechanism or saved from a previous TLS connection for session resumption.
 
-# Construction for TurboTLS {#construction}
-```
-┌──────────┐                        ┌──────────┐    ┌──────────┐                        ┌──────────┐
-│TLS client│                        │DNS server│    │TLS client│                        │DNS server│
-└──────────┘                        └──────────┘    └──────────┘                        └──────────┘
-               DNS: A request                                      DNS: A request
-     ────────────────────────────────────►               ────────────────────────────────────►
-              DNS: AAAA request                                   DNS: AAAA request
-     ────────────────────────────────────►               ────────────────────────────────────►
-             DNS: HTTPS RR request                               DNS: HTTPS RR request
-     ────────────────────────────────────►               ────────────────────────────────────►
-               DNS: A response                                     DNS: A response
-     ◄────────────────────────────────────               ◄────────────────────────────────────
-              DNS: AAAA response                                  DNS: AAAA response
-     ◄────────────────────────────────────               ◄────────────────────────────────────
-             DNS: HTTPS RR response                        DNS: HTTPS RR response w/ TTLS flag
-     ◄────────────────────────────────────               ◄────────────────────────────────────
+# Construction for TLS {#construction}
+We first demonstrate protocol diagrams of the handshaking parts of TLS and TurboTLS.
 
-┌──────────┐                        ┌──────────┐    ┌──────────┐                        ┌──────────┐
-│TLS client│                        │TLS server│    │TLS client│                        │TLS server│
-└──────────┘                        └──────────┘    └──────────┘                        └──────────┘
-                 TCP: SYN                                  UDP: TurboTLS id, TLS CH frag#1
-     ────────────────────────────────────►  │            ────────────────────────────────────►  │
-                TCP: SYN-ACK                │RT1           UDP: TurboTLS id, TLS CH frag#1      │
-     ◄────────────────────────────────────  │            ────────────────────────────────────►  │
-                                                           UDP: TurboTLS id, empty frag#1       │
-                 TCP: ACK                                ────────────────────────────────────►  │
-     ────────────────────────────────────►  │              UDP: TurboTLS id, empty frag#2       │
-                TCP: TLS CH                 │            ────────────────────────────────────►  │
-     ────────────────────────────────────►  │                                                   │
-                TCP: TLS SH                 │RT2                     TCP: SYN                   │
-     ◄────────────────────────────────────  │            ────────────────────────────────────►  │
-              TCP: TLS app data             │                                                   │RT1
-     ◄────────────────────────────────────  │              UDP: TurboTLS id, TLS resp frag#1    │
-                                                         ◄────────────────────────────────────  │
-                TCP: TLS *, FIN                            UDP: TurboTLS id, TLS resp frag#2    │
-     ────────────────────────────────────►  │            ◄────────────────────────────────────  │
-              TCP: TLS app data             │RT3           UDP: TurboTLS id, TLS resp frag#3    │
-     ────────────────────────────────────►  │            ◄────────────────────────────────────  │
-                                                                                                │
-                                                                    TCP: SYN-ACK                │
-                                                         ◄────────────────────────────────────  │
+## Protocol diagram TLS {#construction-diag-tls}
 
-                                                                     TCP: ACK
-                                                         ────────────────────────────────────►  │
-                                                           TCP: TurboTLS id, TLS *, FIN         │
-                                                         ────────────────────────────────────►  │RT2
-                                                                  TCP: TLS app data             │
-                                                         ────────────────────────────────────►  │
-```
+
+~~~~~
+
+┌----------┐                        ┌----------┐
+│TLS client│                        │DNS server│
+└----------┘                        └----------┘
+               DNS: A request
+     ------------------------------------>
+              DNS: AAAA request
+     ------------------------------------>
+             DNS: HTTPS RR request
+     ------------------------------------>
+               DNS: A response
+     <------------------------------------
+              DNS: AAAA response
+     <------------------------------------
+             DNS: HTTPS RR response
+     <------------------------------------
+
+┌----------┐                        ┌----------┐
+│TLS client│                        │TLS server│
+└----------┘                        └----------┘
+                 TCP: SYN
+     ------------------------------------>  │
+                TCP: SYN-ACK                │RT1
+     <------------------------------------  │
+
+                 TCP: ACK
+     ------------------------------------>  │
+                TCP: TLS CH                 │
+     ------------------------------------>  │
+                TCP: TLS SH                 │RT2
+     <------------------------------------  │
+              TCP: TLS app data             │
+     <------------------------------------  │
+
+                TCP: TLS *, FIN
+     ------------------------------------>  │
+              TCP: TLS app data             │RT3
+     ------------------------------------>  │
+~~~~~
+
+## Protocol diagram TurboTLS {#construction-diag-turbotls}
+lalala
+
+~~~~~
+
+┌----------┐                        ┌----------┐
+│TLS client│                        │DNS server│
+└----------┘                        └----------┘
+               DNS: A request
+     ------------------------------------>
+              DNS: AAAA request
+     ------------------------------------>
+             DNS: HTTPS RR request
+     ------------------------------------>
+               DNS: A response
+     <------------------------------------
+              DNS: AAAA response
+     <------------------------------------
+       DNS: HTTPS RR response w/ TTLS flag
+     <------------------------------------
+
+┌----------┐                        ┌----------┐
+│TLS client│                        │TLS server│
+└----------┘                        └----------┘
+       UDP: TurboTLS id, TLS CH frag#1
+     ------------------------------------>  │
+       UDP: TurboTLS id, TLS CH frag#1      │
+     ------------------------------------>  │
+       UDP: TurboTLS id, empty frag#1       │
+     ------------------------------------>  │
+       UDP: TurboTLS id, empty frag#2       │
+     ------------------------------------>  │
+                                            │
+                 TCP: SYN                   │
+     ------------------------------------>  │
+                                            │RT1
+       UDP: TurboTLS id, TLS resp frag#1    │
+     <------------------------------------  │
+       UDP: TurboTLS id, TLS resp frag#2    │
+     <------------------------------------  │
+       UDP: TurboTLS id, TLS resp frag#3    │
+     <------------------------------------  │
+                                            │
+                TCP: SYN-ACK                │
+     <------------------------------------  │
+
+                 TCP: ACK
+     ------------------------------------>  │
+       TCP: TurboTLS id, TLS *, FIN         │
+     ------------------------------------>  │RT2
+              TCP: TLS app data             │
+     ------------------------------------>  │
+~~~~~
+
 As described in **ref fig**, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
 Switching from TCP to UDP for handshake establishment means we cannot rely on TCP's features, namely connection-oriented, reliable, in-order delivery.
 However, since the rest of the connection will still run over TCP and only part of the handshake runs over UDP,
@@ -343,10 +282,10 @@ One of the major problems to deal with is that of fragmentation.  TLS handshake 
 
 Obviously the client can fragment its first C->S flow across multiple UDP packets.  To allow a server to link fragments received across multiple UDP requests, we add a 12-byte connection identifier field, containing a client-selected random value _id_ that is used across all TurboTLS fragments sent by the client. The connection identifier is also included in the first message on the established TLS connection to allow the server to link together data received on the UDP and TCP connections. To allow the server to reassemble fragments if they arrive out-of-order, each fragment includes the total length of the original message as well as the offset of the current fragment; this can allow the server to easily copy fragments into the right position within a buffer as they are received.
 
-Similarly, the server can fragment its first S->C flow across multiple UDP packets.  One additional problem here however is that the S->C flow is typically larger than the C->S flow (as it typically contains one or more certificates), so the server may have to send more UDP response packets than UDP request packets.  As noted by \cite{song-atr-large-resp-03} in the context of DNSSEC, many network devices do not behave well when receiving multiple UDP responses to a single UDP request, and may close the port after the first packet, dropping the request.  Subsequent packets received at a closed port lead to ICMP failure alerts, which can be a nuisance.
+Similarly, the server can fragment its first S->C flow across multiple UDP packets.  One additional problem here however is that the S->C flow is typically larger than the C->S flow (as it typically contains one or more certificates), so the server may have to send more UDP response packets than UDP request packets.  As noted by {{SW19}} in the context of DNSSEC, many network devices do not behave well when receiving multiple UDP responses to a single UDP request, and may close the port after the first packet, dropping the request.  Subsequent packets received at a closed port lead to ICMP failure alerts, which can be a nuisance.
 
 ### Client request-based fragmentation {#Construction-CRBF}
-We employ a recent method proposed by Goertzen and Stebila \cite{arxiv.2211.14196} for DNSSEC: request-based fragmentation.  In the context of large resource records in DNSSEC, \cite{arxiv.2211.14196} had the first response be a truncated response that included information about the size of the response, and then the client sent multiple additional requests, in parallel, for the remaining fragments.  This ensured that there was only one UDP response for each UDP request.  We adapt that method for TurboTLS: the client, in its first C->S flow, fragments its own C->S data across multiple UDP packets, and additionally sends (in parallel) enough nearly-empty UDP requests for a predicted upper bound on the number of fragments the server will need to fit its response.  This preserves the model of each UDP request receiving a single UDP response, reducing the impact of misbehaving network devices and also reducing the potential for DDoS amplification attacks.
+We employ a recent method proposed by Goertzen and Stebila {{GS22}} for DNSSEC: request-based fragmentation.  In the context of large resource records in DNSSEC, {{GS22}} had the first response be a truncated response that included information about the size of the response, and then the client sent multiple additional requests, in parallel, for the remaining fragments.  This ensured that there was only one UDP response for each UDP request.  We adapt that method for TurboTLS: the client, in its first C->S flow, fragments its own C->S data across multiple UDP packets, and additionally sends (in parallel) enough nearly-empty UDP requests for a predicted upper bound on the number of fragments the server will need to fit its response.  This preserves the model of each UDP request receiving a single UDP response, reducing the impact of misbehaving network devices and also reducing the potential for DDoS amplification attacks.
 
 ## TLS-over-TCP fallback {#Construction-fallback}
 UDP does not have reliable delivery, so packets may be lost.  Since the first TurboTLS round-trip includes the TCP handshake, we can immediately fall back to TCP if a UDP packet is lost in either direction.  This will induce a latency cost of however long the client decides to wait for UDP packets to arrive before giving up and assuming they were lost.
@@ -362,7 +301,15 @@ As part of the TLS 1.3 specification, a server is able to send encrypted applica
 In the best case scenario, these early data and post-handshake messages arrive one round trip sooner than they would than in TCP-based TLS, and in the worst cast arrive at the same time as TCP-based TLS. However, this fallback method comes at the cost of requiring additional memory usage by the server to store the messages sent over UDP until it has verified they have been delivered.
 
 ## TurboTLS support advertisment {#Construction-advertisment}
-To protect servers who do not support TurboTLS from being bombarded with unwanted UDP traffic, it would be preferable if clients only used TurboTLS with servers that they already know support it.  Clients could cache this information from previous non-TurboTLS connections, but in fact we can do better.  Even on the first visit to a server, we can communicate server support for TurboTLS to the client, without an extra round trip, using the HTTPS resource record in DNS \cite{ietf-dnsop-svcb-https-11}.  Today when web browsers perform the DNS lookup for the domain name in question, they typically send three requests in parallel: an A query for an IPv4 address, an AAAA query for an IPv6 address, and a query for an HTTPS resource record \cite{ietf-dnsop-svcb-https-11}.  Servers can advertise support for TurboTLS with an additional flag in the HTTPS resource record and clients can check for it without incurring any extra latency.
+To protect servers who do not support TurboTLS from being bombarded with unwanted UDP traffic, it would be preferable if clients only used TurboTLS with servers that they already know support it.  Clients could cache this information from previous non-TurboTLS connections, but in fact we can do better.  Even on the first visit to a server, we can communicate server support for TurboTLS to the client, without an extra round trip, using the HTTPS resource record in DNS {{SBN22}}.  Today when web browsers perform the DNS lookup for the domain name in question, they typically send three requests in parallel: an A query for an IPv4 address, an AAAA query for an IPv6 address, and a query for an HTTPS resource record {{SBN22}}.  Servers can advertise support for TurboTLS with an additional flag in the HTTPS resource record and clients can check for it without incurring any extra latency.
+
+## Specification: Handshake embedding into UDP {#Construction-embedding}
+
+### Client Hello {#Construction-embedding-CH}
+
+### Server Hello {#Construction-embedding-SH}
+
+### Early data {#Construction-embedding-early-data}
 
 # Discussion {#discussion}
 
@@ -370,8 +317,35 @@ To protect servers who do not support TurboTLS from being bombarded with unwante
 # Security Considerations {#security-considerations}
 
 ## Transparent proxying {#security-proxy}
+TurboTLS benefits from a nice feature: TurboTLS makes no change whatsoever to the content of a TLS handshake, only changes the delivery mechanism.  As a result, all cryptographic properties of TLS are untouched.  In fact, it is possible to implement TurboTLS without changing the client or server's TLS library at all, and instead use transparent proxies on both the client and server side to change the network delivery from pure TCP in TLS to UDP+TCP in TurboTLS. Of course in such a construction the initial client or server, who does not know TurboTLS, will observe two round trip times, but if each proxy is close to its host (say on the same machine), then the two round trip times will be negligible, and the higher latency client--server distance will only be covered over one round trip.
 
 ## Denial-of-Service {#security-DoS}
+We now consider the implications for TurboTLS of various types of denial-of-service and distributed denial-of-service attacks, including whether a TurboTLS server is a victim in a DoS attack or being leveraged by an attacker to direct a DDoS attack elsewhere. TurboTLS runs on top of both TCP and UDP so we have to consider attacks involving both protocols.
+
+### Attacks _on_ TurboTLS servers
+The most significant TCP DoS attack is the SYN flood attack where a target machine is overwhelmed by TCP SYN messages faster than it can process them. This is because a server, upon receiving a SYN, typically stores the source IP, TCP packet index number, and port in a `SYN queue', and this represents a half-open connection. An attacker could flood the server with SYN messages thereby exhausting its memory. The server cannot just arbitrarily drop connections because then legitimate users may find themselves unable to connect. There are multiple protections against SYN flood attacks, such as:
+
+- Allocating only very small amounts (micro blocks) of memory to half-open connections.
+
+- Using TCP cryptographic cookies {{Ber05}} {{Sim11}} whereby the sequence number of the ACK encodes information about the SYN queue entry so that the server can reconstruct the entry even if it was not stored due to having a full SYN queue. TCP cookies enjoy support in the Linux kernel -- this and other such mitigations are already sufficient to protect TurboTLS from SYN floods.
+
+In general there are several vectors to consider for resource exhaustion attacks on a server running TurboTLS.
+The server needs to maintain a buffer of received UDP packets containing fragments of a TLS CH message.
+
+* To avoid memory exhaustion attacks, a server can safely bound the memory allocated to this buffer and flush old entries on a regular basis (e.g. after two seconds).
+  - In the worst case, a legitimate client whose UDP packets are rejected from a busy server or flushed early will be able to fall back to vanilla TLS over TCP, and will incur negligible latency loss (compared to TLS over TCP) in doing so, because TurboTLS starts the TCP handshake in parallel to the first C->S UDP flow.
+* An attacker spoofing IP addresses and sending well-formed CH messages could also try to exhaust a server's CPU resources by causing a large amount of cryptographic computation.
+  - Again, a server under attack can limit the CPU resources allocated to UDP-received CH messages, and then fall back to vanilla TLS over TCP.
+In the worst case, legitimate clients affected by this and having to fall back to vanilla TLS over TCP will incur negligible latency loss compared to TLS over TCP since the TCP handshake has already been started in parallel.
+
+### Attacks _leveraging_ TurboTLS servers
+UDP reflection attacks present another threat. Typical defenses against these are:
+- blocking unused ports,
+- rate limiting based on expected traffic loads from peers (exorbitant traffic loads are likely to be malicious),
+- blocking IPs of other known vulnerable servers.
+However such defenses are provided by middleboxes and therefore do not affect the protocol.
+
+It should be noted here that the redundant UDP packets sent along with CH are part of the TurboTLS-specific technique we call request-based-fragmentation to mitigate _against_ a client's middlebox defenses incorrectly filtering TurboTLS connections, as otherwise multiple UDP responses to a single UDP request could be flagged as malicious behaviour. Furthermore, the one-to-oneness of the UDP request/response significantly reduces the impact of any amplification attack which tries to utilize a TurboTLS server as a reflector: an attacker would have to send one UDP packet for every reflected packet generated by the server, meaning that initial requests and responses are of comparable sizes, making the amplification factor so low that it would be an ineffective use of resources. Furthermore, the UDP requests ultimately must contain a fully formed CH before the server responds, limiting the amplification factor.
 
 # Acknowledgements
 
