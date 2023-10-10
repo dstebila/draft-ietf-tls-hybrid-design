@@ -135,7 +135,7 @@ Many will make the choice to move from TLS to QUIC, however some will not for a 
 
 ## Scope {#scope}
 
-This document focuses on TurboTLS. It covers everything needed to achieve the handshaking portion of a TLS connection over UDP, including
+This document focuses on TurboTLS {{TURBOTLS}}. It covers everything needed to achieve the handshaking portion of a TLS connection over UDP, including
 
 - **Construction in principle:** It provides an outline of which flows are sent over UDP, which are sent over TCP and in what order.
 
@@ -293,6 +293,12 @@ UDP does not have reliable delivery, so packets may be lost.  Since the first Tu
 In an implementation, the client delay could be a fixed number of milliseconds, or could be variable depending on observed network conditions; this need not be fixed by a standard.
 We believe that in many cases a client delay of just 2ms after the TCP reply is received in the first round trip will be enough to ensure UDP responses are received a large majority of the time.  In other words, by tolerating a potential 2ms of extra latency on $X$\% of connections, we can save an entire round-trip on a large proportion ($100-X$\%) of the connections.
 This mechanic was not implemented in the experimental results presented here and constitutes future work.
+
+### Early data, post-handshake messages, and TCP fallback
+
+As part of the TLS 1.3 specification, a server is able to send encrypted application data and connection maintenance related messages after it sends its server finished message. One could wait until the TCP connection is established and is associated with the correct UDP handshake. This would remove the benefit that TurboTLS offers as it requires the server to wait for the TCP connection to finish being established. We therefore propose that all post-handshake messages and early data message attempt to be transmitted over UDP. These messages should therefore be wrapped with the standard TurboTLS headers (session ID and index) to ensure that can be associated with the correct TLS session. Once the TCP connection is established, the client's first message should include the index of the last in order UDP based packet that was received. The server can then determine what needs to be retransmitted over the reliable TCP connection. 
+
+In the best case scenario, these early data and post-handshake messages arrive one round trip sooner than they would than in TCP-based TLS, and in the worst cast arrive at the same time as TCP-based TLS. However, this fallback method comes at the cost of requiring additional memory usage by the server to store the messages sent over UDP until it has verified they have been delivered.
 
 ## TurboTLS support advertisment {#Construction-advertisment}
 To protect servers who do not support TurboTLS from being bombarded with unwanted UDP traffic, it would be preferable if clients only used TurboTLS with servers that they already know support it.  Clients could cache this information from previous non-TurboTLS connections, but in fact we can do better.  Even on the first visit to a server, we can communicate server support for TurboTLS to the client, without an extra round trip, using the HTTPS resource record in DNS {{SBN22}}.  Today when web browsers perform the DNS lookup for the domain name in question, they typically send three requests in parallel: an A query for an IPv4 address, an AAAA query for an IPv6 address, and a query for an HTTPS resource record {{SBN22}}.  Servers can advertise support for TurboTLS with an additional flag in the HTTPS resource record and clients can check for it without incurring any extra latency.
