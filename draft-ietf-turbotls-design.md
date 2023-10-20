@@ -163,7 +163,7 @@ It intentionally does not address:
 
 
 # Transport Layer Security {#TLS}
-The Transport Layer Security (TLS) protocol is ubiquitous and provides security services to many network applications.  TLS runs over TCP.  As shown in **DJ ref fig**, the main flow for TLS 1.3 connection establishment {{TLS13}} in a web browser is as follows.
+The Transport Layer Security (TLS) protocol is ubiquitous and provides security services to many network applications.  TLS runs over TCP.  As shown in {{fig-tls-over-tcp}}, the main flow for TLS 1.3 connection establishment {{TLS13}} in a web browser is as follows.
 
 First of all, the client makes a DNS query to convert the requested domain name into an IP address.  Simultaneously, browsers request an HTTPS resource record [draft-ietf-dnsop-svcb-https-11](https://datatracker.ietf.org/doc/draft-ietf-dnsop-svcb-https/11/) from the DNS server which can provide additional information about the server's HTTPS configuration.  Next, the client and server perform the TCP three-way handshake.  Once the TCP handshake is complete and a TCP connection is established, the TLS handshake can start; it requires one round trip -- one client-to-server C->S flow and one server-to-client S->C flow -- before the client can start transmitting application data.
 
@@ -217,12 +217,11 @@ We first demonstrate protocol diagrams of the handshaking parts of TLS and Turbo
               TCP: TLS app data             │RT3
      ------------------------------------>  │
 ~~~~~
+{: #fig-tls-over-tcp title="TLS-over-TCP handshake"}
 
 ## Protocol diagram TurboTLS {#construction-diag-turbotls}
-lalala
 
 ~~~~~
-
 ┌----------┐                        ┌----------┐
 │TLS client│                        │DNS server│
 └----------┘                        └----------┘
@@ -244,7 +243,7 @@ lalala
 └----------┘                        └----------┘
        UDP: TurboTLS id, TLS CH frag#1
      ------------------------------------>  │
-       UDP: TurboTLS id, TLS CH frag#1      │
+       UDP: TurboTLS id, TLS CH frag#2      │
      ------------------------------------>  │
        UDP: TurboTLS id, empty frag#1       │
      ------------------------------------>  │
@@ -271,8 +270,9 @@ lalala
               TCP: TLS app data             │
      ------------------------------------>  │
 ~~~~~
+{: #fig-turbotls title="TurboTLS Handshake"}
 
-As described in **ref fig**, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
+As described in {{fig-turbotls}}, TurboTLS sends part of the TLS handshake over UDP, rather than TCP.
 Switching from TCP to UDP for handshake establishment means we cannot rely on TCP's features, namely connection-oriented, reliable, in-order delivery.
 However, since the rest of the connection will still run over TCP and only part of the handshake runs over UDP,
 we can reproduce the required functionality in a lightweight way without adding latency and allowing for a simple implementation.
