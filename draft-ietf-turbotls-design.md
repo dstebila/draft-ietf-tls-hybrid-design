@@ -29,7 +29,6 @@ author:
     name: Carlos Aguilar-Melchor
     organization: SandboxAQ
     email: carlos.aguilar@sandboxaq.com
-
   -
     ins: J. Goertzen
     name: Jason Goertzen
@@ -103,6 +102,14 @@ informative:
       -
         ins: W. Simpson
   ZHANG: DOI.10.1007/978-3-540-24632-9_26
+  DNSUDP:
+    target: https://indico.dns-oarc.net/event/36/contributions/776/
+    title: "Defragmenting DNS - Determining the optimal maximum UDP response size for DNS"
+    date: 2020-09-11
+    author:
+      -
+        ins: Axel Koolhaas
+      - ins: Tjeerd Slokker
 
 --- abstract
 
@@ -280,7 +287,7 @@ we can reproduce the required functionality in a lightweight way without adding 
 ## Fragmentation {#Construction-fragmentation}
 One of the major problems to deal with is that of fragmentation.  TLS handshake messages can be too large to fit in a single packet -- especially with long certificate chains or if post-quantum algorithms are used.
 
-Obviously the client can fragment its first C->S flow across multiple UDP packets.  To allow a server to link fragments received across multiple UDP requests, we add a 12-byte connection identifier field, containing a client-selected random value _id_ that is used across all TurboTLS fragments sent by the client. The connection identifier is also included in the first message on the established TLS connection to allow the server to link together data received on the UDP and TCP connections. To allow the server to reassemble fragments if they arrive out-of-order, each fragment includes the total length of the original message as well as the offset of the current fragment; this can allow the server to easily copy fragments into the right position within a buffer as they are received.
+Obviously the client can fragment its first C->S flow across multiple UDP packets.  To allow a server to link fragments received across multiple UDP requests, we add a 12-byte session ID field, containing a client-selected random value _id_ that is used across all TurboTLS fragments sent by the client. The session ID is also included in the first message on the established TLS connection as part of the tombstone message to allow the server to link together data received on the UDP and TCP connections. To allow the server to reassemble fragments if they arrive out-of-order. The client will send the last in-order UDP packet it received's sequence number as a part of the tombstone message so that the server can detect packetloss.
 
 Similarly, the server can fragment its first S->C flow across multiple UDP packets.  One additional problem here however is that the S->C flow is typically larger than the C->S flow (as it typically contains one or more certificates), so the server may have to send more UDP response packets than UDP request packets.  As noted by {{SW19}} in the context of DNSSEC, many network devices do not behave well when receiving multiple UDP responses to a single UDP request, and may close the port after the first packet, dropping the request.  Subsequent packets received at a closed port lead to ICMP failure alerts, which can be a nuisance.
 
@@ -305,13 +312,35 @@ To protect servers who do not support TurboTLS from being bombarded with unwante
 
 ## Specification: Handshake embedding into UDP {#Construction-embedding}
 
-### Client Hello {#Construction-embedding-CH}
+Rather than relying on IP fragmentation, and the issues that may arise from IP/UDP fragmentation, we fragment at the application layer and send a new UDP packet each time the packet size would exceed a predefined _safe_ size. This predefined size will need to account for the various headers and metadata being sent in each packet. In DNS, for example, the recommended maximum payload size is 1232 bytes to account for IPv6, and UDP headers {{DNSUDP}}. As previously mentioned, TurboTLS UDP packets contain a session ID, and a sequence number. These Turbo-headers will be prefixed to the payload of each UDP packet being set. Both client and server UDP communication streams have their own distinct sequence counters to maintain ordering in either direction.
+~~~
+                                    1  1  1  1  1  1
+      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |             Session ID            |Seq. Number|
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    /                    Payload                    /
+    /                                               /
+    /                                               /
+    /                                               /
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+~~~
+{: #turbotls-udp-packet title="TurboTLS UDP packet layout"}
 
-### Server Hello {#Construction-embedding-SH}
+## Specification: UDP Tombstone
 
+As part of joining the UDP and TCP streams together once a TCP connection is established, the cleint sends a tombstone message as the first message over TCP. This message contains the session ID as well as the sequence number of the last in order UDP packet that it received. The server will then use this message to determine which handshake a given TCP stream should be associated with, as well as what data needs to be retransmitted due packet loss.
+~~~
+                                    1  1  1  1  1  1
+      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |             Session ID            |Seq. Number|
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+~~~
+{: #turbotls-tombstone title="TurboTLS tombstone packet layout"}
 
 # Discussion {#discussion}
-
+TODO do we even need this? This isn't a paper.
 
 # Security Considerations {#security-considerations}
 
@@ -346,12 +375,4 @@ However such defenses are provided by middleboxes and therefore do not affect th
 
 It should be noted here that the redundant UDP packets sent along with CH are part of the TurboTLS-specific technique we call request-based-fragmentation to mitigate _against_ a client's middlebox defenses incorrectly filtering TurboTLS connections, as otherwise multiple UDP responses to a single UDP request could be flagged as malicious behaviour. Furthermore, the one-to-oneness of the UDP request/response significantly reduces the impact of any amplification attack which tries to utilize a TurboTLS server as a reflector: an attacker would have to send one UDP packet for every reflected packet generated by the server, meaning that initial requests and responses are of comparable sizes, making the amplification factor so low that it would be an ineffective use of resources. Furthermore, the UDP requests ultimately must contain a fully formed CH before the server responds, limiting the amplification factor.
 
-# Acknowledgements
-
-
-
 --- back
-
-# Related work {#related-work}
-
-
