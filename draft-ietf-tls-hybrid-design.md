@@ -268,6 +268,12 @@ Earlier versions of this document categorized various design decisions one could
 
 ## Terminology {#terminology}
 
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+"OPTIONAL" in this document are to be interpreted as described in
+BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+capitals, as shown here.
+
 For the purposes of this document, it is helpful to be able to divide cryptographic algorithms into two classes:
 
 - "Traditional" algorithms: Algorithms which are widely deployed today, but which may be deprecated in the future.  In the context of TLS 1.3, examples of traditional key exchange algorithms include elliptic curve Diffie-Hellman using secp256r1 or x25519, or finite-field Diffie-Hellman.
@@ -380,7 +386,7 @@ Specific values shall be registered by IANA in the TLS Supported Groups registry
 
 ## Transmitting public keys and ciphertexts {#construction-transmitting}
 
-We take the relatively simple "concatenation approach": the messages from the two or more algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  The values are directly concatenated, without any additional encoding or length fields; this assumes that the representation and length of elements is fixed once the algorithm is fixed.  If concatenation were to be used with values that are not fixed-length, a length prefix or other unambiguous encoding must be used to ensure that the composition of the two values is injective and requires a mechanism different from that specified in this document.
+We take the relatively simple "concatenation approach": the messages from the two or more algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  The values are directly concatenated, without any additional encoding or length fields; the representation and length of elements MUST be fixed once the algorithm is fixed.
 
 Recall that in TLS 1.3 a KEM public key or KEM ciphertext is represented as a `KeyShareEntry`:
 
@@ -405,7 +411,7 @@ These are transmitted in the `extension_data` fields of `KeyShareClientHello` an
 
 The client's shares are listed in descending order of client preference; the server selects one algorithm and sends its corresponding share.
 
-For a hybrid key exchange, the `key_exchange` field of a `KeyShareEntry` is the concatenation of the `key_exchange` field for each of the constituent algorithms.  The order of shares in the concatenation is the same as the order of algorithms indicated in the definition of the `NamedGroup`.
+For a hybrid key exchange, the `key_exchange` field of a `KeyShareEntry` is the concatenation of the `key_exchange` field for each of the constituent algorithms.  The order of shares in the concatenation MUST be the same as the order of algorithms indicated in the definition of the `NamedGroup`.
 
 For the client's share, the `key_exchange` value contains the concatenation of the `pk` outputs of the corresponding KEMs' `KeyGen` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.  For the server's share, the `key_exchange` value contains concatenation of the `ct` outputs of the corresponding KEMs' `Encaps` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.
 
@@ -415,10 +421,10 @@ For the client's share, the `key_exchange` value contains the concatenation of t
 
 Here we also take a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  Again, we do not add any additional structure (length fields) in the concatenation procedure: for both the traditional groups and Kyber, the shared secret output length is fixed for a specific elliptic curve or parameter set.
 
-In other words, the shared secret is calculated as
+In other words, if the `NamedGroup` is `MyECDHMyPQKEM`, the shared secret is calculated as
 
 ~~~
-    concatenated_shared_secret = shared_secret_1 || shared_secret_2
+    concatenated_shared_secret = MyECDH.shared_secret || MyPQKEM.shared_secret
 ~~~
 
 and inserted into the TLS 1.3 key schedule in place of the (EC)DHE shared secret, as shown in {{fig-key-schedule}}.
@@ -512,6 +518,8 @@ This document assumes that the length of each public key, ciphertext, and shared
 Note that variable-length secrets are, generally speaking, dangerous.  In particular, when using key material of variable length and processing it using hash functions, a timing side channel may arise.  In broad terms, when the secret is longer, the hash function may need to process more blocks internally.  In some unfortunate circumstances, this has led to timing attacks, e.g. the Lucky Thirteen {{LUCKY13}} and Raccoon {{RACCOON}} attacks.
 
 Furthermore, {{AVIRAM}} identified a risk of using variable-length secrets when the hash function used in the key derivation function is no longer collision-resistant.
+
+If concatenation were to be used with values that are not fixed-length, a length prefix or other unambiguous encoding would need to be used to ensure that the composition of the two values is injective and requires a mechanism different from that specified in this document.
 
 Therefore, this specification MUST only be used with algorithms which have fixed-length shared secrets (after the variant has been fixed by the algorithm identifier in the `NamedGroup` negotiation in {{construction-negotiation}}).
 
