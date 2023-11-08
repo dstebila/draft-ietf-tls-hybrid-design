@@ -475,32 +475,6 @@ Concatenation of public keys in the `HybridKeyExchange` struct as described in {
 **Failures.**
 Some post-quantum key exchange algorithms, including Kyber, have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  Kyber has a cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients can retry if a failure is encountered.
 
-# Defined Hybrid Groups
-
-This document defines or references four initial hybrids for use within TLS 1.3, as shown in {{tab-defined-groups}}, where the components x25519 and secp256r1 are the existing named groups.
-
-| Hybrid name               | Hybrid components   | Named group |
-|---------------------------|---------------------|-------------|
-| X25519Kyber768Draft00     | x25519, Kyber768    | 0x6399      |
-| SecP256r1Kyber768Draft00  | secp256r1, Kyber768 | 0x639A      |
-{: #tab-defined-groups title="Hybrid key exchanged methods defined by this document"}
-
-## Kyber version
-
-For Kyber768, this document refers to the same named parameter sets defined in the Round 3 submission of Kyber to NIST.  That submission defines two variants for each parameter set based on the symmetric primitives used.  This document uses the FIPS 202 variant (and not the "90s" variant); the FIPS 202 variant uses SHA-3 and SHAKE {{NIST-FIPS-202}} as its internal symmetric primitives.
-
-The Kyber team has updated their documentation twice since submitting to Round 3 (these updates are labeled as version 3.0.1 and 3.0.2), however neither modifies the FIPS 202 variant of Kyber. This version is documented in {{KyberDraft00}}.
-
-The X25519Kyber768Draft00 hybrid (0x6399) is defined in {{X25519Kyber768}}.  The SecP256r1Kyber768Draft00 hybrid (0x639A) is defined in {{SECP256R1Kyber768}}.
-
-## Details of Kyber components
-
-The listed kyber768 components are the named parameter sets of the key exchange method Kyber {{Kyber}}.
-When it is used, the client selects an ephemeral private key, generates the corresponding public key, and transmits that (as a component) within its keyshare.
-When the server receives this keyshare, it extracts the Kyber public key, generates a ciphertext and shared secret.  It then transmits the ciphertext (as a component) within its keyshare.
-When the client receives this keyshare, it extracts the Kyber ciphertext, and uses its private key to generate the shared secret.
-Both sides use their copy of the shared secret as a component within the hybrid shared secret.
-
 # IANA Considerations
 
 IANA will assign identifiers from the TLS TLS Supported Groups section for the hybrid combinations defined in this document.
