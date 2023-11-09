@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2023-09-07
+date: 2023-11-09
 category: info
 
 ipr: trust200902
@@ -33,9 +33,7 @@ author:
 
 normative:
   TLS13: RFC8446
-  X25519Kyber768: I-D.draft-tls-westerbaan-xyber768d00
-  SECP256R1Kyber768: I-D.draft-kwiatkowski-tls-ecdhe-kyber
-  KyberDraft00: I-D.draft-cfrg-schwabe-kyber
+  RFC8174: RFC8174
 
 informative:
   AVIRAM:
@@ -105,13 +103,6 @@ informative:
   IKE-HYBRID: I-D.tjhai-ipsecme-hybrid-qske-ikev2
   IKE-PSK: RFC8784
   KIEFER: I-D.kiefer-tls-ecdhe-sidh
-  Kyber:
-    target: https://csrc.nist.gov/CSRC/media/Projects/post-quantum-cryptography/documents/round-3/submissions/Kyber-Round3.zip
-    title: Crystals-Kyber NIST Round 3 submission
-    author:
-      -
-        ins: Roberto Avanzi, Joppe Bos, Léo Ducas, Eike Kiltz, Tancrède Lepoint, Vadim Lyubashevsky, John M. Schanck, Peter Schwabe, Gregor Seiler, Damien Stehlé
-    date: 2020-10-01
   LANGLEY:
     target: https://www.imperialviolet.org/2018/04/11/pqconftls.html
     title: Post-quantum confidentiality for TLS
@@ -141,12 +132,6 @@ informative:
     title: Post-Quantum Cryptography
     author:
       org: National Institute of Standards and Technology (NIST)
-  NIST-FIPS-202:
-    target: https://doi.org/10.6028/NIST.FIPS.202
-    title: "SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions"
-    author:
-      org: National Institute of Standards and Technology (NIST)
-    date: 2015-08
   NIST-SP-800-56C:
     target: https://doi.org/10.6028/NIST.SP.800-56Cr2
     title: Recommendation for Key-Derivation Methods in Key-Establishment Schemes
@@ -206,6 +191,9 @@ informative:
   WHYTE13: I-D.whyte-qsh-tls13
   XMSS: RFC8391
   ZHANG: DOI.10.1007/978-3-540-24632-9_26
+  X25519Kyber768: I-D.draft-tls-westerbaan-xyber768d00
+  SECP256R1Kyber768: I-D.draft-kwiatkowski-tls-ecdhe-kyber
+  KyberDraft00: I-D.draft-cfrg-schwabe-kyber
 
 --- abstract
 
@@ -227,6 +215,9 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.
 
+- draft-ietf-tls-hybrid-design-09:
+    - Remove IANA registry requests
+    - Editorial changes
 - draft-ietf-tls-hybrid-design-09:
     - Removal of TBD hybrid combinations using Kyber512 or secp384r1
     - Editorial changes
@@ -374,8 +365,7 @@ Specific values shall be registered by IANA in the TLS Supported Groups registry
           ffdhe6144(0x0103), ffdhe8192(0x0104),
 
           /* Hybrid Key Exchange Methods */
-          X25519Kyber768Draft00(0x6399),
-          SecP256r1Kyber768Draft00 (0x639A), ...,
+          ...,
 
           /* Reserved Code Points */
           ffdhe_private_use(0x01FC..0x01FF),
@@ -424,7 +414,7 @@ Here we also take a simple "concatenation approach": the two shared secrets are 
 In other words, if the `NamedGroup` is `MyECDHMyPQKEM`, the shared secret is calculated as
 
 ~~~
-    concatenated_shared_secret = MyECDH.shared_secret || MyPQKEM.shared_secret
+concatenated_shared_secret = MyECDH.shared_secret || MyPQKEM.shared_secret
 ~~~
 
 and inserted into the TLS 1.3 key schedule in place of the (EC)DHE shared secret, as shown in {{fig-key-schedule}}.
@@ -477,7 +467,7 @@ Some post-quantum key exchange algorithms, including Kyber, have non-zero probab
 
 # IANA Considerations
 
-IANA will assign identifiers from the TLS TLS Supported Groups section for the hybrid combinations defined in this document.
+IANA will assign identifiers from the TLS Supported Groups section for the hybrid combinations defined following this document.
 These assignments should be made in a range that is distinct from the Elliptic Curve Groups and the Finite Field Groups ranges.
 
 # Security Considerations {#security-considerations}
