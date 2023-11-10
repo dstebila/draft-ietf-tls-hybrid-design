@@ -405,7 +405,51 @@ For a hybrid key exchange, the `key_exchange` field of a `KeyShareEntry` is the 
 
 For the client's share, the `key_exchange` value contains the concatenation of the `pk` outputs of the corresponding KEMs' `KeyGen` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.  For the server's share, the `key_exchange` value contains concatenation of the `ct` outputs of the corresponding KEMs' `Encaps` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.
 
-{{TLS13}} requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, we relax the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent in within the same `ClientHello`.  However, key_exchange values for different algorithms MUST be generated independently.
+{{TLS13}} requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, we relax the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent in within the same `ClientHello`.  However, key_exchange values for different algorithms MUST be generated independently. Explicitly, if the `NamedGroup` is the hybrid key exchange `MyECDHMyPQKEM` MUST generate `KeyShareEntry.key_exchange` values in one of the following two ways:
+
+Fully independently:
+
+~~~
+MyECDHMyPQKEM.KeyGen() = (MyECDH.KeyGen(), MyPQKEM.KeyGen())
+
+KeyShareClientHello {
+    KeyShareEntry {
+        NamedGroup: 'MyECDH',
+        key_exchange: MyECDH.KeyGen()
+    },
+    KeyShareEntry {
+        NamedGroup: 'MyPQKEM',
+        key_exchange: MyPQKEM.KeyGen()
+    },
+    KeyShareEntry {
+        NamedGroup: 'MyECDHMyPQKEM',
+        key_exchange: MyECDHMyPQKEM.KeyGen()
+    },
+}
+~~~
+
+Reusing key_exchange values of the same component algorithm within the same `ClientHello`:
+
+~~~
+myecdh_key_share = MyECDH.KeyGen()
+mypqkem_key_share = MyPQKEM.KeyGen()
+myecdh_mypqkem_key_share = (myecdh_key_share, mypqkem_key_share)
+
+KeyShareClientHello {
+    KeyShareEntry {
+        NamedGroup: 'MyECDH',
+        key_exchange: myecdh_key_share
+    },
+    KeyShareEntry {
+        NamedGroup: 'MyPQKEM',
+        key_exchange: mypqkem_key_share
+    },
+    KeyShareEntry {
+        NamedGroup: 'MyECDHMyPQKEM',
+        key_exchange: myecdh_mypqkem_key_share
+    },
+}
+~~~
 
 ## Shared secret calculation {#construction-shared-secret}
 
