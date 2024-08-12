@@ -455,7 +455,7 @@ KeyShareClientHello {
 
 ## Shared secret calculation {#construction-shared-secret}
 
-Here we also take a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  Again, we do not add any additional structure (length fields) in the concatenation procedure: for both the traditional groups and Kyber, the shared secret output length is fixed for a specific elliptic curve or parameter set.
+Here we also take a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  Again, we do not add any additional structure (length fields) in the concatenation procedure: for both the traditional groups and post quantum KEMs, the shared secret output length is fixed for a specific elliptic curve or parameter set.
 
 In other words, if the `NamedGroup` is `MyECDHMyPQKEM`, the shared secret is calculated as
 
