@@ -533,7 +533,7 @@ If concatenation were to be used with values that are not fixed-length, a length
 
 Therefore, this specification MUST only be used with algorithms which have fixed-length shared secrets (after the variant has been fixed by the algorithm identifier in the `NamedGroup` negotiation in {{construction-negotiation}}).
 
-For all groups, both the client and server must not reuse the ECDH or the PQKEM portion of the key share across different connections. Reusing ephemeral keys ties key material from different connections together, which should remain unrelated. This vulnerability, combined with key reuse, could enable an attacker to recover the shared secret from another connection. Additionally, reusing keys raises significant privacy concerns, as it allows passive observers to correlate different connections.
+For all groups, both the client and server MUST NOT reuse the ECDH or the PQKEM portion of the key share across different connections. Reusing ephemeral keys ties key material from different connections together, which should remain unrelated. This vulnerability, combined with key reuse, could enable an attacker to recover the shared secret from another connection. Additionally, reusing keys raises significant privacy concerns, as it allows passive observers to correlate different connections.
 
 # Acknowledgements
 
