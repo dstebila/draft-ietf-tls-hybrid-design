@@ -533,8 +533,6 @@ If concatenation were to be used with values that are not fixed-length, a length
 
 Therefore, this specification MUST only be used with algorithms which have fixed-length shared secrets (after the variant has been fixed by the algorithm identifier in the `NamedGroup` negotiation in {{construction-negotiation}}).
 
-For all groups, both the client and server MUST NOT reuse the ECDH or the PQKEM portion of the key share across different connections. Reusing ephemeral keys ties key material from different connections together, which should remain unrelated. This vulnerability, combined with key reuse, could enable an attacker to recover the shared secret from another connection. Additionally, reusing keys raises significant privacy concerns, as it allows passive observers to correlate different connections.
-
 # Acknowledgements
 
 These ideas have grown from discussions with many colleagues, including Christopher Wood, Matt Campagna, Eric Crockett, Deirdre Connolly, authors of the various hybrid Internet-Drafts and implementations cited in this document, and members of the TLS working group.  The immediate impetus for this document came from discussions with attendees at the Workshop on Post-Quantum Software in Mountain View, California, in January 2019.  Daniel J. Bernstein and Tanja Lange commented on the risks of reuse of ephemeral public keys.  Matt Campagna and the team at Amazon Web Services provided additional suggestions.  Nimrod Aviram proposed restricting to fixed-length secrets.
