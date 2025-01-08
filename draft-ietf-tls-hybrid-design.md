@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2024-10-07
+date: 2025-01-08
 category: info
 
 ipr: trust200902
@@ -27,8 +27,8 @@ author:
   -
     ins: S. Gueron
     name: Shay Gueron
-    organization: University of Haifa
-    abbrev: U. Haifa
+    organization: University of Haifa and Meta
+    abbrev: U. Haifa & Meta
     email: shay.gueron@gmail.com
 
 normative:
