@@ -215,6 +215,8 @@ This document does not propose specific post-quantum mechanisms; see {{scope}} f
 
 Earlier versions of this document categorized various design decisions one could make when implementing hybrid key exchange in TLS 1.3.
 
+- draft-ietf-tls-hybrid-design-12:
+    - Editorial changes
 - draft-ietf-tls-hybrid-design-10:
     - Clarifications on shared secret and public key generation
 - draft-ietf-tls-hybrid-design-09:
@@ -503,10 +505,10 @@ concatenated_shared_secret -> HKDF-Extract = Handshake Secret
 # Discussion {#discussion}
 
 **Larger public keys and/or ciphertexts.**
-The `HybridKeyExchange` struct in {{construction-transmitting}} limits public keys and ciphertexts to 2^16-1 bytes; this is bounded by the same (2^16-1)-byte limit on the `key_exchange` field in the `KeyShareEntry` struct.  Some post-quantum KEMs have larger public keys and/or ciphertexts; for example, Classic McEliece's smallest parameter set has public key size 261,120 bytes.  However, all defined parameter sets for Kyber have public keys and ciphertexts that fall within the TLS constraints.
+The `key_exchange` field in the `KeyShareEntry` struct in {{construction-transmitting}} limits public keys and ciphertexts to 2^16-1 bytes.  Some post-quantum KEMs have larger public keys and/or ciphertexts; for example, Classic McEliece's smallest parameter set has public key size 261,120 bytes.  However, all defined parameter sets for Kyber have public keys and ciphertexts that fall within the TLS constraints.
 
 **Duplication of key shares.**
-Concatenation of public keys in the `HybridKeyExchange` struct as described in {{construction-transmitting}} can result in sending duplicate key shares.  For example, if a client wanted to offer support for two combinations, say "SecP256r1Kyber768Draft00" and "X25519Kyber768Draft00", it would end up sending two kyber768 public keys, since the `KeyShareEntry` for each combination contains its own copy of a kyber768 key.  This duplication may be more problematic for post-quantum algorithms which have larger public keys.  On the other hand, if the client wants to offer, for example "SecP256r1Kyber768Draft00" and "secp256r1" (for backwards compatibility), there is relatively little duplicated data (as the secp256r1 keys are comparatively small).
+Concatenation of public keys in the `key_exchange` field in the `KeyShareEntry` struct as described in {{construction-transmitting}} can result in sending duplicate key shares.  For example, if a client wanted to offer support for two combinations, say "SecP256r1Kyber768Draft00" and "X25519Kyber768Draft00", it would end up sending two kyber768 public keys, since the `KeyShareEntry` for each combination contains its own copy of a kyber768 key.  This duplication may be more problematic for post-quantum algorithms which have larger public keys.  On the other hand, if the client wants to offer, for example "SecP256r1Kyber768Draft00" and "secp256r1" (for backwards compatibility), there is relatively little duplicated data (as the secp256r1 keys are comparatively small).
 
 **Failures.**
 Some post-quantum key exchange algorithms, including Kyber, have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  Kyber has a cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients can retry if a failure is encountered.
