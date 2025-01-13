@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2025-01-08
+date: 2025-01-13
 category: info
 
 ipr: trust200902
@@ -132,18 +132,9 @@ informative:
     title: Post-Quantum Cryptography
     author:
       org: National Institute of Standards and Technology (NIST)
-  NIST-SP-800-56C:
-    target: https://doi.org/10.6028/NIST.SP.800-56Cr2
-    title: Recommendation for Key-Derivation Methods in Key-Establishment Schemes
-    author:
-      org: National Institute of Standards and Technology (NIST)
-    date: 2020-08
-  NIST-SP-800-135:
-    target: https://doi.org/10.6028/NIST.SP.800-135r1
-    title: Recommendation for Existing Application-Specific Key Derivation Functions
-    author:
-      org: National Institute of Standards and Technology (NIST)
-    date: 2011-12
+  NIST-FIPS-203: DOI.10.6028/NIST.FIPS.203
+  NIST-SP-800-56C: DOI.10.6028/NIST.SP.800-56Cr2
+  NIST-SP-800-135: DOI.10.6028/NIST.SP.800-135r1
   OQS-102:
     target: https://github.com/open-quantum-safe/openssl/tree/OQS-OpenSSL_1_0_2-stable
     title: OQS-OpenSSL-1-0-2_stable
@@ -191,9 +182,7 @@ informative:
   WHYTE13: I-D.whyte-qsh-tls13
   XMSS: RFC8391
   ZHANG: DOI.10.1007/978-3-540-24632-9_26
-  X25519Kyber768: I-D.draft-tls-westerbaan-xyber768d00
-  SECP256R1Kyber768: I-D.draft-kwiatkowski-tls-ecdhe-kyber
-  KyberDraft00: I-D.draft-cfrg-schwabe-kyber
+  ECDHE-MLKEM: I-D.kwiatkowski-tls-ecdhe-mlkem
 
 --- abstract
 
@@ -217,6 +206,7 @@ Earlier versions of this document categorized various design decisions one could
 
 - draft-ietf-tls-hybrid-design-12:
     - Editorial changes
+    - Change Kyber references to ML-KEM references
 - draft-ietf-tls-hybrid-design-10:
     - Clarifications on shared secret and public key generation
 - draft-ietf-tls-hybrid-design-09:
@@ -226,10 +216,10 @@ Earlier versions of this document categorized various design decisions one could
     - Removal of TBD hybrid combinations using Kyber512 or secp384r1
     - Editorial changes
 - draft-ietf-tls-hybrid-design-08:
-    - Add reference to {{SECP256R1Kyber768}} and {{KyberDraft00}} drafts
+    - Add reference to ECP256R1Kyber768 and KyberDraft00 drafts
 - draft-ietf-tls-hybrid-design-07:
     - Editorial changes
-    - Add reference to {{X25519Kyber768}} draft
+    - Add reference to X25519Kyber768 draft
 - draft-ietf-tls-hybrid-design-06:
     - Bump to version -06 to avoid expiry
 - draft-ietf-tls-hybrid-design-05:
@@ -505,13 +495,13 @@ concatenated_shared_secret -> HKDF-Extract = Handshake Secret
 # Discussion {#discussion}
 
 **Larger public keys and/or ciphertexts.**
-The `key_exchange` field in the `KeyShareEntry` struct in {{construction-transmitting}} limits public keys and ciphertexts to 2^16-1 bytes.  Some post-quantum KEMs have larger public keys and/or ciphertexts; for example, Classic McEliece's smallest parameter set has public key size 261,120 bytes.  However, all defined parameter sets for Kyber have public keys and ciphertexts that fall within the TLS constraints.
+The `key_exchange` field in the `KeyShareEntry` struct in {{construction-transmitting}} limits public keys and ciphertexts to 2^16-1 bytes.  Some post-quantum KEMs have larger public keys and/or ciphertexts; for example, Classic McEliece's smallest parameter set has public key size 261,120 bytes.  However, all defined parameter sets for ML-KEM {{NIST-FIPS-203}} have public keys and ciphertexts that fall within the TLS constraints.
 
 **Duplication of key shares.**
-Concatenation of public keys in the `key_exchange` field in the `KeyShareEntry` struct as described in {{construction-transmitting}} can result in sending duplicate key shares.  For example, if a client wanted to offer support for two combinations, say "SecP256r1Kyber768Draft00" and "X25519Kyber768Draft00", it would end up sending two kyber768 public keys, since the `KeyShareEntry` for each combination contains its own copy of a kyber768 key.  This duplication may be more problematic for post-quantum algorithms which have larger public keys.  On the other hand, if the client wants to offer, for example "SecP256r1Kyber768Draft00" and "secp256r1" (for backwards compatibility), there is relatively little duplicated data (as the secp256r1 keys are comparatively small).
+Concatenation of public keys in the `key_exchange` field in the `KeyShareEntry` struct as described in {{construction-transmitting}} can result in sending duplicate key shares.  For example, if a client wanted to offer support for two combinations, say "SecP256r1MLKEM768" and "X25519MLKEM768" {{ECDHE-MLKEM}}, it would end up sending two ML-KEM-768 public keys, since the `KeyShareEntry` for each combination contains its own copy of a ML-KEM-768 key.  This duplication may be more problematic for post-quantum algorithms which have larger public keys.  On the other hand, if the client wants to offer, for example "SecP256r1MLKEM768" and "secp256r1" (for backwards compatibility), there is relatively little duplicated data (as the secp256r1 keys are comparatively small).
 
 **Failures.**
-Some post-quantum key exchange algorithms, including Kyber, have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  Kyber has a cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients can retry if a failure is encountered.
+Some post-quantum key exchange algorithms, including ML-KEM {{NIST-FIPS-203}}, have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  ML-KEM has a cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients can retry if a failure is encountered.
 
 # IANA Considerations
 
@@ -522,10 +512,10 @@ These assignments should be made in a range that is distinct from the Elliptic C
 
 The shared secrets computed in the hybrid key exchange should be computed in a way that achieves the "hybrid" property: the resulting secret is secure as long as at least one of the component key exchange algorithms is unbroken.  See {{GIACON}} and {{BINDEL}} for an investigation of these issues.  Under the assumption that shared secrets are fixed length once the combination is fixed, the construction from {{construction-shared-secret}} corresponds to the dual-PRF combiner of {{BINDEL}} which is shown to preserve security under the assumption that the hash function is a dual-PRF.
 
-As noted in {{kems}}, KEMs used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is reused, such as achieving IND-CCA2 security or having a transform like the Fujisaki-Okamoto transform applied.  Kyber has such security properties.  However, some other post-quantum KEMs designed to be IND-CPA-secure (i.e., without countermeasures such as the FO transform) are completely insecure under public key reuse; for example, some lattice-based IND-CPA-secure KEMs are vulnerable to attacks that recover the private key after just a few thousand samples {{FLUHRER}}.
+As noted in {{kems}}, KEMs used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is reused, such as achieving IND-CCA2 security or having a transform like the Fujisaki-Okamoto transform applied.  ML-KEM has such security properties.  However, some other post-quantum KEMs designed to be IND-CPA-secure (i.e., without countermeasures such as the FO transform) are completely insecure under public key reuse; for example, some lattice-based IND-CPA-secure KEMs are vulnerable to attacks that recover the private key after just a few thousand samples {{FLUHRER}}.
 
 **Public keys, ciphertexts, and secrets should be constant length.**
-This document assumes that the length of each public key, ciphertext, and shared secret is fixed once the algorithm is fixed.  This is the case for Kyber.
+This document assumes that the length of each public key, ciphertext, and shared secret is fixed once the algorithm is fixed.  This is the case for ML-KEM.
 
 Note that variable-length secrets are, generally speaking, dangerous.  In particular, when using key material of variable length and processing it using hash functions, a timing side channel may arise.  In broad terms, when the secret is longer, the hash function may need to process more blocks internally.  In some unfortunate circumstances, this has led to timing attacks, e.g. the Lucky Thirteen {{LUCKY13}} and Raccoon {{RACCOON}} attacks.
 
