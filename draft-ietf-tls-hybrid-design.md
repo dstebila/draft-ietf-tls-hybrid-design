@@ -110,7 +110,14 @@ informative:
       -
         ins: A. Langley
     date: 2018-04-11
-  LUCKY13: DOI.10.1109/SP.2013.42
+  LUCKY13:
+    target: https://ieeexplore.ieee.org/iel7/6547086/6547088/06547131.pdf
+    title: "Lucky Thirteen: Breaking the TLS and DTLS record protocols"
+    author:
+    -
+      ins: N. J. Al Fardan
+    -
+      ins: K. G. Paterson
   NIELSEN:
     title: Quantum Computation and Quantum Information
     author:
@@ -146,7 +153,6 @@ informative:
     author:
       org: Open Quantum Safe Project
     date: 2023-07
-  PQUIP-TERM: I-D.ietf-pquip-pqt-hybrid-terminology
   PST: DOI.10.1007/978-3-030-44223-1_5
   RACCOON:
     target: https://raccoon-attack.com/
@@ -259,7 +265,7 @@ For the purposes of this document, it is helpful to be able to divide cryptograp
 - "Next-generation" (or "next-gen") algorithms: Algorithms which are not yet widely deployed, but which may eventually be widely deployed.  An additional facet of these algorithms may be that we have less confidence in their security due to them being relatively new or less studied.  This includes "post-quantum" algorithms.
 
 "Hybrid" key exchange, in this context, means the use of two (or more) key exchange algorithms based on different cryptographic assumptions, e.g., one traditional algorithm and one next-gen algorithm, with the purpose of the final session key being secure as long as at least one of the component key exchange algorithms remains unbroken.
-When one of the algorithms is traditional and one of them is post-quantum, this is a Post-Quantum Traditional Hybrid Scheme {{PQUIP-TERM}}; while this is the initial use case for this draft, we do not limit this draft to that case.
+When one of the algorithms is traditional and one of them is post-quantum, this is a Post-Quantum Traditional Hybrid Scheme {{?I-D.driscoll-pqt-hybrid-terminology}}; while this is the initial use case for this draft, we do not limit this draft to that case.
 We use the term "component" algorithms to refer to the algorithms combined in a hybrid key exchange.
 
 We note that some authors prefer the phrase "composite" to refer to the use of multiple algorithms, to distinguish from "hybrid public key encryption" in which a key encapsulation mechanism and data encapsulation mechanism are combined to create public key encryption.
