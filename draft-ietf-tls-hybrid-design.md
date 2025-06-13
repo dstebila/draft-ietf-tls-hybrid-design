@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2025-01-13
+date: 2025-06-13
 category: info
 
 ipr: trust200902
@@ -288,7 +288,7 @@ As such, there may be users for whom hybrid key exchange is an appropriate step 
 
 This document focuses on hybrid ephemeral key exchange in TLS 1.3 {{TLS13}}.  It intentionally does not address:
 
-- Selecting which next-generation algorithms to use in TLS 1.3, or algorithm identifiers or encoding mechanisms for next-generation algorithms.  This selection will be based on the recommendations by the Crypto Forum Research Group (CFRG), which is currently waiting for the results of the NIST Post-Quantum Cryptography Standardization Project {{NIST}}.
+- Selecting which next-generation algorithms to use in TLS 1.3, or algorithm identifiers or encoding mechanisms for next-generation algorithms.
 - Authentication using next-generation algorithms.  While quantum computers could retroactively decrypt previous sessions, session authentication cannot be retroactively broken.
 
 ## Goals {#goals}
@@ -338,29 +338,6 @@ TLS 1.3 does not require that ephemeral public keys be used only in a single key
 Each particular combination of algorithms in a hybrid key exchange will be represented as a `NamedGroup` and sent in the `supported_groups` extension.  No internal structure or grammar is implied or required in the value of the identifier; they are simply opaque identifiers.
 
 Each value representing a hybrid key exchange will correspond to an ordered pair of two or more algorithms.  (We note that this is independent from future documents standardizing solely post-quantum key exchange methods, which would have to be assigned their own identifier.)
-
-Specific values shall be registered by IANA in the TLS Supported Groups registry.
-
-~~~
-    enum {
-
-          /* Elliptic Curve Groups (ECDHE) */
-          secp256r1(0x0017), secp384r1(0x0018), secp521r1(0x0019),
-          x25519(0x001D), x448(0x001E),
-
-          /* Finite Field Groups (DHE) */
-          ffdhe2048(0x0100), ffdhe3072(0x0101), ffdhe4096(0x0102),
-          ffdhe6144(0x0103), ffdhe8192(0x0104),
-
-          /* Hybrid Key Exchange Methods */
-          ...,
-
-          /* Reserved Code Points */
-          ffdhe_private_use(0x01FC..0x01FF),
-          ecdhe_private_use(0xFE00..0xFEFF),
-          (0xFFFF)
-    } NamedGroup;
-~~~
 
 ## Transmitting public keys and ciphertexts {#construction-transmitting}
 
@@ -499,8 +476,9 @@ Some post-quantum key exchange algorithms, including ML-KEM {{NIST-FIPS-203}}, h
 
 # IANA Considerations
 
-IANA will assign identifiers from the TLS Supported Groups section for the hybrid combinations defined following this document.
+IANA will assign identifiers from the TLS Supported Groups registry for the hybrid combinations defined following this document.
 These assignments should be made in a range that is distinct from the Elliptic Curve Groups and the Finite Field Groups ranges.
+For these entries in the TLS Supported Groups registry, the "Recommended" column should be "N" and the "DTLS-OK" column should be "Y".
 
 # Security Considerations {#security-considerations}
 
