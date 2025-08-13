@@ -293,8 +293,8 @@ In addition to the primary cryptographic goal, there may be several additional g
 
 - **Backwards compatibility:** Clients and servers who are "hybrid-aware", i.e., compliant with whatever hybrid key exchange standard is developed for TLS, should remain compatible with endpoints and middle-boxes that are not hybrid-aware.  The three scenarios to consider are:
     1. Hybrid-aware client, hybrid-aware server: These parties should establish a hybrid shared secret.
-    2. Hybrid-aware client, non-hybrid-aware server:  These parties should establish a traditional shared secret (assuming the hybrid-aware client is willing to downgrade to traditional-only).
-    3. Non-hybrid-aware client, hybrid-aware server:  These parties should establish a traditional shared secret (assuming the hybrid-aware server is willing to downgrade to traditional-only).
+    2. Hybrid-aware client, non-hybrid-aware server:  These parties should establish a non-hybrid shared secret (assuming the hybrid-aware client is willing to downgrade to non-hybrid-only).
+    3. Non-hybrid-aware client, hybrid-aware server:  These parties should establish a non-hybrid shared secret (assuming the hybrid-aware server is willing to downgrade to non-hybrid-only).
 
     Ideally backwards compatibility should be achieved without extra round trips and without sending duplicate information; see below.
 
@@ -308,6 +308,8 @@ In addition to the primary cryptographic goal, there may be several additional g
 - **No extra round trips:** Attempting to negotiate hybrid key exchange should not lead to extra round trips in any of the three hybrid-aware/non-hybrid-aware scenarios listed above.
 
 - **Minimal duplicate information:** Attempting to negotiate hybrid key exchange should not mean having to send multiple public keys of the same type.
+
+The tolerance for lower performance / increased latency due to use of hybrid key exchange will depend on the context and use case of the systems and the network involved.
 
 # Key encapsulation mechanisms {#kems}
 
