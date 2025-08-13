@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2025-07-17
+date: 2025-08-13
 category: info
 
 ipr: trust200902
@@ -146,7 +146,7 @@ informative:
     author:
       org: Open Quantum Safe Project
     date: 2023-07
-  PQUIP-TERM: I-D.ietf-pquip-pqt-hybrid-terminology
+  PQUIP-TERM: RFC9794
   PST: DOI.10.1007/978-3-030-44223-1_5
   RACCOON:
     target: https://raccoon-attack.com/
