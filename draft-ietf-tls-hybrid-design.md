@@ -100,8 +100,23 @@ informative:
   HARNIK: DOI.10.1007/11426639_6
   HHK: DOI.10.1007/978-3-319-70500-2_12
   HPKE: RFC9180
+  IANATLS:
+    target: https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
+    title: "Transport Layer Security (TLS) Parameters - TLS Supported Groups"
+    author:
+      -
+        ins: Internet Assigned Numbers Authority
   IKE-HYBRID: I-D.tjhai-ipsecme-hybrid-qske-ikev2
   IKE-PSK: RFC8784
+  KATZ:
+    title: Introductino to Modern Cryptography, Third Edition
+    author:
+      -
+        ins: J. Katz
+      -
+        ins: Y. Lindell
+    seriesinfo: CRC Press
+    date: 2021
   KIEFER: I-D.kiefer-tls-ecdhe-sidh
   LANGLEY:
     target: https://www.imperialviolet.org/2018/04/11/pqconftls.html
@@ -249,20 +264,20 @@ Earlier versions of this document categorized various design decisions one could
 
 For the purposes of this document, it is helpful to be able to divide cryptographic algorithms into two classes:
 
-- "Traditional" algorithms: Algorithms which are widely deployed today, but which may be deprecated in the future.  In the context of TLS 1.3, examples of traditional key exchange algorithms include elliptic curve Diffie-Hellman using secp256r1 or x25519, or finite-field Diffie-Hellman.
-- "Next-generation" (or "next-gen") algorithms: Algorithms which are not yet widely deployed, but which may eventually be widely deployed.  An additional facet of these algorithms may be that we have less confidence in their security due to them being relatively new or less studied.  This includes "post-quantum" algorithms.
+- "Traditional" algorithms: Algorithms that are widely deployed today, but may be deprecated in the future.  In the context of TLS 1.3, examples of traditional key exchange algorithms include elliptic curve Diffie-Hellman using secp256r1 or x25519, or finite-field Diffie-Hellman.
+- "Next-generation" (or "next-gen") algorithms: Algorithms that are not yet widely deployed, but may eventually be widely deployed.  An additional facet of these algorithms may be that the cryptographic community has less confidence in their security due to them being relatively new or less studied.  This includes "post-quantum" algorithms.
 
 "Hybrid" key exchange, in this context, means the use of two (or more) key exchange algorithms based on different cryptographic assumptions, e.g., one traditional algorithm and one next-gen algorithm, with the purpose of the final session key being secure as long as at least one of the component key exchange algorithms remains unbroken.
-When one of the algorithms is traditional and one of them is post-quantum, this is a Post-Quantum Traditional Hybrid Scheme {{PQUIP-TERM}}; while this is the initial use case for this draft, we do not limit this draft to that case.
-We use the term "component" algorithms to refer to the algorithms combined in a hybrid key exchange.
+When one of the algorithms is traditional and one of them is post-quantum, this is a Post-Quantum Traditional Hybrid Scheme {{PQUIP-TERM}}; while this is the initial use case for this document, the document is not limited to this case.
+This document uses the term "component" algorithms to refer to the algorithms combined in a hybrid key exchange.
 
-We note that some authors prefer the phrase "composite" to refer to the use of multiple algorithms, to distinguish from "hybrid public key encryption" in which a key encapsulation mechanism and data encapsulation mechanism are combined to create public key encryption.
+Some authors prefer the phrase "composite" to refer to the use of multiple algorithms, to distinguish from "hybrid public key encryption" in which a key encapsulation mechanism and data encapsulation mechanism are combined to create public key encryption.
 
-It is intended that the composite algorithms within a hybrid key exchange are to be performed, that is, negotiated and transmitted, within the TLS 1.3 handshake.  Any out-of-band method of exchanging keying material is considered out-of-scope.
+It is intended that the component algorithms within a hybrid key exchange are to be performed, that is, negotiated and transmitted, within the TLS 1.3 handshake.  Any out-of-band method of exchanging keying material is considered out-of-scope.
 
-The primary motivation of this document is preparing for post-quantum algorithms.  However, it is possible that public key cryptography based on alternative mathematical constructions will be desired to mitigate risks independent of the advent of a quantum computer, for example because of a cryptanalytic breakthrough.  As such we opt for the more generic term "next-generation" algorithms rather than exclusively "post-quantum" algorithms.
+The primary motivation of this document is preparing for post-quantum algorithms.  However, it is possible that public key cryptography based on alternative mathematical constructions will be desired to mitigate risks independent of the advent of a quantum computer, for example because of a cryptanalytic breakthrough.  As such this document opts for the more generic term "next-generation" algorithms rather than exclusively "post-quantum" algorithms.
 
-Note that TLS 1.3 uses the phrase "groups" to refer to key exchange algorithms -- for example, the `supported_groups` extension -- since all key exchange algorithms in TLS 1.3 are Diffie-Hellman-based.  As a result, some parts of this document will refer to data structures or messages with the term "group" in them despite using a key exchange algorithm that is not Diffie-Hellman-based nor a group.
+Note that TLS 1.3 uses the phrase "groups" to refer to key exchange algorithms -- for example, the `supported_groups` extension -- since all key exchange algorithms in TLS 1.3 are Diffie-Hellman-based.  As a result, some parts of this document will refer to data structures or messages with the term "group" in them despite using a key exchange algorithm that is neither Diffie-Hellman-based nor a group.
 
 ## Motivation for use of hybrid key exchange {#motivation}
 
@@ -319,11 +334,11 @@ This document models key agreement as key encapsulation mechanisms (KEMs), which
 - `Encaps(pk) -> (ct, ss)`: A probabilistic encapsulation algorithm, which takes as input a public key `pk` and outputs a ciphertext `ct` and shared secret `ss`.
 - `Decaps(sk, ct) -> ss`: A decapsulation algorithm, which takes as input a secret key `sk` and ciphertext `ct` and outputs a shared secret `ss`, or in some cases a distinguished error value.
 
-The main security property for KEMs is indistinguishability under adaptive chosen ciphertext attack (IND-CCA2), which means that shared secret values should be indistinguishable from random strings even given the ability to have other arbitrary ciphertexts decapsulated.  IND-CCA2 corresponds to security against an active attacker, and the public key / secret key pair can be treated as a long-term key or reused.  A common design pattern for obtaining security under key reuse is to apply the Fujisaki-Okamoto (FO) transform {{FO}} or a variant thereof {{HHK}}.
+The main security property for KEMs is indistinguishability under adaptive chosen ciphertext attack (IND-CCA2), which means that shared secret values should be indistinguishable from random strings even given the ability to have other arbitrary ciphertexts decapsulated.  IND-CCA2 corresponds to security against an active attacker, and the public key / secret key pair can be treated as a long-term key or reused (see for example {{KATZ}} for definitions of IND-CCA2 and IND-CPA security).  A common design pattern for obtaining security under key reuse is to apply the Fujisaki-Okamoto (FO) transform {{FO}} or a variant thereof {{HHK}}.
 
 A weaker security notion is indistinguishability under chosen plaintext attack (IND-CPA), which means that the shared secret values should be indistinguishable from random strings given a copy of the public key.  IND-CPA roughly corresponds to security against a passive attacker, and sometimes corresponds to one-time key exchange.
 
-Key exchange in TLS 1.3 is phrased in terms of Diffie-Hellman key exchange in a group.  DH key exchange can be modeled as a KEM, with `KeyGen` corresponding to selecting an exponent `x` as the secret key and computing the public key `g^x`; encapsulation corresponding to selecting an exponent `y`, computing the ciphertext `g^y` and the shared secret `g^(xy)`, and decapsulation as computing the shared secret `g^(xy)`. See {{HPKE}} for more details of such Diffie-Hellman-based key encapsulation mechanisms. Diffie-Hellman key exchange, when viewed as a KEM, does not formally satisfy IND-CCA2 security, but is still safe to use for ephemeral key exchange in TLS 1.3, see e.g. {{DOWLING}}.
+Key exchange in TLS 1.3 is phrased in terms of Diffie-Hellman key exchange in a group.  DH key exchange can be modeled as a KEM, with `KeyGen` corresponding to selecting an exponent `x` as the secret key and computing the public key `g^x`; encapsulation corresponding to selecting an exponent `y`, computing the ciphertext `g^y` and the shared secret `g^(xy)`, and decapsulation as computing the shared secret `g^(xy)`. See {{HPKE}} for more details of such Diffie-Hellman-based key encapsulation mechanisms. Diffie-Hellman key exchange, when viewed as a KEM, does not formally satisfy IND-CCA2 security, but is still safe to use for ephemeral key exchange in TLS 1.3, see for example {{DOWLING}}.
 
 TLS 1.3 does not require that ephemeral public keys be used only in a single key exchange session; some implementations may reuse them, at the cost of limited forward secrecy.  As a result, any KEM used in the manner described in this document MUST explicitly be designed to be secure in the event that the public key is reused.  Finite-field and elliptic-curve Diffie-Hellman key exchange methods used in TLS 1.3 satisfy this criteria.  For generic KEMs, this means satisfying IND-CCA2 security or having a transform like the Fujisaki-Okamoto transform {{FO}} {{HHK}} applied.  While it is recommended that implementations avoid reuse of KEM public keys, implementations that do reuse KEM public keys MUST ensure that the number of reuses of a KEM public key abides by any bounds in the specification of the KEM or subsequent security analyses.  Implementations MUST NOT reuse randomness in the generation of KEM ciphertexts.
 
@@ -333,11 +348,11 @@ TLS 1.3 does not require that ephemeral public keys be used only in a single key
 
 Each particular combination of algorithms in a hybrid key exchange will be represented as a `NamedGroup` and sent in the `supported_groups` extension.  No internal structure or grammar is implied or required in the value of the identifier; they are simply opaque identifiers.
 
-Each value representing a hybrid key exchange will correspond to an ordered pair of two or more algorithms.  (We note that this is independent from future documents standardizing solely post-quantum key exchange methods, which would have to be assigned their own identifier.)
+Each value representing a hybrid key exchange will correspond to an ordered pair of two or more algorithms.  (Note that this is independent from future documents standardizing solely post-quantum key exchange methods, which would have to be assigned their own identifier.)
 
 ## Transmitting public keys and ciphertexts {#construction-transmitting}
 
-We take the relatively simple "concatenation approach": the messages from the two or more algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  The values are directly concatenated, without any additional encoding or length fields; the representation and length of elements MUST be fixed once the algorithm is fixed.
+This document takes the relatively simple "concatenation approach": the messages from the two or more algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  The values are directly concatenated, without any additional encoding or length fields; the representation and length of elements MUST be fixed once the algorithm is fixed.
 
 Recall that in TLS 1.3 a KEM public key or KEM ciphertext is represented as a `KeyShareEntry`:
 
@@ -366,7 +381,7 @@ For a hybrid key exchange, the `key_exchange` field of a `KeyShareEntry` is the 
 
 For the client's share, the `key_exchange` value contains the concatenation of the `pk` outputs of the corresponding KEMs' `KeyGen` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.  For the server's share, the `key_exchange` value contains concatenation of the `ct` outputs of the corresponding KEMs' `Encaps` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.
 
-{{TLS13}} requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, we relax the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent in within the same `ClientHello`.  However, key_exchange values for different algorithms MUST be generated independently. Explicitly, if the `NamedGroup` is the hybrid key exchange `MyECDHMyPQKEM`, the `KeyShareEntry.key_exchange` values MUST be generated in one of the following two ways:
+{{TLS13}} requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, this document relaxes the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent in within the same `ClientHello`.  However, key_exchange values for different algorithms MUST be generated independently. Explicitly, if the `NamedGroup` is the hybrid key exchange `MyECDHMyPQKEM`, the `KeyShareEntry.key_exchange` values MUST be generated in one of the following two ways:
 
 Fully independently:
 
@@ -414,7 +429,7 @@ KeyShareClientHello {
 
 ## Shared secret calculation {#construction-shared-secret}
 
-Here we also take a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  Again, we do not add any additional structure (length fields) in the concatenation procedure: for both the traditional groups and post quantum KEMs, the shared secret output length is fixed for a specific elliptic curve or parameter set.
+Here this document also takes a simple "concatenation approach": the two shared secrets are concatenated together and used as the shared secret in the existing TLS 1.3 key schedule.  Again, this document does not add any additional structure (length fields) in the concatenation procedure: for both the traditional groups and post quantum KEMs, the shared secret output length is fixed for a specific elliptic curve or parameter set.
 
 In other words, if the `NamedGroup` is `MyECDHMyPQKEM`, the shared secret is calculated as
 
@@ -457,7 +472,7 @@ concatenated_shared_secret -> HKDF-Extract = Handshake Secret
 {: #fig-key-schedule title="Key schedule for hybrid key exchange"}
 
 **FIPS-compliance of shared secret concatenation.**
-{{NIST-SP-800-56C}} or {{NIST-SP-800-135}} give NIST recommendations for key derivation methods in key exchange protocols.  Some hybrid combinations may combine the shared secret from a NIST-approved algorithm (e.g., ECDH using the nistp256/secp256r1 curve) with a shared secret from a non-approved algorithm (e.g., post-quantum).  {{NIST-SP-800-56C}} lists simple concatenation as an approved method for generation of a hybrid shared secret in which one of the constituent shared secret is from an approved method.
+The US National Institute of Standards and Technology (NIST) documents {{NIST-SP-800-56C}} and {{NIST-SP-800-135}} give recommendations for key derivation methods in key exchange protocols.  Some hybrid combinations may combine the shared secret from a NIST-approved algorithm (e.g., ECDH using the nistp256/secp256r1 curve) with a shared secret from a non-approved algorithm (e.g., post-quantum).  {{NIST-SP-800-56C}} lists simple concatenation as an approved method for generation of a hybrid shared secret in which one of the constituent shared secret is from an approved method.
 
 # Discussion {#discussion}
 
@@ -468,13 +483,13 @@ The `key_exchange` field in the `KeyShareEntry` struct in {{construction-transmi
 Concatenation of public keys in the `key_exchange` field in the `KeyShareEntry` struct as described in {{construction-transmitting}} can result in sending duplicate key shares.  For example, if a client wanted to offer support for two combinations, say "SecP256r1MLKEM768" and "X25519MLKEM768" {{ECDHE-MLKEM}}, it would end up sending two ML-KEM-768 public keys, since the `KeyShareEntry` for each combination contains its own copy of a ML-KEM-768 key.  This duplication may be more problematic for post-quantum algorithms which have larger public keys.  On the other hand, if the client wants to offer, for example "SecP256r1MLKEM768" and "secp256r1" (for backwards compatibility), there is relatively little duplicated data (as the secp256r1 keys are comparatively small).
 
 **Failures.**
-Some post-quantum key exchange algorithms, including ML-KEM {{NIST-FIPS-203}}, have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  ML-KEM has a cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients can retry if a failure is encountered.
+Some post-quantum key exchange algorithms, including ML-KEM {{NIST-FIPS-203}}, have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  ML-KEM has a cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients MAY retry if a failure is encountered.
 
 # IANA Considerations
 
-IANA will assign identifiers from the TLS Supported Groups registry for the hybrid combinations defined following this document.
+IANA will assign identifiers from the TLS Supported Groups registry {{IANATLS}} for the hybrid combinations defined following this document.
 These assignments should be made in a range that is distinct from the Finite Field Groups range.
-For these entries in the TLS Supported Groups registry, the "Recommended" column should be "N" and the "DTLS-OK" column should be "Y".
+For these entries in the TLS Supported Groups registry, the "Recommended" column SHOULD be "N" and the "DTLS-OK" column SHOULD be "Y".
 
 # Security Considerations {#security-considerations}
 
@@ -485,7 +500,7 @@ As noted in {{kems}}, KEMs used in the manner described in this document MUST ex
 **Public keys, ciphertexts, and secrets should be constant length.**
 This document assumes that the length of each public key, ciphertext, and shared secret is fixed once the algorithm is fixed.  This is the case for ML-KEM.
 
-Note that variable-length secrets are, generally speaking, dangerous.  In particular, when using key material of variable length and processing it using hash functions, a timing side channel may arise.  In broad terms, when the secret is longer, the hash function may need to process more blocks internally.  In some unfortunate circumstances, this has led to timing attacks, e.g. the Lucky Thirteen {{LUCKY13}} and Raccoon {{RACCOON}} attacks.
+Note that variable-length secrets are, generally speaking, dangerous.  In particular, when using key material of variable length and processing it using hash functions, a timing side channel may arise.  In broad terms, when the secret is longer, the hash function may need to process more blocks internally.  In some unfortunate circumstances, this has led to timing attacks, e.g., the Lucky Thirteen {{LUCKY13}} and Raccoon {{RACCOON}} attacks.
 
 Furthermore, {{AVIRAM}} identified a risk of using variable-length secrets when the hash function used in the key derivation function is no longer collision-resistant.
 
