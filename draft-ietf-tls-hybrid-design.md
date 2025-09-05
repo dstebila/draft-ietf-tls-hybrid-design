@@ -271,7 +271,7 @@ For the purposes of this document, it is helpful to be able to divide cryptograp
 When one of the algorithms is traditional and one of them is post-quantum, this is a Post-Quantum Traditional Hybrid Scheme {{PQUIP-TERM}}; while this is the initial use case for this document, the document is not limited to this case.
 This document uses the term "component" algorithms to refer to the algorithms combined in a hybrid key exchange.
 
-Some authors prefer the phrase "composite" to refer to the use of multiple algorithms, to distinguish from "hybrid public key encryption" in which a key encapsulation mechanism and data encapsulation mechanism are combined to create public key encryption.
+Some researchers prefer the phrase "composite" to refer to the use of multiple algorithms, to distinguish from "hybrid public key encryption" in which a key encapsulation mechanism and data encapsulation mechanism are combined to create public key encryption.
 
 It is intended that the component algorithms within a hybrid key exchange are to be performed, that is, negotiated and transmitted, within the TLS 1.3 handshake.  Any out-of-band method of exchanging keying material is considered out-of-scope.
 
@@ -516,7 +516,7 @@ These ideas have grown from discussions with many colleagues, including Christop
 
 # Related work {#related-work}
 
-Quantum computing and post-quantum cryptography in general are outside the scope of this document.  For a general introduction to quantum computing, see a standard textbook such as {{NIELSEN}}.  For an overview of post-quantum cryptography as of 2009, see {{BERNSTEIN}}.  For the current status of the NIST Post-Quantum Cryptography Standardization Project, see {{NIST}}.  For additional perspectives on the general transition from traditional to post-quantum cryptography, see for example {{ETSI}}, among others.
+Quantum computing and post-quantum cryptography in general are outside the scope of this document.  For a general introduction to quantum computing, see a standard textbook such as {{NIELSEN}}.  For an overview of post-quantum cryptography as of 2009, see {{BERNSTEIN}}; while not containing more recent advances, it still provides a helpful introduction.  For the current status of the NIST Post-Quantum Cryptography Standardization Project, see {{NIST}}.  For additional perspectives on the general transition from traditional to post-quantum cryptography, see for example {{ETSI}}, among others.
 
 There have been several Internet-Drafts describing mechanisms for embedding post-quantum and/or hybrid key exchange in TLS:
 
