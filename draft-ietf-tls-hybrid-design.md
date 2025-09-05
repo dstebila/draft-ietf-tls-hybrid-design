@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2025-09-02
+date: 2025-09-05
 category: info
 
 ipr: trust200902
@@ -32,8 +32,10 @@ author:
     email: shay.gueron@gmail.com
 
 normative:
-  TLS13: RFC8446
+  FO: DOI.10.1007/s00145-011-9114-1
+  HHK: DOI.10.1007/978-3-319-70500-2_12
   RFC8174: RFC8174
+  TLS13: RFC8446
 
 informative:
   AVIRAM:
@@ -94,11 +96,9 @@ informative:
         ins: S. Fluhrer
     seriesinfo: Cryptology ePrint Archive, Report 2016/085
     date: 2016-01
-  FO: DOI.10.1007/s00145-011-9114-1
   FRODO: DOI.10.1145/2976749.2978425
   GIACON: DOI.10.1007/978-3-319-76578-5_7
   HARNIK: DOI.10.1007/11426639_6
-  HHK: DOI.10.1007/978-3-319-70500-2_12
   HPKE: RFC9180
   IANATLS:
     target: https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
@@ -109,7 +109,7 @@ informative:
   IKE-HYBRID: I-D.tjhai-ipsecme-hybrid-qske-ikev2
   IKE-PSK: RFC8784
   KATZ:
-    title: Introductino to Modern Cryptography, Third Edition
+    title: Introduction to Modern Cryptography, Third Edition
     author:
       -
         ins: J. Katz
@@ -334,7 +334,7 @@ This document models key agreement as key encapsulation mechanisms (KEMs), which
 - `Encaps(pk) -> (ct, ss)`: A probabilistic encapsulation algorithm, which takes as input a public key `pk` and outputs a ciphertext `ct` and shared secret `ss`.
 - `Decaps(sk, ct) -> ss`: A decapsulation algorithm, which takes as input a secret key `sk` and ciphertext `ct` and outputs a shared secret `ss`, or in some cases a distinguished error value.
 
-The main security property for KEMs is indistinguishability under adaptive chosen ciphertext attack (IND-CCA2), which means that shared secret values should be indistinguishable from random strings even given the ability to have other arbitrary ciphertexts decapsulated.  IND-CCA2 corresponds to security against an active attacker, and the public key / secret key pair can be treated as a long-term key or reused (see for example {{KATZ}} for definitions of IND-CCA2 and IND-CPA security).  A common design pattern for obtaining security under key reuse is to apply the Fujisaki-Okamoto (FO) transform {{FO}} or a variant thereof {{HHK}}.
+The main security property for KEMs is indistinguishability under adaptive chosen ciphertext attack (IND-CCA2), which means that shared secret values should be indistinguishable from random strings even given the ability to have other arbitrary ciphertexts decapsulated.  IND-CCA2 corresponds to security against an active attacker, and the public key / secret key pair can be treated as a long-term key or reused (see for example {{KATZ}} or {{HHK}} for definitions of IND-CCA2 and IND-CPA security).  A common design pattern for obtaining security under key reuse is to apply the Fujisaki-Okamoto (FO) transform {{FO}} or a variant thereof {{HHK}}.
 
 A weaker security notion is indistinguishability under chosen plaintext attack (IND-CPA), which means that the shared secret values should be indistinguishable from random strings given a copy of the public key.  IND-CPA roughly corresponds to security against a passive attacker, and sometimes corresponds to one-time key exchange.
 
@@ -381,7 +381,7 @@ For a hybrid key exchange, the `key_exchange` field of a `KeyShareEntry` is the 
 
 For the client's share, the `key_exchange` value contains the concatenation of the `pk` outputs of the corresponding KEMs' `KeyGen` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.  For the server's share, the `key_exchange` value contains concatenation of the `ct` outputs of the corresponding KEMs' `Encaps` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.
 
-{{TLS13}} requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, this document relaxes the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent in within the same `ClientHello`.  However, key_exchange values for different algorithms MUST be generated independently. Explicitly, if the `NamedGroup` is the hybrid key exchange `MyECDHMyPQKEM`, the `KeyShareEntry.key_exchange` values MUST be generated in one of the following two ways:
+{{TLS13}} requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, this document relaxes the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent within the same `ClientHello`.  However, key_exchange values for different algorithms MUST be generated independently. Explicitly, if the `NamedGroup` is the hybrid key exchange `MyECDHMyPQKEM`, the `KeyShareEntry.key_exchange` values MUST be generated in one of the following two ways:
 
 Fully independently:
 
