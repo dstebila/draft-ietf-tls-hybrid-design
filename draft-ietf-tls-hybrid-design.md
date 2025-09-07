@@ -281,7 +281,7 @@ Note that TLS 1.3 uses the phrase "groups" to refer to key exchange algorithms -
 
 ## Motivation for use of hybrid key exchange {#motivation}
 
-A hybrid key exchange algorithm allows early adopters eager for post-quantum security to have the potential of post-quantum security (possibly from a less-well-studied algorithm) while still retaining at least the security currently offered by traditional algorithms.  They may even need to retain traditional algorithms due to regulatory constraints, for example FIPS compliance.
+A hybrid key exchange algorithm allows early adopters eager for post-quantum security to have the potential of post-quantum security (possibly from a less-well-studied algorithm) while still retaining at least the security currently offered by traditional algorithms.  They may even need to retain traditional algorithms due to regulatory constraints, for example US National Institute of Standards and Technology (NIST) FIPS compliance.
 
 Ideally, one would not use hybrid key exchange: one would have confidence in a single algorithm and parameterization that will stand the test of time.  However, this may not be the case in the face of quantum computers and cryptanalytic advances more generally.
 
@@ -302,7 +302,7 @@ This document focuses on hybrid ephemeral key exchange in TLS 1.3 {{TLS13}}.  It
 
 ## Goals {#goals}
 
-The primary goal of a hybrid key exchange mechanism is to facilitate the establishment of a shared secret which remains secure as long as as one of the component key exchange mechanisms remains unbroken.
+The primary goal of a hybrid key exchange mechanism is to facilitate the establishment of a shared secret which remains secure as long as one of the component key exchange mechanisms remains unbroken.
 
 In addition to the primary cryptographic goal, there may be several additional goals in the context of TLS 1.3:
 
@@ -354,7 +354,7 @@ Each value representing a hybrid key exchange will correspond to an ordered pair
 
 This document takes the relatively simple "concatenation approach": the messages from the two or more algorithms being hybridized will be concatenated together and transmitted as a single value, to avoid having to change existing data structures.  The values are directly concatenated, without any additional encoding or length fields; the representation and length of elements MUST be fixed once the algorithm is fixed.
 
-Recall that in TLS 1.3 a KEM public key or KEM ciphertext is represented as a `KeyShareEntry`:
+Recall that in TLS 1.3 {{TLS13}} Section 4.2.8, a KEM public key or KEM ciphertext is represented as a `KeyShareEntry`:
 
 ~~~
     struct {
@@ -381,7 +381,7 @@ For a hybrid key exchange, the `key_exchange` field of a `KeyShareEntry` is the 
 
 For the client's share, the `key_exchange` value contains the concatenation of the `pk` outputs of the corresponding KEMs' `KeyGen` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.  For the server's share, the `key_exchange` value contains concatenation of the `ct` outputs of the corresponding KEMs' `Encaps` algorithms, if that algorithm corresponds to a KEM; or the (EC)DH ephemeral key share, if that algorithm corresponds to an (EC)DH group.
 
-{{TLS13}} requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, this document relaxes the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent within the same `ClientHello`.  However, key_exchange values for different algorithms MUST be generated independently. Explicitly, if the `NamedGroup` is the hybrid key exchange `MyECDHMyPQKEM`, the `KeyShareEntry.key_exchange` values MUST be generated in one of the following two ways:
+{{TLS13}} Section 4.2.8 requires that ``The key_exchange values for each KeyShareEntry MUST be generated independently.''  In the context of this document, since the same algorithm may appear in multiple named groups, this document relaxes the above requirement to allow the same key_exchange value for the same algorithm to be reused in multiple KeyShareEntry records sent within the same `ClientHello`.  However, key_exchange values for different algorithms MUST be generated independently. Explicitly, if the `NamedGroup` is the hybrid key exchange `MyECDHMyPQKEM`, the `KeyShareEntry.key_exchange` values MUST be generated in one of the following two ways:
 
 Fully independently:
 
