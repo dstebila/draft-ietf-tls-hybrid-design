@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2025-09-05
+date: 2025-09-08
 category: info
 
 ipr: trust200902
@@ -489,7 +489,7 @@ Some post-quantum key exchange algorithms, including ML-KEM {{NIST-FIPS-203}}, h
 
 IANA will assign identifiers from the TLS Supported Groups registry {{IANATLS}} for the hybrid combinations defined following this document.
 These assignments should be made in a range that is distinct from the Finite Field Groups range.
-For these entries in the TLS Supported Groups registry, the "Recommended" column SHOULD be "N" and the "DTLS-OK" column SHOULD be "Y".
+For these entries in the TLS Supported Groups registry, the "Recommended" column SHOULD in the initial registration be "N" and the "DTLS-OK" column SHOULD in the initial registration be "Y".
 
 # Security Considerations {#security-considerations}
 
