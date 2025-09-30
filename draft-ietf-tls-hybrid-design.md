@@ -2,7 +2,7 @@
 title: Hybrid key exchange in TLS 1.3
 abbrev: ietf-tls-hybrid-design
 docname: draft-ietf-tls-hybrid-design-latest
-date: 2025-09-08
+date: 2025-09-28
 category: info
 
 ipr: trust200902
@@ -483,7 +483,9 @@ The `key_exchange` field in the `KeyShareEntry` struct in {{construction-transmi
 Concatenation of public keys in the `key_exchange` field in the `KeyShareEntry` struct as described in {{construction-transmitting}} can result in sending duplicate key shares.  For example, if a client wanted to offer support for two combinations, say "SecP256r1MLKEM768" and "X25519MLKEM768" {{ECDHE-MLKEM}}, it would end up sending two ML-KEM-768 public keys, since the `KeyShareEntry` for each combination contains its own copy of a ML-KEM-768 key.  This duplication may be more problematic for post-quantum algorithms which have larger public keys.  On the other hand, if the client wants to offer, for example "SecP256r1MLKEM768" and "secp256r1" (for backwards compatibility), there is relatively little duplicated data (as the secp256r1 keys are comparatively small).
 
 **Failures.**
-Some post-quantum key exchange algorithms, including ML-KEM {{NIST-FIPS-203}}, have non-zero probability of failure, meaning two honest parties may derive different shared secrets.  This would cause a handshake failure.  ML-KEM has a cryptographically small failure rate; if other algorithms are used, implementers should be aware of the potential of handshake failure. Clients MAY retry if a failure is encountered.
+Some post-quantum KEMs, including ML-KEM {{NIST-FIPS-203}}, have non-zero probability of decapsulation correctness error, meaning two honest parties may compute different shared secrets. This would cause a handshake failure. As with other similar failures (such as bit corruptions during transmission), clients MAY retry if a failure is encountered.
+
+The mechanism in this document is only intended to be used with key exchange algorithms that have a cryptographically small probability of failure, and there may be additional considerations needed for key exchange algorithms with larger probability of failure. For example, the probability of failure of ML-KEM is less than 2^(-128), which is sufficiently low that it is extremely unlikely that any implementation will ever encounter it in practice.  Due to the negligible rate of occurence of these failure events and the additional risk of introducing new attack vectors when attempting to handle these events, it is RECOMMENDED that implementers not attempt to specifically handle post-quantum KEM decapsulation correctness errors, and instead rely on pre-existing code paths in the TLS handshake that handle derivation failures.
 
 # IANA Considerations
 
